@@ -27,7 +27,7 @@ class _MyApp extends State<MyApp> {
   AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
 
   Future getPrayerTimesFromAPIServer() async {
-    var url = 'http://192.168.2.183:5000/';
+    var url = 'https://prayer-times.vsyou.app/';
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {

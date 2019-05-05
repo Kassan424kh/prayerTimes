@@ -17,17 +17,14 @@ class MyApp extends StatefulWidget {
 
 class _MyApp extends State<MyApp> {
   // variables
-  Color _primaryColor = Colors.deepPurpleAccent; //Colors.deepPurpleAccent;
+  Color _primaryColor = Color(0xff2196f3); //Colors.deepPurpleAccent;
+  Color _primaryColorAccent = Color(0xffe3f2fd); //Colors.deepPurpleAccent;
   DateTime now = DateTime.now();
-  List _prayerTimes = [
-    {
-      "لا يوجد صلوات": ["2019-05-02 22:17:00Z", "2019-05-02 23:59:00Z", 6]
-    }
-  ];
+  List _prayerTimes = null;
   AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
 
   Future getPrayerTimesFromAPIServer() async {
-    var url = 'https://prayer-times.vsyou.app/';
+    String url = 'https://prayer-times.vsyou.app/';
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -38,7 +35,7 @@ class _MyApp extends State<MyApp> {
         print('[Error] connection faild');
       }
     } catch (e) {
-      print('[Error] connection to server $url faild');
+      print('[Error] faild connection to server $url');
       setState(() {
         _prayerTimes = null;
       });
@@ -51,6 +48,62 @@ class _MyApp extends State<MyApp> {
       folder: "assets/audios/",
     ));
   }
+
+  Widget prayerContainer() => _prayerTimes != null
+      ? Expanded(
+    flex: 8,
+    child: ClipRRect(
+      clipBehavior: Clip.antiAlias,
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+      child: Container(
+        color: Colors.white,
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: _prayerTimes.map((pt) {
+            String key;
+            String start;
+            String end;
+            bool active;
+            pt.forEach((k, v) {
+              if (k != 'active') {
+                key = k.toString();
+                start = v[0].toString();
+                end = v[1].toString();
+              } else if (k == 'active') {
+                active = v;
+              }
+            });
+            DateTime startDateTime = DateTime.parse(start);
+
+            if (now.isAtSameMomentAs(DateTime(
+                startDateTime.year,
+                startDateTime.month,
+                startDateTime.day,
+                startDateTime.hour,
+                startDateTime.minute.toInt() + 1))) {
+              playSound().then((s) => null);
+            }
+
+            return PrayerTimesCard(_primaryColor, _primaryColorAccent,
+                key, start, end, active);
+          }).toList(),
+        ),
+      ),
+    ),
+  )
+      : Container(
+    height: 200,
+    child: Center(
+      child: Text(
+        'لا يوجد صلواة',
+        style: TextStyle(
+          fontSize: 28,
+          color: _primaryColor,
+        ),
+      ),
+    ),
+  );
 
   // state functions
   @override
@@ -75,42 +128,18 @@ class _MyApp extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       home: Scaffold(
-        body: _prayerTimes != null
-            ? ListView(
-          scrollDirection: Axis.vertical,
-          children: _prayerTimes.map((pt) {
-            String key;
-            String start;
-            String end;
-            pt.forEach((k, v) {
-              setState(() {
-                key = k.toString();
-                start = v[0].toString();
-                end = v[1].toString();
-              });
-            });
-            DateTime startDateTime = DateTime.parse(start);
-
-            if (now.isAtSameMomentAs(DateTime(
-                startDateTime.year,
-                startDateTime.month,
-                startDateTime.day,
-                startDateTime.hour,
-                startDateTime.minute.toInt() + 1))) {
-              playSound().then((s) => null);
-            }
-
-            return PrayerTimesCard(_primaryColor, key, start, end);
-          }).toList(),
-        )
-            : Center(
-          child: Text(
-            'لا يوجد صلواة',
-            style: TextStyle(
-              fontSize: 28,
-              color: _primaryColor,
+        body: Container(
+          color: _primaryColorAccent,
+          child: Column(children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Text(now.toString().substring(11, 16),
+                    style: TextStyle(color: _primaryColor, fontSize: 50)),
+              ),
             ),
-          ),
+            prayerContainer()
+          ]),
         ),
       ),
     );

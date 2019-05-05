@@ -3,81 +3,89 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 
 class PrayerTimesCard extends StatelessWidget {
   final primaryColor;
+  final primaryColorAccent;
   final primaryName;
   final start;
   final end;
+  final active;
 
-  PrayerTimesCard(this.primaryColor, this.primaryName, this.start, this.end);
+  BorderRadius brContainer = BorderRadius.only(
+      topLeft: Radius.circular(30),
+      bottomLeft: Radius.circular(30),
+      topRight: Radius.circular(30),
+      bottomRight: Radius.circular(5));
+  BorderRadius brElements = BorderRadius.only(
+      topLeft: Radius.circular(25),
+      bottomLeft: Radius.circular(25),
+      topRight: Radius.circular(25),
+      bottomRight: Radius.circular(5));
+
+  PrayerTimesCard(this.primaryColor, this.primaryColorAccent, this.primaryName,
+      this.start, this.end, this.active);
+
+  Widget prayerElement() => Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.white,
+          borderRadius: brContainer,
+        ),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 9),
+        child: Card(
+          elevation: 0,
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          margin: EdgeInsets.all(5),
+          child: Column(children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(right: 15),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(children: <Widget>[
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                        decoration: BoxDecoration(
+                            color: primaryColorAccent,
+                            borderRadius: brElements),
+                        child: Row(children: <Widget>[
+                          Text(
+                            start.substring(11, 16),
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: primaryColor,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(Icons.keyboard_arrow_right, color: primaryColor),
+                          SizedBox(width: 10),
+                          Text(
+                            end.substring(11, 16),
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: primaryColor,
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ]),
+                    Text(
+                      primaryName,
+                      style: TextStyle(fontSize: 30, color: primaryColor),
+                    ),
+                  ]),
+            ),
+          ]),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: Colors.white,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: primaryColor,
-              blurRadius: 40,
-              spreadRadius: -30,
-              offset: Offset(0, 20))
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      margin: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-      child: Card(
-        elevation: 0,
-        color: Colors.transparent,
-        clipBehavior: Clip.hardEdge,
-        child: Column(children: <Widget>[
-          Card(
-            clipBehavior: Clip.hardEdge,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(15),
-              ),
-            ),
-            child: Container(
-              height: 400,
-              color: primaryColor,
-              child: null,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(30),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(children: <Widget>[
-                    Text(
-                      start.substring(11, 16),
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: primaryColor,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(start.substring(0, 10)),
-                    SizedBox(height: 10),
-                    Text(
-                      end.substring(11, 16),
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: primaryColor,
-                      ),
-                    ),
-                  ]),
-                  Text(
-                    primaryName,
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ]),
-          ),
-        ]),
-      ),
-    );
+    return active
+        ? prayerElement()
+        : Opacity(
+            opacity: 0.3,
+            child: prayerElement(),
+          );
   }
 }

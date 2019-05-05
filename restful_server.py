@@ -16,10 +16,21 @@ app = Flask('__main__')
 api = Api(app)
 CORS(app)
 
-d = dt.now()
-
 prayer_times_folder_location = 'prayer_times_data/'
 
+def getActivePrayer(prayer_times):
+    pt_index = 0
+    for pts in prayer_times:
+        for pts_key in list(pts):
+            start = dt.strptime(pts[pts_key][0], '%Y-%m-%d %H:%M:%SZ')
+            end = dt.strptime(pts[pts_key][1], '%Y-%m-%d %H:%M:%SZ')
+            datetime_now = dt.strptime(dt.strftime(
+                dt.now(), '%Y-%m-%d %H:%M:%SZ'), '%Y-%m-%d %H:%M:%SZ')
+            if start < datetime_now and end >= datetime_now:
+                prayer_times[pt_index]["active"] = True
+            else:
+                prayer_times[pt_index]["active"] = False
+        pt_index += 1
 
 def getData():
     prayer_times = []
@@ -73,15 +84,9 @@ def getData():
         if old_prayer_times_json_file.is_file():
             os.remove(old_prayer_times_json_file_name)
 
-    for pts in prayer_times:
-        for pts_key in pts.keys():
-            start = dt.strptime(pts[pts_key][0], '%Y-%m-%d %H:%M:%SZ')
-            end = dt.strptime(pts[pts_key][1], '%Y-%m-%d %H:%M:%SZ')
-            datetime_now = dt.strptime(dt.strftime(
-                dt.now(), '%Y-%m-%d %H:%M:%SZ'), '%Y-%m-%d %H:%M:%SZ')
-            if start < datetime_now and end >= datetime_now or end == datetime_now:
-                return [pts]
-
+    getActivePrayer(prayer_times)
+    
+    return prayer_times
 
 class GebetsZeiten(Resource):
     def get(self):

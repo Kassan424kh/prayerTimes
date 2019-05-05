@@ -1,2 +1,4 @@
 *.pyc
 /__pycached__
+/.idea
+/.idea/*

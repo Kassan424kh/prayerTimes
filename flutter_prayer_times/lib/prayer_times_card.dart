@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 
 class PrayerTimesCard extends StatelessWidget {
-  final primaryColor;
-  final primaryColorAccent;
-  final primaryName;
-  final start;
-  final end;
-  final active;
+  final primaryColor, primaryColorAccent, primaryName, start, end, active;
 
   BorderRadius brContainer = BorderRadius.only(
       topLeft: Radius.circular(30),
@@ -23,10 +17,10 @@ class PrayerTimesCard extends StatelessWidget {
   PrayerTimesCard(this.primaryColor, this.primaryColorAccent, this.primaryName,
       this.start, this.end, this.active);
 
-  Widget prayerElement() => Container(
+  Widget prayerElement(displaySize) => Container(
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: Colors.white,
+          color: Colors.transparent,
           borderRadius: brContainer,
         ),
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 9),
@@ -46,32 +40,36 @@ class PrayerTimesCard extends StatelessWidget {
                         padding:
                             EdgeInsets.symmetric(vertical: 30, horizontal: 15),
                         decoration: BoxDecoration(
-                            color: primaryColorAccent,
-                            borderRadius: brElements),
+                          shape: BoxShape.rectangle,
+                          color: primaryColorAccent,
+                          borderRadius: brElements,
+                        ),
                         child: Row(children: <Widget>[
+                          SizedBox(width: 30),
                           Text(
                             start.substring(11, 16),
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: displaySize ? 20 : 30,
                               color: primaryColor,
                             ),
                           ),
-                          SizedBox(width: 10),
-                          Icon(Icons.keyboard_arrow_right, color: primaryColor),
-                          SizedBox(width: 10),
-                          Text(
+                          SizedBox(width: 30),
+                          //SizedBox(width: displaySize ? 5 : 10),
+                          //Icon(Icons.keyboard_arrow_right, color: primaryColor),
+                          //SizedBox(width: displaySize?5:10),
+                          /*Text(
                             end.substring(11, 16),
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: displaySize ? 20 : 30,
                               color: primaryColor,
                             ),
-                          ),
+                          ),*/
                         ]),
                       ),
                     ]),
                     Text(
                       primaryName,
-                      style: TextStyle(fontSize: 30, color: primaryColor),
+                      style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                   ]),
             ),
@@ -81,11 +79,12 @@ class PrayerTimesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool displaySize = MediaQuery.of(context).size.width <= 411;
     return active
-        ? prayerElement()
+        ? prayerElement(displaySize)
         : Opacity(
-            opacity: 0.3,
-            child: prayerElement(),
+            opacity: 0.5,
+            child: prayerElement(displaySize),
           );
   }
 }

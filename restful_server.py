@@ -16,7 +16,7 @@ app = Flask('__main__')
 api = Api(app)
 CORS(app)
 
-prayer_times_folder_location = 'prayer_times_data/'
+prayer_times_folder_location = './prayer_times_data/'
 
 def getActivePrayer(prayer_times):
     pt_index = 0
@@ -43,7 +43,7 @@ def getData():
             prayer_times = json.load(ptf)
     else:
         print('[Important] Prayer times is from url/server imported')
-        url = 'https://www.gebetszeiten.de/Harburg/gebetszeiten-Buchholz-in-der-Nordheide/161069-dit17de#'
+        url = 'https://www.gebetszeiten.de/Harburg/gebetszeiten-Buchholz-in-der-Nordheide/161069-mwl07'
         page = r.get(url)
         doc = lh.fromstring(page.content)
         prayerTime = doc.xpath(
@@ -83,7 +83,6 @@ def getData():
         old_prayer_times_json_file = path.open(old_prayer_times_json_file_name)
         if old_prayer_times_json_file.is_file():
             os.remove(old_prayer_times_json_file_name)
-
     getActivePrayer(prayer_times)
     
     return prayer_times

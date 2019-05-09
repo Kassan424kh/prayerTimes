@@ -23,7 +23,7 @@ class PrayerTimesCard extends StatelessWidget {
           color: Colors.transparent,
           borderRadius: brContainer,
         ),
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 9),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Card(
           elevation: 0,
           color: Colors.transparent,
@@ -38,7 +38,7 @@ class PrayerTimesCard extends StatelessWidget {
                     Column(children: <Widget>[
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                            EdgeInsets.symmetric(vertical: 25, horizontal: 15),
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           color: primaryColorAccent,
@@ -54,16 +54,6 @@ class PrayerTimesCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 30),
-                          //SizedBox(width: displaySize ? 5 : 10),
-                          //Icon(Icons.keyboard_arrow_right, color: primaryColor),
-                          //SizedBox(width: displaySize?5:10),
-                          /*Text(
-                            end.substring(11, 16),
-                            style: TextStyle(
-                              fontSize: displaySize ? 20 : 30,
-                              color: primaryColor,
-                            ),
-                          ),*/
                         ]),
                       ),
                     ]),

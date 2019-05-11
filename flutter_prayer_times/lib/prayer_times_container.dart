@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
-import 'dart:convert' as json;
 
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:http/http.dart' as http;
 
 import 'prayer_times_card.dart';
+import 'prayer_times_data_from_server.dart';
 
 class PrayerTimesContainer extends StatefulWidget {
   final primaryColor, primaryColorAccent, backgroundImage;
@@ -21,31 +20,15 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   List _prayerTimes = null;
   var _now, _primaryColor, _primaryColorAccent, _backgroundImage;
   AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
+  PrayerTimesDataFromServer _prayerTimesDataFromServer =
+      PrayerTimesDataFromServer();
+  GlobalKey key;
 
   Future playSound() async {
     await _assetsAudioPlayer.open(AssetsAudio(
       asset: "33432.mp3",
       folder: "assets/audios/",
     ));
-  }
-
-  Future getPrayerTimesFromAPIServer() async {
-    String url = 'https://prayer-times.vsyou.app/';
-    try {
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        setState(() {
-          _prayerTimes = json.jsonDecode(response.body);
-        });
-      } else {
-        print('[Error] connection faild');
-      }
-    } catch (e) {
-      print('[Error] faild connection to server $url');
-      setState(() {
-        _prayerTimes = null;
-      });
-    }
   }
 
   List<Widget> prayerTimesList() {
@@ -71,6 +54,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
               startDateTime.day,
               startDateTime.hour,
               startDateTime.minute.toInt())) &&
+          (startDateTime.second >= 0 || startDateTime.second < 2) &&
           key != 'الشروق') {
         playSound().then((s) => null);
       }
@@ -83,28 +67,41 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   Widget prayerContainer() => _prayerTimes != null
       ? Expanded(
           flex: 8,
-          child: ClipRRect(
-            clipBehavior: Clip.antiAlias,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: _backgroundImage,
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black26,
-                    BlendMode.darken,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1,
+                color: Colors.black54,
+                style: BorderStyle.solid,
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            child: ClipRRect(
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: _backgroundImage,
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black26,
+                      BlendMode.darken,
+                    ),
                   ),
                 ),
-                color: Colors.black54,
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-                child:
-                    ListView(scrollDirection: Axis.vertical, children: <Widget>[
-                  ...prayerTimesList(),
-                ]),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                  child: ListView(
+                      scrollDirection: Axis.vertical,
+                      children: <Widget>[
+                        ...prayerTimesList(),
+                      ]),
+                ),
               ),
             ),
           ),
@@ -123,7 +120,9 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
         );
 
   Future<void> setData() async {
-    getPrayerTimesFromAPIServer();
+    _prayerTimesDataFromServer
+        .getPrayerTimes()
+        .then((List data) => setState(() => _prayerTimes = data));
     DateTime dtNow = DateTime.now();
     setState(() {
       _now = DateTime(
@@ -140,7 +139,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
       _backgroundImage = widget.backgroundImage;
     });
     setData();
-    Timer.periodic(Duration(minutes: 1), (Timer t) {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
     });
   }

@@ -54,6 +54,9 @@ class PrayerTimesCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 30),
+                          IconButton(
+                              onPressed: null, icon: Icon(Icons.volume_up)),
+                          SizedBox(width: 30),
                         ]),
                       ),
                     ]),

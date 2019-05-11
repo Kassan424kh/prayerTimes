@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:screen/screen.dart';
 
 import './prayer_times_container.dart';
 
@@ -33,8 +34,9 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    Screen.keepOn(true);
     setData();
-    Timer.periodic(Duration(minutes: 1), (Timer t) {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
     });
   }
@@ -66,8 +68,10 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
             Expanded(
               flex: 2,
               child: Center(
-                child: Text(_now.toString().substring(11, 16),
-                    style: TextStyle(color: _primaryColor, fontSize: 50)),
+                child: Text(
+                  _now.toString().substring(11, 16),
+                  style: TextStyle(color: _primaryColor, fontSize: 50),
+                ),
               ),
             ),
             PrayerTimesContainer(

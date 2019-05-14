@@ -21,6 +21,7 @@ class PrayerTimesDataFromServer {
 
   Future<Map> get prayerTimesFromJsonFile async {
     try {
+      //print('Read data from file');
       final file = await _localFile;
       Map prayerTimesWithDateFromToday =
           await json.decode(await file.readAsString());
@@ -34,7 +35,7 @@ class PrayerTimesDataFromServer {
   Future writePrayerTimesToJsonFile(Map data) async {
     final file = await _localFile;
     try {
-      print('save data to file');
+      print('Write data to file');
       print(data.toString());
       await file.writeAsString(json.encode(data));
     } catch (e) {
@@ -62,17 +63,52 @@ class PrayerTimesDataFromServer {
     }
   }
 
-  Future<List> getPrayerTimes() async {
-    return await prayerTimesFromJsonFile.then((data) async {
-      if (data == null) {
-        return getPrayerTimesFromApiServer;
-      } else {
-        if (!data.containsKey(_dtNow)) {
-          return getPrayerTimesFromApiServer;
-        } else {
-          return data[_dtNow];
+  DateTime dateTimeFromStringConverter(String dtString) {
+    DateTime dt = DateTime.parse(dtString);
+    return DateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute);
+  }
+
+  DateTime dateTimeFromDateConverter(DateTime dt) {
+    return DateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute);
+  }
+
+  List setActivePrayerTime(data) {
+    return data.map((prsData) {
+      for (String key in prsData.keys.toList()) {
+        if (key != 'active') {
+          List times = prsData[key];
+          DateTime now = dateTimeFromDateConverter(DateTime.now());
+          DateTime start = dateTimeFromStringConverter(times[0]);
+          DateTime end = dateTimeFromStringConverter(times[1]);
+
+          if (start.isAtSameMomentAs(now) ||
+              start.isBefore(now) && end.isAfter(now)) {
+            prsData['active'] = true;
+          } else {
+            prsData['active'] = false;
+          }
+          return prsData;
         }
       }
+    }).toList();
+  }
+
+  Future<List> getPrayerTimes() async {
+    return await prayerTimesFromJsonFile.then((data) async {
+      List getData;
+      if (data == null) {
+        getPrayerTimesFromApiServer.then((d) => getData = d);
+      } else {
+        if (!data.containsKey(_dtNow)) {
+          getPrayerTimesFromApiServer.then((d) => getData = d);
+        } else {
+          getData = data[_dtNow];
+        }
+      }
+
+      getData = setActivePrayerTime(getData);
+
+      return getData;
     });
   }
 }

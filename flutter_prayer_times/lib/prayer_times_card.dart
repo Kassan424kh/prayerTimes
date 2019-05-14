@@ -55,7 +55,10 @@ class PrayerTimesCard extends StatelessWidget {
                           ),
                           SizedBox(width: 30),
                           IconButton(
-                              onPressed: null, icon: Icon(Icons.volume_up)),
+                              onPressed: primaryName == 'الشروق' ? null : () {},
+                              icon: Icon(primaryName == 'الشروق'
+                                  ? Icons.volume_off
+                                  : Icons.volume_up)),
                           SizedBox(width: 30),
                         ]),
                       ),

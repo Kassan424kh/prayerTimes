@@ -96,14 +96,10 @@ class PrayerTimesDataFromServer {
   Future<List> getPrayerTimes() async {
     return await prayerTimesFromJsonFile.then((data) async {
       List getData;
-      if (data == null) {
+      if (data == null || !data.containsKey(_dtNow)) {
         getPrayerTimesFromApiServer.then((d) => getData = d);
       } else {
-        if (!data.containsKey(_dtNow)) {
-          getPrayerTimesFromApiServer.then((d) => getData = d);
-        } else {
-          getData = data[_dtNow];
-        }
+        getData = data[_dtNow];
       }
 
       getData = setActivePrayerTime(getData);

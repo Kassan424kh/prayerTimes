@@ -27,6 +27,7 @@ def getData():
         print('[Important] Prayer times is from file imported')
         with open(prayer_times_file_name, 'r') as ptf:
             prayer_times = json.load(ptf)
+            ptf.close()
     else:
         print('[Important] Prayer times is from url/server imported')
         url = 'https://www.gebetszeiten.de/Harburg/gebetszeiten-Buchholz-in-der-Nordheide/161069-dit17de'
@@ -61,14 +62,14 @@ def getData():
             gebets_zeiten.append(
                 {gebets_zeiten_namen[index]: [g_zeit_start, g_zeit_end]})
 
+        prayer_times = gebets_zeiten
         with open(prayer_times_file_name, 'w') as ptf:
             json.dump(gebets_zeiten, ptf, )
 
-        old_prayer_times_json_file_name = prayer_times_folder_location + \
-            str(dt.now() - td(days=1))[0:10] + '.json'
-        old_prayer_times_json_file = path.open(old_prayer_times_json_file_name)
-        if old_prayer_times_json_file.is_file():
-            os.remove(old_prayer_times_json_file_name)
+    old_prayer_times_json_file_name = prayer_times_folder_location + \
+        str(dt.now() - td(days=1))[0:10] + '.json'
+    if os.path.exists(old_prayer_times_json_file_name):
+        os.remove(old_prayer_times_json_file_name)
 
     return prayer_times
 

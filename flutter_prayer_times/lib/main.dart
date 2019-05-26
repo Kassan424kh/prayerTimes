@@ -19,7 +19,7 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   Color _primaryColor = Color(0xff2196f3); //Colors.deepPurpleAccent;
   Color _primaryColorAccent = Color(0xffe3f2fd); //Colors.deepPurpleAccent;
   AssetImage _backgroundImage =
-      AssetImage('assets/background_images/285563.jpg');
+      AssetImage('assets/background_images/284268.jpg');
   DateTime _now = DateTime.now();
 
   Future<void> setData() async {
@@ -70,7 +70,15 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
               child: Center(
                 child: Text(
                   _now.toString().substring(11, 16),
-                  style: TextStyle(color: _primaryColor, fontSize: 50),
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 60,
+                      shadows: <Shadow>[
+                        Shadow(
+                            color: Colors.black45,
+                            offset: Offset(0, 5),
+                            blurRadius: 50)
+                      ]),
                 ),
               ),
             ),

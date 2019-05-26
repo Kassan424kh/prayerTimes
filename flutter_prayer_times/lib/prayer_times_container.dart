@@ -53,7 +53,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
               startDateTime.month,
               startDateTime.day,
               startDateTime.hour,
-              startDateTime.minute.toInt())) &&
+              startDateTime.minute.toInt() - 1)) &&
           (startDateTime.second >= 0 || startDateTime.second < 2) &&
           key != 'الشروق') {
         playSound().then((s) => null);

@@ -68,10 +68,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
             setState(() {
               indexOfActivePrayer = index;
             });
-          }else{
-            setState(() {
-              indexOfActivePrayer = 0;
-            });
           }
 
           return MapEntry(

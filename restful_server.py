@@ -16,10 +16,7 @@ app = Flask('__main__')
 api = Api(app)
 CORS(app)
 
-d = dt.now()
-
-prayer_times_folder_location = 'prayer_times_data/'
-
+prayer_times_folder_location = './prayer_times_data/'
 
 def getData():
     prayer_times = []
@@ -30,9 +27,10 @@ def getData():
         print('[Important] Prayer times is from file imported')
         with open(prayer_times_file_name, 'r') as ptf:
             prayer_times = json.load(ptf)
+            ptf.close()
     else:
         print('[Important] Prayer times is from url/server imported')
-        url = 'https://www.gebetszeiten.de/Harburg/gebetszeiten-Buchholz-in-der-Nordheide/161069-dit17de#'
+        url = 'https://www.gebetszeiten.de/Harburg/gebetszeiten-Buchholz-in-der-Nordheide/161069-dit17de'
         page = r.get(url)
         doc = lh.fromstring(page.content)
         prayerTime = doc.xpath(
@@ -64,24 +62,16 @@ def getData():
             gebets_zeiten.append(
                 {gebets_zeiten_namen[index]: [g_zeit_start, g_zeit_end]})
 
+        prayer_times = gebets_zeiten
         with open(prayer_times_file_name, 'w') as ptf:
             json.dump(gebets_zeiten, ptf, )
 
-        old_prayer_times_json_file_name = prayer_times_folder_location + \
-            str(dt.now() - td(days=1))[0:10] + '.json'
-        old_prayer_times_json_file = path.open(old_prayer_times_json_file_name)
-        if old_prayer_times_json_file.is_file():
-            os.remove(old_prayer_times_json_file_name)
+    old_prayer_times_json_file_name = prayer_times_folder_location + \
+        str(dt.now() - td(days=1))[0:10] + '.json'
+    if os.path.exists(old_prayer_times_json_file_name):
+        os.remove(old_prayer_times_json_file_name)
 
-    for pts in prayer_times:
-        for pts_key in pts.keys():
-            start = dt.strptime(pts[pts_key][0], '%Y-%m-%d %H:%M:%SZ')
-            end = dt.strptime(pts[pts_key][1], '%Y-%m-%d %H:%M:%SZ')
-            datetime_now = dt.strptime(dt.strftime(
-                dt.now(), '%Y-%m-%d %H:%M:%SZ'), '%Y-%m-%d %H:%M:%SZ')
-            if start < datetime_now and end >= datetime_now or end == datetime_now:
-                return [pts]
-
+    return prayer_times
 
 class GebetsZeiten(Resource):
     def get(self):

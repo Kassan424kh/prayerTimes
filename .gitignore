@@ -1,3 +1,5 @@
 *.pyc
 /__pycached__
-.idea/
+/.idea
+/.idea/*
+/flutter_prayer_times/pubspec.lock

@@ -19,7 +19,7 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   Color _primaryColor = Color(0xff2196f3); //Colors.deepPurpleAccent;
   Color _primaryColorAccent = Color(0xffe3f2fd); //Colors.deepPurpleAccent;
   AssetImage _backgroundImage =
-      AssetImage('assets/background_images/284268.jpg');
+      AssetImage('assets/background_images/jan-antonin-kolar-1530013-unsplash.jpg');
   DateTime _now = DateTime.now();
 
   Future<void> setData() async {
@@ -53,7 +53,9 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.black,
+      ),
       home: Scaffold(
         body: Container(
           decoration: BoxDecoration(
@@ -62,7 +64,9 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
               image: _backgroundImage,
               fit: BoxFit.cover,
             ),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
+
           //color: _primaryColorAccent,
           child: Column(children: <Widget>[
             Expanded(
@@ -71,11 +75,11 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
                 child: Text(
                   _now.toString().substring(11, 16),
                   style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: 60,
                       shadows: <Shadow>[
                         Shadow(
-                            color: Colors.black45,
+                            color: Colors.black,
                             offset: Offset(0, 5),
                             blurRadius: 50)
                       ]),

@@ -85,19 +85,15 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(
-                width: 1,
+                width: 0,
                 color: Colors.black54,
                 style: BorderStyle.solid,
               ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: ClipRRect(
               clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(

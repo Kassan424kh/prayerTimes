@@ -145,8 +145,8 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   @override
   initState() {
     super.initState();
-    _scrollController =
-        ScrollController(initialScrollOffset: _prayerTimeCardHeight);
+    /*_scrollController =
+        ScrollController(initialScrollOffset: _prayerTimeCardHeight);*/
     setState(() {
       _primaryColor = widget.primaryColor;
       _primaryColorAccent = widget.primaryColorAccent;
@@ -161,13 +161,13 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Timer(
+    /*Timer(
       Duration(seconds: 1),
       () => _scrollController.animateTo(
           indexOfActivePrayer * _prayerTimeCardHeight,
           duration: Duration(milliseconds: 350),
           curve: Curves.easeIn),
-    );
+    );*/
   }
 
   @override

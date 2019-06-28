@@ -19,11 +19,11 @@ class PrayerTimesDataFromServer {
     return File('$path/serverDataFile.json');
   }
 
-  Future<Map> get prayerTimesFromJsonFile async {
+  Future<List> get prayerTimesFromJsonFile async {
     try {
       //print('Read data from file');
       final file = await _localFile;
-      Map prayerTimesWithDateFromToday =
+      List prayerTimesWithDateFromToday =
           await json.decode(await file.readAsString());
       return prayerTimesWithDateFromToday;
     } catch (e) {
@@ -32,7 +32,7 @@ class PrayerTimesDataFromServer {
     }
   }
 
-  Future writePrayerTimesToJsonFile(Map data) async {
+  Future writePrayerTimesToJsonFile(List data) async {
     final file = await _localFile;
     try {
       print('Write data to file');
@@ -46,13 +46,12 @@ class PrayerTimesDataFromServer {
   Future<List> get getPrayerTimesFromApiServer async {
     //print('get data from restful server');
     String url = 'https://prayer-times.vsyou.app/';
-    Map prayerTimesDataToDay = {};
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        prayerTimesDataToDay[_dtNow] = await json.decode(response.body);
-        await writePrayerTimesToJsonFile(prayerTimesDataToDay);
-        return prayerTimesDataToDay[_dtNow];
+        await writePrayerTimesToJsonFile(
+            json.decode(response.body));
+        return json.decode(response.body);
       } else {
         print('[Error] connection faild');
         return null;
@@ -96,10 +95,10 @@ class PrayerTimesDataFromServer {
   Future<List> getPrayerTimes() async {
     return await prayerTimesFromJsonFile.then((data) async {
       List getData;
-      if (data == null || (data != null && _dtNow != data.keys.elementAt(0))) {
+      if (data == null) {
         getPrayerTimesFromApiServer.then((d) => getData = d);
       } else {
-        getData = data[_dtNow];
+        getData = data as List;
       }
 
       getData = getData != null ? setActivePrayerTime(getData) : null;

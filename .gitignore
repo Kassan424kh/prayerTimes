@@ -3,3 +3,4 @@
 /.idea
 /.idea/*
 /flutter_prayer_times/pubspec.lock
+.DS_Store

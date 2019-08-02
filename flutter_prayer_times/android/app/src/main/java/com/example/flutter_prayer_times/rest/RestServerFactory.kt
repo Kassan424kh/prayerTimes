@@ -67,6 +67,9 @@ class RestServerFactory internal constructor(ctxt: Context) {
                             Toast.makeText(ctxt, "Prayer Times are updated", Toast.LENGTH_SHORT).show()
                             println("JSON Object: $listOfPrayers")
                         }
+
+
+
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }

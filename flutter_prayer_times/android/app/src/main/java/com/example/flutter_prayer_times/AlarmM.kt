@@ -7,7 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 
-import com.example.flutter_prayer_times.AlathanPlayer.AlathanPlayer
+import com.example.flutter_prayer_times.Receiver.AlarmReceiver
+import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
 import java.util.*
 
 object AlarmM : Activity() {
@@ -36,7 +37,7 @@ object AlarmM : Activity() {
 
         alarmMgr = ctxt.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(ctxt, AlathanPlayerReceiver::class.java)
-        alarmIntent = PendingIntent.getActivity(ctxt, id, intent, 0)
+        alarmIntent = PendingIntent.getBroadcast(ctxt, id, intent, 0)
 
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
@@ -46,6 +47,6 @@ object AlarmM : Activity() {
 
         alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
 
-        Toast.makeText(ctxt, "Prayer Alathan Set", Toast.LENGTH_SHORT).show()
+        Toast.makeText(ctxt, "PrayerTimes updater set", Toast.LENGTH_SHORT).show()
     }
 }

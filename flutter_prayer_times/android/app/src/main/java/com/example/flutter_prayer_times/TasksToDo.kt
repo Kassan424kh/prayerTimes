@@ -12,17 +12,19 @@ class TasksToDo {
     }
 
     internal fun listOfContentFilesAndOrdersInAssetOrder(path: String): Boolean {
-        val list: Array<String>
+        val list: Array<String>?
         try {
             list = this.ctx.getAssets().list(path)
-            if (list.size > 0) {
+            if (list.isNotEmpty()) {
                 // This is a folder
                 for (file in list) {
-                    if (!listOfContentFilesAndOrdersInAssetOrder("$path/$file")) {
+                    if (listOfContentFilesAndOrdersInAssetOrder("$path/$file")) {
+                        if (file == "raw/alathan.mp3"){
+                            println(file)
+                        }
+                    } else {
                         println("File is not founded")
                         return false
-                    } else {
-                        println(file)
                     }
                 }
             }

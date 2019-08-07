@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_prayer_times/search_panner.dart';
 import 'package:screen/screen.dart';
 
 import './prayer_times_container.dart';
@@ -18,8 +19,8 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   // variables
   Color _primaryColor = Color(0xff2196f3); //Colors.deepPurpleAccent;
   Color _primaryColorAccent = Color(0xffe3f2fd); //Colors.deepPurpleAccent;
-  AssetImage _backgroundImage =
-      AssetImage('assets/background_images/jan-antonin-kolar-1530013-unsplash.jpg');
+  AssetImage _backgroundImage = AssetImage(
+      'assets/background_images/jan-antonin-kolar-1530013-unsplash.jpg');
   DateTime _now = DateTime.now();
 
   Future<void> setData() async {
@@ -64,27 +65,31 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
               image: _backgroundImage,
               fit: BoxFit.cover,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: BorderRadius.all(Radius.circular(40)),
           ),
 
           //color: _primaryColorAccent,
           child: Column(children: <Widget>[
             Expanded(
-              flex: 2,
-              child: Center(
-                child: Text(
-                  _now.toString().substring(11, 16),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 60,
-                      shadows: <Shadow>[
-                        Shadow(
-                            color: Colors.black,
-                            offset: Offset(0, 5),
-                            blurRadius: 50)
-                      ]),
+              flex: 3,
+              child: Column(children: <Widget>[
+                SearchPanner(),
+                SizedBox(height: 25),
+                Center(
+                  child: Text(
+                    _now.toString().substring(11, 16),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 60,
+                        shadows: <Shadow>[
+                          Shadow(
+                              color: Colors.black,
+                              offset: Offset(0, 5),
+                              blurRadius: 50)
+                        ]),
+                  ),
                 ),
-              ),
+              ])
             ),
             PrayerTimesContainer(
                 _primaryColor, _primaryColorAccent, _backgroundImage)

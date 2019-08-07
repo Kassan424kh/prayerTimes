@@ -8,11 +8,7 @@ class PrayerTimesCard extends StatelessWidget {
       bottomLeft: Radius.circular(30),
       topRight: Radius.circular(30),
       bottomRight: Radius.circular(5));
-  BorderRadius brElements = BorderRadius.only(
-      topLeft: Radius.circular(25),
-      bottomLeft: Radius.circular(25),
-      topRight: Radius.circular(25),
-      bottomRight: Radius.circular(5));
+  BorderRadius brElements = BorderRadius.all(Radius.circular(30));
 
   PrayerTimesCard(this.primaryColor, this.primaryColorAccent, this.primaryName,
       this.start, this.end, this.active);

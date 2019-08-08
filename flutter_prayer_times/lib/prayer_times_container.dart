@@ -19,7 +19,7 @@ class PrayerTimesContainer extends StatefulWidget {
 class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   final double _prayerTimeCardHeight = 150;
   List _prayerTimes;
-  var _now, _primaryColor, _primaryColorAccent, _backgroundImage;
+  var _now, _primaryColor, _primaryColorAccent;
   AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
   PrayerTimesDataFromServer _prayerTimesDataFromServer =
       PrayerTimesDataFromServer();
@@ -95,16 +95,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
               clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadius.all(Radius.circular(40)),
               child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: _backgroundImage,
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black26,
-                      BlendMode.darken,
-                    ),
-                  ),
-                ),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
                   child: ListView(
@@ -150,7 +140,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
     setState(() {
       _primaryColor = widget.primaryColor;
       _primaryColorAccent = widget.primaryColorAccent;
-      _backgroundImage = widget.backgroundImage;
     });
     setData();
     Timer.periodic(Duration(seconds: 1), (Timer t) {

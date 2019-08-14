@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_prayer_times/provider/founded_places.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
+
+import 'package:provider/provider.dart';
 
 class PlaceSearchBannerField extends StatelessWidget {
   final Color primaryColor, primaryColorAccent;
@@ -12,15 +18,20 @@ class PlaceSearchBannerField extends StatelessWidget {
   Future closeKeyboard(ctx) async {
     FocusScope.of(ctx).requestFocus(new FocusNode());
     return Future.delayed(
-      const Duration(milliseconds: 100),
+      const Duration(milliseconds: 200),
       () {
         Navigator.pop(ctx);
       },
     );
   }
 
+  final String _api_key =
+      "pk.eyJ1Ijoia2Fzc2FuNDI0a2giLCJhIjoiY2pxMmI4NHJxMTA4NzN4cDMxYW1md2x4MiJ9" +
+          ".-IuNyxk89rjHrd8_qxBirw&limit";
+
   @override
   Widget build(BuildContext context) {
+    final foundedPlaces = Provider.of<FoundedPlaces>(context);
     return Column(children: <Widget>[
       Container(
         margin: EdgeInsets.all(10),
@@ -60,8 +71,9 @@ class PlaceSearchBannerField extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
+                    child: TypeAheadField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
                           hintText: 'Search after Place ... ',
@@ -89,17 +101,23 @@ class PlaceSearchBannerField extends StatelessWidget {
                           ),
                           focusColor: Colors.white,
                           hoverColor: Colors.white,
-                          contentPadding: EdgeInsets.all(18)),
-                      style: TextStyle(fontSize: 20, color: primaryColor),
-                      cursorColor: primaryColor,
-                      onChanged: (text) {},
+                          contentPadding: EdgeInsets.all(18),
+                        ),
+                      ),
+                      suggestionsCallback: (items) async {
+                        viewLatLogFromSearchedPlaceApi(items, foundedPlaces);
+                        return [];
+                      },
+                      hideOnEmpty: true,
+                      itemBuilder: (ctx, s) {},
+                      onSuggestionSelected: (s) {},
                     ),
                   ),
                   SizedBox(width: 5),
                   Container(
                     width: 61,
                     child: RaisedButton(
-                        child: Icon(Icons.check, color: primaryColor, size: 30),
+                        child: Icon(Icons.gps_fixed, color: primaryColor, size: 30),
                         color: primaryColorAccent,
                         splashColor: Colors.blue[100],
                         highlightColor: Colors.white10,
@@ -118,5 +136,36 @@ class PlaceSearchBannerField extends StatelessWidget {
         ),
       ),
     ]);
+  }
+
+  Future<List> viewLatLogFromSearchedPlaceApi(s, fp) async {
+    var url =
+        "https://api.mapbox.com/geocoding/v5/mapbox.places/$s.json?access_token=$_api_key=1";
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        List placesList = jsonResponse['features'];
+        fp.setFoundedPlaces(placesList);
+        placesList.forEach((index) {
+          print(index['place_name']);
+          int i = 0;
+          index['center'].forEach((e) {
+            String latOrLng = i == 0 ? "Lng: " : "Lat: ";
+            print(latOrLng + e.toString());
+            i++;
+          });
+        });
+        return placesList;
+      } else {
+        print("Request failed with status: ${response.statusCode}.");
+        fp.clearFoundedPlaces();
+        return [];
+      }
+    } catch (e) {
+      print("cann't connect to server");
+      fp.clearFoundedPlaces();
+      return [];
+    }
   }
 }

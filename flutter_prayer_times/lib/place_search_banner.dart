@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/place_search_page.dart';
+import 'package:flutter_prayer_times/provider/founded_places.dart';
+import 'package:provider/provider.dart';
 
 class PlaceSearchBanner extends StatelessWidget {
   final Color primaryColor, primaryColorAccent;
@@ -55,9 +57,12 @@ class PlaceSearchBanner extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PlaceSearchPage(
-                            primaryColor: primaryColor,
-                            primaryColorAccent: primaryColorAccent,
+                          builder: (context) => ChangeNotifierProvider<FoundedPlaces>(
+                            builder: (_) => FoundedPlaces([]),
+                            child: PlaceSearchPage(
+                              primaryColor: primaryColor,
+                              primaryColorAccent: primaryColorAccent,
+                            ),
                           ),
                         ),
                       );

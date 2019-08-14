@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 
 import 'prayer_times_card.dart';
 import 'prayer_times_data_from_server.dart';
@@ -20,19 +19,11 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   final double _prayerTimeCardHeight = 150;
   List _prayerTimes;
   var _now, _primaryColor, _primaryColorAccent;
-  AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
   PrayerTimesDataFromServer _prayerTimesDataFromServer =
       PrayerTimesDataFromServer();
   ScrollController _scrollController;
   int indexOfActivePrayer = 0;
   GlobalKey key;
-
-  Future playSound() async {
-    await _assetsAudioPlayer.open(AssetsAudio(
-      asset: "33432.mp3",
-      folder: "assets/audios/",
-    ));
-  }
 
   List<Widget> prayerTimesList() {
     return _prayerTimes
@@ -52,17 +43,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
             }
           });
           DateTime startDateTime = DateTime.parse(start);
-
-          if (_now.isAtSameMomentAs(DateTime(
-                  startDateTime.year,
-                  startDateTime.month,
-                  startDateTime.day,
-                  startDateTime.hour,
-                  startDateTime.minute.toInt() - 1)) &&
-              (startDateTime.second >= 0 || startDateTime.second < 2) &&
-              key != 'الشروق') {
-            playSound().then((s) => null);
-          }
 
           if (active) {
             setState(() {
@@ -102,6 +82,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
                       scrollDirection: Axis.vertical,
                       children: <Widget>[
                         ...prayerTimesList(),
+                        SizedBox(height: 50)
                       ]),
                 ),
               ),

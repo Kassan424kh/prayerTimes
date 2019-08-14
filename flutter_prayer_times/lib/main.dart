@@ -35,12 +35,16 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // keyboard done
     Screen.keepOn(true);
     setData();
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
     });
   }
+
+  @override
+
 
   @override
   didChangeDependencies() {

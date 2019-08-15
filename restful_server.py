@@ -1,82 +1,90 @@
-import lxml.html as lh
-import requests as r
-import pandas as pd
-import subprocess
 import json
-import os.path as op
-import os
-
-from pathlib import Path as path
 from flask import Flask, render_template, Response, request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from datetime import datetime as dt, timedelta as td, date as d
 from flask_cors import CORS
+from urllib.request import urlopen, Request
 
 app = Flask('__main__')
 api = Api(app)
 CORS(app)
 
-prayer_times_folder_location = './prayer_times_data/'
+default_dayes_of_arabic = {
+    "Fajr": "الفجر",
+    "Sunrise": "الشروق",
+    "Dhuhr": "الضهر",
+    "Asr": "العصر",
+    "Maghrib": "المفرب",
+    "Isha": "العشاء"
+}
+end_times_of_prayers = {
+    "Fajr": "Sunrise",
+    "Sunrise": "Dhuhr",
+    "Dhuhr": "Asr",
+    "Asr": "Maghrib",
+    "Maghrib": "Isha",
+    "Isha": "Midnight"
+}
 
-def getData():
-    prayer_times = []
-    prayer_times_file_name = prayer_times_folder_location + \
-        str(dt.now())[0:10] + '.json'
-    prayer_times_from_json_file = path(prayer_times_file_name)
-    if prayer_times_from_json_file.is_file():
-        print('[Important] Prayer times is from file imported')
-        with open(prayer_times_file_name, 'r') as ptf:
-            prayer_times = json.load(ptf)
-            ptf.close()
-    else:
-        print('[Important] Prayer times is from url/server imported')
-        url = 'https://www.gebetszeiten.de/Harburg/gebetszeiten-Buchholz-in-der-Nordheide/161069-dit17de'
-        page = r.get(url)
-        doc = lh.fromstring(page.content)
-        prayerTime = doc.xpath(
-            '//div[contains(concat(" ", @class, " "), " prayerTime ")]')
-        gebets_zeiten_namen = ['الفجر', 'الشروق',
-                               'الضهر', 'العصر', 'المفرب', 'العشاء', ]
+# dart dateTime format => 2019-08-15 03:19:00Z"
+def timesConverterToDartDateTimeFormat(lat, lng):
 
-        gebets_zeiten = []
-        for index, prayer_times_from_array in enumerate(prayerTime):
-            if index == 0:  # first prayer
-                g_zeit_start = str(dt.now())[
-                    0:11] + prayer_times_from_array.text_content().strip()[0:5] + ':00Z'
-                g_zeit_end = str(dt.now())[
-                    0:11] + prayerTime[index + 1].text_content().strip()[0:5] + ':00Z'
-            elif index == len(prayerTime) - 1:  # last prayer
-                g_zeit_start = str(dt.now())[
-                    0:11] + prayer_times_from_array.text_content().strip()[68:73] + ':00Z'
-                g_zeit_end = str(dt.now() + td(days=1))[0:11] + " ".join(
-                    prayer_times_from_array.text_content().split())[39:44] + ':00Z'
-            else:  # other prayer
-                g_zeit_start = str(dt.now())[
-                    0:11] + prayer_times_from_array.text_content().strip() + ':00Z'
-                if index == len(prayerTime) - 2:
-                    g_zeit_end = str(dt.now())[
-                        0:11] + prayerTime[index + 1].text_content().strip()[68:73] + ':00Z'
-                else:
-                    g_zeit_end = str(dt.now())[
-                        0:11] + prayerTime[index + 1].text_content().strip() + ':00Z'
-            gebets_zeiten.append(
-                {gebets_zeiten_namen[index]: [g_zeit_start, g_zeit_end]})
+    json_data = {}
 
-        prayer_times = gebets_zeiten
-        with open(prayer_times_file_name, 'w') as ptf:
-            json.dump(gebets_zeiten, ptf, )
+    # get the dataset
+    url = f"http://api.aladhan.com/v1/calendar?latitude={lat}&longitude={lng}"
+    response = urlopen(Request(url, headers={'User-Agent': 'Mozilla/5.0'}))
 
-    old_prayer_times_json_file_name = prayer_times_folder_location + \
-        str(dt.now() - td(days=1))[0:10] + '.json'
-    if os.path.exists(old_prayer_times_json_file_name):
-        os.remove(old_prayer_times_json_file_name)
+    # convert bytes to string type and string type to dict
+    string = response.read().decode('utf-8')
+    json_obj = json.loads(string)
 
-    return prayer_times
+    # get all data objects from the json request
+    for data in json_obj.get("data"):
+
+        # convert date to german format and set it in date_of_this_object var to get it easy
+        date_of_this_object = dt.strptime(data.get("date").get(
+            "gregorian").get("date"), '%d-%m-%Y').strftime('%Y-%m-%d')
+
+        prayer_times_of_this_date = {}
+
+        # get all prayerKeys and prayerValues from timings from the api request
+        for prayer_key, prayer_value in data.get("timings").items():
+
+            # check if key in arabic keys
+            if prayer_key in default_dayes_of_arabic:
+
+                # start date of prayer
+                start_date = (date_of_this_object + " " +
+                              prayer_value.replace(" (CEST)", "") + ":00Z")
+
+                # end date of prayer
+                end_date = (date_of_this_object + " " + data.get("timings").get(
+                    end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "") + ":00Z")
+                if prayer_key == "Isha":
+                    end_date = ((dt.strptime(date_of_this_object, '%Y-%m-%d') + td(days=1)).strftime('%Y-%m-%d') + " " +
+                                data.get("timings").get(end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "") + ":00Z")
+
+                prayer_times_of_this_date[default_dayes_of_arabic[prayer_key]] = [
+                    start_date,
+                    end_date
+                ]
+
+        # set prayertimes to json_data var to returned it back as api
+        json_data[date_of_this_object] = prayer_times_of_this_date
+
+    return json_data
+
 
 class GebetsZeiten(Resource):
-    def get(self):
-        return getData()
 
+    parser = reqparse.RequestParser()
+    parser.add_argument('lat', required=True)
+    parser.add_argument('lng', required=True)
+
+    def get(self):
+        args = self.parser.parse_args()
+        return timesConverterToDartDateTimeFormat(args.get('lat', False), args.get('lng', False))
 
 api.add_resource(GebetsZeiten, "/")
 

@@ -1,0 +1,34 @@
+{
+    "arabic": {
+        "Fajr": "الفجر",
+        "Sunrise": "الشروق",
+        "Dhuhr": "الظهر",
+        "Asr": "العصر",
+        "Maghrib": "المغرب",
+        "Isha": "العشاء"
+    },
+    "english": {
+        "Fajr": "Fajr",
+        "Sunrise": "Sunrise",
+        "Dhuhr": "Dhuhr",
+        "Asr": "Asr",
+        "Maghrib": "Maghrib",
+        "Isha": "Isha"
+    },
+    "turkish": {
+        "Fajr": "Namazı",
+        "Sunrise": "Güneş",
+        "Dhuhr": "Öğle",
+        "Asr": "İkindi",
+        "Maghrib": "Akşam",
+        "Isha": "Yatsı"
+    },
+    "persian": {
+        "Fajr": "فجر",
+        "Sunrise": "طلوع آفتاب",
+        "Dhuhr": "ظهر",
+        "Asr": "عصر",
+        "Maghrib": "مغرب",
+        "Isha": "عشا"
+    }
+}

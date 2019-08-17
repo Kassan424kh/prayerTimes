@@ -9,14 +9,9 @@ app = Flask('__main__')
 api = Api(app)
 CORS(app)
 
-default_dayes_of_arabic = {
-    "Fajr": "الفجر",
-    "Sunrise": "الشروق",
-    "Dhuhr": "الضهر",
-    "Asr": "العصر",
-    "Maghrib": "المفرب",
-    "Isha": "العشاء"
-}
+with open('./translate.json', "r", encoding="utf8") as data:
+    TRANSLATED_PRAYER_NAMES = json.load(data)
+
 end_times_of_prayers = {
     "Fajr": "Sunrise",
     "Sunrise": "Dhuhr",
@@ -27,7 +22,7 @@ end_times_of_prayers = {
 }
 
 # dart dateTime format => 2019-08-15 03:19:00Z"
-def timesConverterToDartDateTimeFormat(lat, lng):
+def timesConverterToDartDateTimeFormat(lat, lng, language):
 
     json_data = {}
 
@@ -51,8 +46,12 @@ def timesConverterToDartDateTimeFormat(lat, lng):
         # get all prayerKeys and prayerValues from timings from the api request
         for prayer_key, prayer_value in data.get("timings").items():
 
+            if language is None:
+                language = "english"
+            selectedTranslatingLanguage = TRANSLATED_PRAYER_NAMES[language]
+
             # check if key in arabic keys
-            if prayer_key in default_dayes_of_arabic:
+            if prayer_key in selectedTranslatingLanguage:
 
                 # start date of prayer
                 start_date = (date_of_this_object + " " +
@@ -65,7 +64,7 @@ def timesConverterToDartDateTimeFormat(lat, lng):
                     end_date = ((dt.strptime(date_of_this_object, '%Y-%m-%d') + td(days=1)).strftime('%Y-%m-%d') + " " +
                                 data.get("timings").get(end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "") + ":00Z")
 
-                prayer_times_of_this_date[default_dayes_of_arabic[prayer_key]] = [
+                prayer_times_of_this_date[selectedTranslatingLanguage[prayer_key]] = [
                     start_date,
                     end_date
                 ]
@@ -81,10 +80,11 @@ class GebetsZeiten(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('lat', required=True)
     parser.add_argument('lng', required=True)
+    parser.add_argument('language', required=False)
 
     def get(self):
         args = self.parser.parse_args()
-        return timesConverterToDartDateTimeFormat(args.get('lat', False), args.get('lng', False))
+        return timesConverterToDartDateTimeFormat(args.get('lat', False), args.get('lng', False), args.get('language', None))
 
 api.add_resource(GebetsZeiten, "/")
 

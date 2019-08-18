@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prayer_times/place_search_banner_field.dart';
+import 'package:flutter_prayer_times/components/place_search_component/place_search_banner_field.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 
 import 'package:provider/provider.dart';
+
+import '../../app_settings.dart';
 
 class PlaceSearchPage extends StatefulWidget {
   final Color primaryColor, primaryColorAccent;
@@ -16,6 +18,17 @@ class PlaceSearchPage extends StatefulWidget {
 
 class _PlaceSearchPageState extends State<PlaceSearchPage> {
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
+  AppSettings appSettings = new AppSettings();
+
+  Future closeKeyboard(ctx) async {
+    FocusScope.of(ctx).requestFocus(new FocusNode());
+    return Future.delayed(
+      const Duration(milliseconds: 200),
+          () {
+        Navigator.pop(ctx);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +46,18 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
               ? Column(
                   children: foundedPlaces.getFoundedPlaces().map<Widget>((e) {
                   return ListTile(
-                    onTap: () => print(e['place_name']),
+                    onTap: () {
+                      appSettings.jsonFromAppSettingsFile.then((oldSettings){
+                        oldSettings["place"]["lng"] = e['center'][0].toString();
+                        oldSettings["place"]["lat"] = e['center'][1].toString();
+                        oldSettings["place"]["place"] = e['place_name'];
+                        appSettings.updateSettingsInAppSettingsJsonFile(oldSettings).then((isUpdated) {
+                          if(isUpdated)
+                            closeKeyboard(context);
+                        });
+                      });
+
+                    },
                     leading: Icon(Icons.place),
                     title: Text(e['place_name']),
                     subtitle: Text(

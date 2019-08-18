@@ -3,8 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'prayer_times_card.dart';
-import 'prayer_times_data_from_server.dart';
+import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_card.dart';
+import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 
 class PrayerTimesContainer extends StatefulWidget {
   final primaryColor, primaryColorAccent, backgroundImage;

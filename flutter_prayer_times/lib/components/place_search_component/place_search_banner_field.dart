@@ -147,15 +147,6 @@ class PlaceSearchBannerField extends StatelessWidget {
         var jsonResponse = convert.jsonDecode(response.body);
         List placesList = jsonResponse['features'];
         fp.setFoundedPlaces(placesList);
-        placesList.forEach((index) {
-          print(index['place_name']);
-          int i = 0;
-          index['center'].forEach((e) {
-            String latOrLng = i == 0 ? "Lng: " : "Lat: ";
-            print(latOrLng + e.toString());
-            i++;
-          });
-        });
         return placesList;
       } else {
         print("Request failed with status: ${response.statusCode}.");

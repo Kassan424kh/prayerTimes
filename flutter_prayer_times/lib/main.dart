@@ -3,10 +3,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_prayer_times/place_search_banner.dart';
+import 'package:flutter_prayer_times/components/place_search_component/place_search_banner.dart';
 import 'package:screen/screen.dart';
 
-import './prayer_times_container.dart';
+import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_container.dart';
+import 'package:flutter_prayer_times/app_settings.dart';
 
 Future main() async => runApp(MyApp());
 
@@ -22,6 +23,7 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   AssetImage _backgroundImage = AssetImage(
       'assets/background_images/hugues-de-buyer-mimeure-lQPEChtLjUo-unsplash.jpg');
   DateTime _now = DateTime.now();
+  AppSettings appSettings = new AppSettings();
 
   Future<void> setData() async {
     DateTime dtNow = DateTime.now();
@@ -40,6 +42,10 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
     setData();
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
+    });
+
+    appSettings.writeDefaultAppSettingsToAppSettingsJsonFile.then((none) {
+      appSettings.jsonFromAppSettingsFile;
     });
   }
 

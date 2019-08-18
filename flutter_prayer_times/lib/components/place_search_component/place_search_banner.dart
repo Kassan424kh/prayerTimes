@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prayer_times/place_search_page.dart';
+import 'package:flutter_prayer_times/components/place_search_component/place_search_page.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 import 'package:provider/provider.dart';
 

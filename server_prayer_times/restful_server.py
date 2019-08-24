@@ -22,7 +22,7 @@ end_times_of_prayers = {
 }
 
 # dart dateTime format => 2019-08-15 03:19:00Z"
-def timesConverterToDartDateTimeFormat(lat, lng, language):
+def timesConverterToDartDateTimeFormat(lat, lng, language, only_today):
 
     json_data = {}
 
@@ -33,6 +33,10 @@ def timesConverterToDartDateTimeFormat(lat, lng, language):
     # convert bytes to string type and string type to dict
     string = response.read().decode('utf-8')
     json_obj = json.loads(string)
+
+    today = d.today()
+    # YY-mm-dd
+    today_date = today.strftime("%Y-%m-%d")
 
     # get all data objects from the json request
     for data in json_obj.get("data"):
@@ -72,6 +76,10 @@ def timesConverterToDartDateTimeFormat(lat, lng, language):
         # set prayertimes to json_data var to returned it back as api
         json_data[date_of_this_object] = prayer_times_of_this_date
 
+    if only_today is not None:
+        json_data = json_data.get(today_date)
+        pass
+
     return json_data
 
 
@@ -81,10 +89,11 @@ class GebetsZeiten(Resource):
     parser.add_argument('lat', required=True)
     parser.add_argument('lng', required=True)
     parser.add_argument('language', required=False)
+    parser.add_argument('today', required=False)
 
     def get(self):
         args = self.parser.parse_args()
-        return timesConverterToDartDateTimeFormat(args.get('lat', False), args.get('lng', False), args.get('language', None))
+        return timesConverterToDartDateTimeFormat(args.get('lat', False), args.get('lng', False), args.get('language', None), args.get('today', None))
 
 api.add_resource(GebetsZeiten, "/")
 

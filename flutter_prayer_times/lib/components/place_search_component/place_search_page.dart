@@ -47,10 +47,10 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                   children: foundedPlaces.getFoundedPlaces().map<Widget>((e) {
                   return ListTile(
                     onTap: () {
-                      appSettings.jsonFromAppSettingsFile.then((List oldSettings){
-                        oldSettings[0]["place"]["lng"] = e['center'][0].toString();
-                        oldSettings[0]["place"]["lat"] = e['center'][1].toString();
-                        oldSettings[0]["place"]["place"] = e['place_name'];
+                      appSettings.jsonFromAppSettingsFile.then((Map<String, dynamic> oldSettings){
+                        oldSettings["place"]["lng"] = e['center'][0].toString();
+                        oldSettings["place"]["lat"] = e['center'][1].toString();
+                        oldSettings["place"]["place"] = e['place_name'];
                         appSettings.updateSettingsInAppSettingsJsonFile(oldSettings).then((isUpdated) {
                           if(isUpdated)
                             closeKeyboard(context);

@@ -2,6 +2,7 @@ package com.example.flutter_prayer_times.rest
 
 import android.content.Context
 import android.widget.Toast
+import com.example.flutter_prayer_times.AppSettings.AppSettings
 
 import org.json.simple.JSONArray
 
@@ -24,10 +25,13 @@ class RestServerFactory internal constructor(ctxt: Context) {
 
     companion object {
 
-        private val BASE_URL = "https://prayer-times.vsyou.app"
-
+        private val appSettings = AppSettings()
 
         fun createRestService(): RestServicePrayerTimes {
+
+            val BASE_URL = "https://prayer-times.vsyou.app"
+
+
             val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(JacksonConverterFactory.create())

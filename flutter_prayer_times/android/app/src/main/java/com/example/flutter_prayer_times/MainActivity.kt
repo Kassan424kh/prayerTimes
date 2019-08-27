@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.example.flutter_prayer_times.AlathanPlayer.AlathanPlayer
+import com.example.flutter_prayer_times.AppSettings.AppSettings
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import com.example.flutter_prayer_times.rest.RestServerFactory
 
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
+import java.io.IOException
 import java.util.*
 
 class MainActivity : FlutterActivity() {
@@ -18,8 +21,7 @@ class MainActivity : FlutterActivity() {
         val tToDo = TasksToDo(this)
 
         // Set scheduler with AlarmManager
-        AlarmM.updatePrayerTimesAt1HourDaily(this,  0, 1, 0)
-
+        AlarmM.updatePrayerTimesAt1HourDaily(this, 0, 1, 0)
 
         /*// Alathan Player setter
         val date = Date()

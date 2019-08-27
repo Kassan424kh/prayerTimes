@@ -1,16 +1,16 @@
-[{
+{
   "place" : {
     "place": "Hamburg Germany",
     "lat" : 53.551142,
     "lng" : 9.992291
   },
-  "accept_playing_ears": [
+  "acceptPlayingAthans": [
     true, true, true, true, true
   ],
-  "language":{
+  "languages":{
     "arabic":  true,
     "english":  false,
     "persian":  false,
     "turkish":  false
   }
-}]
+}

@@ -24,9 +24,9 @@ class AppSettings {
     return File('$path/appSettings.json').exists();
   }
 
-  Future<List> get jsonFromDefaultAppSettingsFile async {
+  Future<Map<String, dynamic>> get jsonFromDefaultAppSettingsFile async {
     try {
-      List defaultAppSettings =
+      Map<String, dynamic> defaultAppSettings =
           await json.decode(await _defaultAppSettingsJsonAsString);
       return defaultAppSettings;
     } catch (e) {
@@ -54,10 +54,10 @@ class AppSettings {
     });
   }
 
-  Future<List> get jsonFromAppSettingsFile async {
+  Future<Map<String, dynamic>> get jsonFromAppSettingsFile async {
     try {
       final file = await _appSettingsFile;
-      List appSettings =
+      Map<String, dynamic> appSettings =
       await json.decode(await file.readAsString());
       return appSettings;
     } catch (e) {
@@ -71,7 +71,7 @@ class AppSettings {
   /// from "jsonFromAppSettingsFile" function then set your changes on the Map request
   /// after that use "updateSettingsInAppSettingsJsonFile" function with the new
   /// Map data in the function data attribute.
-  Future<bool> updateSettingsInAppSettingsJsonFile(List data) async {
+  Future<bool> updateSettingsInAppSettingsJsonFile(Map<String, dynamic> data) async {
     return await _isAppSettingsFileExists.then((isExists) async {
       if (isExists) {
         try {

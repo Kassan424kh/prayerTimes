@@ -16,7 +16,6 @@ class PrayerTimesContainer extends StatefulWidget {
 }
 
 class _PrayerTimesContainer extends State<PrayerTimesContainer> {
-  final double _prayerTimeCardHeight = 150;
   List _prayerTimes;
   var _now, _primaryColor, _primaryColorAccent;
   PrayerTimesDataFromServer _prayerTimesDataFromServer =
@@ -42,7 +41,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
               active = v;
             }
           });
-          DateTime startDateTime = DateTime.parse(start);
 
           if (active) {
             setState(() {

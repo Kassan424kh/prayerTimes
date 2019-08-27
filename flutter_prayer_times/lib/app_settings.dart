@@ -16,12 +16,12 @@ class AppSettings {
 
   Future get _appSettingsFile async {
     final path = await _localPath;
-    return File('$path/defaultAppSettings.json');
+    return File('$path/appSettings.json');
   }
 
   Future<bool> get _isAppSettingsFileExists async {
     final path = await _localPath;
-    return File('$path/defaultAppSettings.json').exists();
+    return File('$path/appSettings.json').exists();
   }
 
   Future<Map> get jsonFromDefaultAppSettingsFile async {
@@ -74,6 +74,7 @@ class AppSettings {
   Future<bool> updateSettingsInAppSettingsJsonFile(Map<String, dynamic> data) async {
     return await _isAppSettingsFileExists.then((isExists) async {
       if (isExists) {
+        print("AppSettings.json file is exist now!");
         try {
           final file = await _appSettingsFile;
           await file.writeAsString(json.encode(data));
@@ -81,7 +82,7 @@ class AppSettings {
           print(data);
           return true;
         } catch (e) {
-          print('cann\'t saved data to appSettings File');
+          print('cann\'t saved data to appSettings.json File');
           print(e);
           return false;
         }

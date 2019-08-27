@@ -6,8 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 class PrayerTimesDataFromServer {
-  String _dtNow =
-      "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
 
   Future get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -98,7 +96,7 @@ class PrayerTimesDataFromServer {
       if (data == null) {
         getPrayerTimesFromApiServer.then((d) => getData = d);
       } else {
-        getData = data as List;
+        getData = data;
       }
 
       getData = getData != null ? setActivePrayerTime(getData) : null;

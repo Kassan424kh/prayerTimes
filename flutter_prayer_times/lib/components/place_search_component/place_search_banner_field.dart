@@ -25,7 +25,7 @@ class PlaceSearchBannerField extends StatelessWidget {
     );
   }
 
-  final String _api_key =
+  final String _apiKey =
       "pk.eyJ1Ijoia2Fzc2FuNDI0a2giLCJhIjoiY2pxMmI4NHJxMTA4NzN4cDMxYW1md2x4MiJ9" +
           ".-IuNyxk89rjHrd8_qxBirw&limit";
 
@@ -140,7 +140,7 @@ class PlaceSearchBannerField extends StatelessWidget {
 
   Future<List> viewLatLogFromSearchedPlaceApi(s, fp) async {
     var url =
-        "https://api.mapbox.com/geocoding/v5/mapbox.places/$s.json?access_token=$_api_key=1";
+        "https://api.mapbox.com/geocoding/v5/mapbox.places/$s.json?access_token=$_apiKey=1";
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {

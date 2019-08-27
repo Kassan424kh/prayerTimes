@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class PrayerTimesCard extends StatelessWidget {
   final primaryColor, primaryColorAccent, primaryName, start, end, active;
 

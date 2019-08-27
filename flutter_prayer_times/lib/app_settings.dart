@@ -24,13 +24,13 @@ class AppSettings {
     return File('$path/appSettings.json').exists();
   }
 
-  Future<Map> get jsonFromDefaultAppSettingsFile async {
+  Future<List> get jsonFromDefaultAppSettingsFile async {
     try {
-      Map<String, dynamic> defaultAppSettings =
+      List defaultAppSettings =
           await json.decode(await _defaultAppSettingsJsonAsString);
       return defaultAppSettings;
     } catch (e) {
-      print(e);
+      print("14"); print(e);
       print('cann\'t read data from defaultAppSettings json File');
       return null;
     }
@@ -48,21 +48,21 @@ class AppSettings {
           });
         } catch (e) {
           print('cann\'t saved data to appSettings File');
-          print(e);
+          print("15"); print(e);
         }
       }
     });
   }
 
-  Future<Map> get jsonFromAppSettingsFile async {
+  Future<List> get jsonFromAppSettingsFile async {
     try {
       final file = await _appSettingsFile;
-      Map<String, dynamic> appSettings =
+      List appSettings =
       await json.decode(await file.readAsString());
       return appSettings;
     } catch (e) {
-      print(e);
       print('cann\'t read data from AppSettings json File');
+      print("16"); print(e);
       return null;
     }
   }
@@ -71,10 +71,9 @@ class AppSettings {
   /// from "jsonFromAppSettingsFile" function then set your changes on the Map request
   /// after that use "updateSettingsInAppSettingsJsonFile" function with the new
   /// Map data in the function data attribute.
-  Future<bool> updateSettingsInAppSettingsJsonFile(Map<String, dynamic> data) async {
+  Future<bool> updateSettingsInAppSettingsJsonFile(List data) async {
     return await _isAppSettingsFileExists.then((isExists) async {
       if (isExists) {
-        print("AppSettings.json file is exist now!");
         try {
           final file = await _appSettingsFile;
           await file.writeAsString(json.encode(data));
@@ -83,7 +82,7 @@ class AppSettings {
           return true;
         } catch (e) {
           print('cann\'t saved data to appSettings.json File');
-          print(e);
+          print("17"); print(e);
           return false;
         }
       }else{

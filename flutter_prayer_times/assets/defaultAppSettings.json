@@ -1,4 +1,4 @@
-{
+[{
   "place" : {
     "place": "Hamburg Germany",
     "lat" : 53.551142,
@@ -13,4 +13,4 @@
     "persian":  false,
     "turkish":  false
   }
-}
+}]

@@ -23,15 +23,17 @@ class MainActivity : FlutterActivity() {
         // Set scheduler with AlarmManager
         AlarmM.updatePrayerTimesAt1HourDaily(this, 0, 1, 0)
 
-        /*// Alathan Player setter
-        val date = Date()
+        // Alathan Player setter
+        /*val date = Date()
         val calendar:Calendar = GregorianCalendar.getInstance()
         calendar.setTime(date)
-        calendar.get(Calendar.MINUTE)
-        val newMinutesPlusOne: Int = calendar.get(Calendar.MINUTE) + 1
-        print("\n Now minute + 1: " + newMinutesPlusOne + "\n")
-        AlarmM.setPrayerTimesToPlayAlathan(this, 0, 10, newMinutesPlusOne)*/
-
+        calendar.add(Calendar.MINUTE, 1)
+        val newMinutesPlusOne: Int = calendar.get(Calendar.MINUTE)
+        println("Now minute + 1: " + newMinutesPlusOne)
+        println("Now hour: " + calendar.get(Calendar.HOUR))
+        AlarmM.setPrayerTimesToPlayAlathan(this, 0, calendar.get(Calendar.HOUR), newMinutesPlusOne)
+        */
+        
         // Task To Do
         tToDo.listOfContentFilesAndOrdersInAssetOrder("flutter_assets")
 

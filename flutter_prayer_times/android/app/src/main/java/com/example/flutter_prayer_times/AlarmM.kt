@@ -12,6 +12,10 @@ import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
 import java.util.*
 
 object AlarmM : Activity() {
+    fun cancelAlarmManagerIfUpdateIsDone(am: AlarmManager, ai: PendingIntent){
+        am.cancel(ai)
+    }
+
     fun updatePrayerTimesAt1HourDaily(ctxt: Context, id: Int, hour: Int, minute: Int) {
         val alarmMgr: AlarmManager?
         val alarmIntent: PendingIntent?
@@ -27,7 +31,7 @@ object AlarmM : Activity() {
         calendar.set(Calendar.SECOND, 0)
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, alarmIntent)
-        
+
         Toast.makeText(ctxt, "PrayerTimes updater set", Toast.LENGTH_SHORT).show()
     }
 
@@ -47,6 +51,6 @@ object AlarmM : Activity() {
 
         alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
 
-        Toast.makeText(ctxt, "PrayerTimes updater set", Toast.LENGTH_SHORT).show()
+        Toast.makeText(ctxt, "Start playing alathan", Toast.LENGTH_SHORT).show()
     }
 }

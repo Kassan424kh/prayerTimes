@@ -17,6 +17,9 @@ import android.support.v4.app.NotificationCompat
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION.SDK_INT
 import android.support.annotation.RequiresApi
+import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class AlathanPlayer : Service(){
@@ -42,7 +45,6 @@ class AlathanPlayer : Service(){
 
             val notification = builder.build()
             startForeground(1, notification)
-
         } else {
             val builder = NotificationCompat.Builder(this)
                     .setContentTitle(getString(R.string.app_name))
@@ -52,6 +54,12 @@ class AlathanPlayer : Service(){
             val notification = builder.build()
             startForeground(1, notification)
         }
+
+        Executors.newSingleThreadScheduledExecutor().schedule({
+            onDestroy()
+            stopForeground(true)
+            stopSelf()
+        }, 200, TimeUnit.SECONDS)
 
         return START_STICKY
     }

@@ -82,7 +82,7 @@ def timesConverterToDartDateTimeFormat(lat, lng, language, only_today):
         json_data[date_of_this_object] = prayer_times_of_this_date
 
     if only_today is not None:
-        json_data = [json_data.get(today_date)]
+        json_data = json_data.get(today_date)
         pass
 
     return json_data

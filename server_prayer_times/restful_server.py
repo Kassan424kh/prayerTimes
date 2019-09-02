@@ -61,14 +61,14 @@ def timesConverterToDartDateTimeFormat(lat, lng, language, only_today):
 
                 # start date of prayer
                 start_date = (date_of_this_object + " " +
-                              prayer_value.replace(" (CEST)", "") + ":00Z")
+                              prayer_value.replace(" (CEST)", "").replace(" (EEST)", "") + ":00Z")
 
                 # end date of prayer
                 end_date = (date_of_this_object + " " + data.get("timings").get(
-                    end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "") + ":00Z")
+                    end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "").replace(" (EEST)", "") + ":00Z")
                 if prayer_key == "Isha":
                     end_date = ((dt.strptime(date_of_this_object, '%Y-%m-%d') + td(days=1)).strftime('%Y-%m-%d') + " " +
-                                data.get("timings").get(end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "") + ":00Z")
+                                data.get("timings").get(end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "").replace(" (EEST)", "") + ":00Z")
 
                 prayer_times_of_this_date.append({selectedTranslatingLanguage[prayer_key]:
                                                     [

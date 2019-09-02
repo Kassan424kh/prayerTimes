@@ -51,7 +51,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
           return MapEntry(
               index,
               PrayerTimesCard(
-                  _primaryColor, _primaryColorAccent, key, start, end, active));
+                  _primaryColor, _primaryColorAccent, key, start, end, active, index));
         })
         .values
         .toList();
@@ -114,8 +114,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   @override
   initState() {
     super.initState();
-    /*_scrollController =
-        ScrollController(initialScrollOffset: _prayerTimeCardHeight);*/
     setState(() {
       _primaryColor = widget.primaryColor;
       _primaryColorAccent = widget.primaryColorAccent;
@@ -124,18 +122,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    /*Timer(
-      Duration(seconds: 1),
-      () => _scrollController.animateTo(
-          indexOfActivePrayer * _prayerTimeCardHeight,
-          duration: Duration(milliseconds: 350),
-          curve: Curves.easeIn),
-    );*/
   }
 
   @override

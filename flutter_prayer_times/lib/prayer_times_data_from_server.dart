@@ -5,7 +5,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
+import 'app_settings.dart';
+
 class PrayerTimesDataFromServer {
+  AppSettings appSettings = new AppSettings();
 
   Future get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -43,12 +46,17 @@ class PrayerTimesDataFromServer {
 
   Future<List> get getPrayerTimesFromApiServer async {
     //print('get data from restful server');
-    String url = 'https://prayer-times.vsyou.app/';
+    String lat, lng;
+    Map<String, dynamic> appSetting = await appSettings.jsonFromAppSettingsFile;
+    lat = appSetting["place"]["lat"].toString();
+    lng = appSetting["place"]["lng"].toString();
+    String url =
+        'https://stage.prayer-times.vsyou.app/?lat=${lat}&lng=${lng}&today=true&language=arabic';
+
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        await writePrayerTimesToJsonFile(
-            json.decode(response.body));
+        await writePrayerTimesToJsonFile(json.decode(response.body));
         return json.decode(response.body);
       } else {
         print('[Error] connection faild');

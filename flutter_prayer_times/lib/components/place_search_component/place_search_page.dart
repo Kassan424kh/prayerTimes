@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner_field.dart';
+import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 
 import 'package:provider/provider.dart';
@@ -18,7 +20,9 @@ class PlaceSearchPage extends StatefulWidget {
 
 class _PlaceSearchPageState extends State<PlaceSearchPage> {
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
+  static const platform = const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
   AppSettings appSettings = new AppSettings();
+  PrayerTimesDataFromServer prayerTimesDataFromServer = new PrayerTimesDataFromServer();
 
   Future closeKeyboard(ctx) async {
     FocusScope.of(ctx).requestFocus(new FocusNode());
@@ -28,6 +32,11 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
         Navigator.pop(ctx);
       },
     );
+  }
+
+  Future<bool> _updatePrayerTimesAfterNewLocation() async {
+    final result = await prayerTimesDataFromServer.getPrayerTimesFromApiServer;
+    return result != null? true: false;
   }
 
   @override
@@ -53,7 +62,13 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                         oldSettings["place"]["place"] = e['place_name'];
                         appSettings.updateSettingsInAppSettingsJsonFile(oldSettings).then((isUpdated) {
                           if(isUpdated)
-                            closeKeyboard(context);
+                            _updatePrayerTimesAfterNewLocation().then((result) {
+                              if (result)
+                                closeKeyboard(context);
+                              else
+                                //TODO: give message back
+                              print("cann't update prayerTimes");
+                            });
                         });
                       });
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class PrayerTimesCard extends StatelessWidget {
-  final primaryColor, primaryColorAccent, primaryName, start, end, active;
+  final primaryColor, primaryColorAccent, primaryName, start, end, active, index;
 
   BorderRadius brContainer = BorderRadius.only(
       topLeft: Radius.circular(30),
@@ -12,7 +12,7 @@ class PrayerTimesCard extends StatelessWidget {
   BorderRadius brElements = BorderRadius.all(Radius.circular(30));
 
   PrayerTimesCard(this.primaryColor, this.primaryColorAccent, this.primaryName,
-      this.start, this.end, this.active);
+      this.start, this.end, this.active, this.index);
 
   Widget prayerElement(displaySize) => Container(
         decoration: BoxDecoration(
@@ -52,8 +52,9 @@ class PrayerTimesCard extends StatelessWidget {
                           ),
                           SizedBox(width: 30),
                           IconButton(
-                              onPressed: primaryName == 'الشروق' ? null : () {},
-                              icon: Icon(primaryName == 'الشروق'
+                              // disable if Sunrise/الشروق
+                              onPressed: index == 1 ? null : () {},
+                              icon: Icon(index == 1
                                   ? Icons.volume_off
                                   : Icons.volume_up)),
                           SizedBox(width: 30),

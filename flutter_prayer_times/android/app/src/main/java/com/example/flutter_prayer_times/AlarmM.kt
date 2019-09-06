@@ -5,10 +5,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.widget.Toast
 
 import com.example.flutter_prayer_times.Receiver.AlarmReceiver
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import java.time.LocalDateTime
 import java.util.*
 
 object AlarmM : Activity() {
@@ -35,7 +38,8 @@ object AlarmM : Activity() {
         Toast.makeText(ctxt, "PrayerTimes updater set", Toast.LENGTH_SHORT).show()
     }
 
-    fun setPrayerTimesToPlayAlathan(ctxt: Context, id: Int, hour: Int, minute: Int) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setPrayerTimesToPlayAlathan(ctxt: Context, id: Int, hour: Int, minute: Int, nameOfPrayer: String = "", prayerTimeStartDateFormatted:LocalDateTime? =null) {
         val alarmMgr: AlarmManager?
         val alarmIntent: PendingIntent?
 
@@ -51,6 +55,7 @@ object AlarmM : Activity() {
 
         alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
 
-        Toast.makeText(ctxt, "Start playing alathan", Toast.LENGTH_SHORT).show()
+        if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null)
+            println("✓ ${nameOfPrayer} was set at ${prayerTimeStartDateFormatted.hour}:${prayerTimeStartDateFormatted.minute} today")
     }
 }

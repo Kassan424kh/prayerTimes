@@ -27,9 +27,6 @@ class Languages {
 }
 
 class AppSettings constructor(ctx: Context) {
-
-    var appSettingsFormat: AppSettingsFormat? = null
-
     var stringFromJsonFile: String? = null
     private var gson = Gson()
 

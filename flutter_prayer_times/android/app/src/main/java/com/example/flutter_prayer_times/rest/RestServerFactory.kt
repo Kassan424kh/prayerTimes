@@ -1,107 +1,71 @@
 package com.example.flutter_prayer_times.rest
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.Toast
+import android.os.Build
+import android.support.annotation.RequiresApi
 import com.example.flutter_prayer_times.AppSettings.AppSettings
-
-import org.json.simple.JSONArray
-
-import java.io.FileWriter
-import java.io.IOException
-
+import com.example.flutter_prayer_times.JsonFilesServices
+import com.google.gson.JsonParser
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.jackson.JacksonConverterFactory
+import java.io.BufferedReader
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import retrofit2.Response as Response1
 
-class RestServerFactory internal constructor(ctxt: Context) {
 
-    var ctxt: Context? = null
-
-    init {
-        this.ctxt = ctxt
-    }
-
+class RestServerFactory internal constructor() {
     companion object {
-        fun createRestService(ctxt: Context): RestServicePrayerTimes {
-
-            val appSettings = AppSettings(ctxt)
-            println(appSettings.lat)
-            println(appSettings.lng)
-            println(appSettings.place)
-
-            val BASE_URL = "https://stage.prayer-times.vsyou.app/?lat=${appSettings.lat}&lng=${appSettings.lng}&today=true&language=arabic"
-
-            val retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(JacksonConverterFactory.create())
-                    .build()
-
-            return retrofit.create(RestServicePrayerTimes::class.java)
-        }
-
+        val restServicePrayerTimes = RestServicePrayerTimes.create()
         fun getDataFromServer(ctxt: Context) {
-            val restServicePrayerTimes = createRestService(ctxt)
+            val appSettings = AppSettings(ctxt)
+            val call = restServicePrayerTimes.all(
+                    lat = appSettings.lat.toString(),
+                    lng = appSettings.lng.toString(),
+                    language = "arabic")
 
-            val call = restServicePrayerTimes.all
-
-            call.enqueue(object : Callback<List<Map<String, List<String>>>> {
-
+            call.enqueue(object : Callback<Map<String, List<Map<String, List<String>>>>> {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResponse(
-                        call: Call<List<Map<String, List<String>>>>,
-                        response: Response<List<Map<String, List<String>>>>
+                        call: Call<Map<String, List<Map<String, List<String>>>>>,
+                        response: Response1<Map<String, List<Map<String, List<String>>>>>
                 ) {
-                    if (!response.isSuccessful) {
+                    if (!response.isSuccessful)
                         return
-                    }
 
                     val resBody = response.body()
+                    val fileName = "prayerTimesJsonDateInMonth.json"
+                    val filePath = "/data/user/0/com.example.flutter_prayer_times/app_flutter/"
 
-                    println("List of API" + resBody!!)
-
-                    val listOfPrayers = JSONArray()
-                    for (i in 0 until resBody.toTypedArray().size) {
-                        listOfPrayers.add(resBody.toTypedArray()[i])
+                    var checkIfPrayerDateIsAvailable = true
+                    if (File(filePath + fileName).exists()) {
+                        val bufferedReader: BufferedReader = File(filePath + fileName).bufferedReader()
+                        // Read the text from bufferReader and store in String variable
+                        val yourJson = bufferedReader.use { it.readText() }
+                        val parser = JsonParser()
+                        val element = parser.parse(yourJson)
+                        val obj = element!!.getAsJsonObject()
+                        val formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                        val todayDate = LocalDate.now().format(formatters)
+                        checkIfPrayerDateIsAvailable = todayDate in obj.keySet()
                     }
 
-                    try {
-                        val filePath = "/data/user/0/com.example.flutter_prayer_times/app_flutter/serverDataFile.json"
-                        FileWriter(filePath).use { file ->
-                            file.write(listOfPrayers.toJSONString())
-                            println("Successfully Copied JSON Object to File...")
-                            Toast.makeText(ctxt, "Prayer Times are updated", Toast.LENGTH_LONG).show()
-                            println("JSON Object: $listOfPrayers")
-                        }
+                    val isWrited = JsonFilesServices.writeToJsonFile(fileName, resBody,
+                            checkIfPrayerDateIsAvailable,
+                            "data in $fileName are up to date")
 
-                        /*
-                        // Alathan Player setter
-                        // Format yyyy-MM-dd HH:mm:ssz
-                        val string = "2019-08-03 05:40:00Z"
-                        val date = LocalDateTime.parse(string, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssz"))
-                        println(date.hour)
-                        println(date.minute)
-                        AlarmM.setPrayerTimesToPlayAlathan(this, 0, date.hour, date.minute)
-                        */
-
-                    } catch (e: IOException) {
-                        Toast.makeText(ctxt, "Prayer Times cann't updated", Toast.LENGTH_LONG).show()
-                        e.printStackTrace()
-                    }
-
+                    if (isWrited)
+                        JsonFilesServices.getTodayDatesFromJsonFile(ctxt)
                     return
                 }
 
                 override fun onFailure(
-                        call: Call<List<Map<String, List<String>>>>,
+                        call: Call<Map<String, List<Map<String, List<String>>>>>,
                         t: Throwable) {
-                    println("TestTest")
                     println(t)
                 }
             })
         }
     }
-
 }

@@ -13,6 +13,7 @@ import java.util.*
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(ctxt: Context, intent: Intent) {
         RestServerFactory.getDataFromServer(ctxt)
+
         val alarmManager = AlarmM
 
         val alarmMgr = ctxt.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -21,6 +22,6 @@ class AlarmReceiver : BroadcastReceiver() {
             override fun run() {
                 alarmManager.cancelAlarmManagerIfUpdateIsDone(alarmMgr, alarmIntent)
             }
-        }, 6000)
+        }, 10000)
     }
 }

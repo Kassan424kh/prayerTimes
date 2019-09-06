@@ -1,4 +1,4 @@
-package com.example.flutter_prayer_times.AlathanPlayer
+package com.example.flutter_prayer_times.AlathanServices
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -10,14 +10,12 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.support.v4.app.NotificationCompat
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION.SDK_INT
 import android.support.annotation.RequiresApi
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -59,7 +57,7 @@ class AlathanPlayer : Service(){
             onDestroy()
             stopForeground(true)
             stopSelf()
-        }, 200, TimeUnit.SECONDS)
+        }, 210, TimeUnit.SECONDS)
 
         return START_STICKY
     }

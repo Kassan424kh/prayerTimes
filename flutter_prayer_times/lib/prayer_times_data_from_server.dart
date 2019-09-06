@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 import 'app_settings.dart';
@@ -40,31 +39,7 @@ class PrayerTimesDataFromServer {
       print(data.toString());
       await file.writeAsString(json.encode(data));
     } catch (e) {
-      print('cann\'t saved data to json File');
-    }
-  }
-
-  Future<List> get getPrayerTimesFromApiServer async {
-    //print('get data from restful server');
-    String lat, lng;
-    Map<String, dynamic> appSetting = await appSettings.jsonFromAppSettingsFile;
-    lat = appSetting["place"]["lat"].toString();
-    lng = appSetting["place"]["lng"].toString();
-    String url =
-        'https://stage.prayer-times.vsyou.app/?lat=${lat}&lng=${lng}&today=true&language=arabic';
-
-    try {
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        await writePrayerTimesToJsonFile(json.decode(response.body));
-        return json.decode(response.body);
-      } else {
-        print('[Error] connection faild');
-        return null;
-      }
-    } catch (e) {
-      print('[Error] faild connection to server $url');
-      return null;
+      print("cann't saved data to json File");
     }
   }
 
@@ -101,11 +76,7 @@ class PrayerTimesDataFromServer {
   Future<List> getPrayerTimes() async {
     return await prayerTimesFromJsonFile.then((data) async {
       List getData;
-      if (data == null) {
-        getPrayerTimesFromApiServer.then((d) => getData = d);
-      } else {
-        getData = data;
-      }
+      if (data != null) getData = data;
 
       getData = getData != null ? setActivePrayerTime(getData) : null;
 

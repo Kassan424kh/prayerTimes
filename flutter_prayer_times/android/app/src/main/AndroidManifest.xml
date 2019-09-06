@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".AlathanPlayer.AlathanPlayer"
+            android:name=".AlathanServices.AlathanPlayer"
             android:stopWithTask="false"
             android:process=".process"
             android:enabled="true"

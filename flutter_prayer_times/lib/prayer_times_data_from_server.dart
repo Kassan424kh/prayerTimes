@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'app_settings.dart';
 
 class PrayerTimesDataFromServer {
   AppSettings appSettings = new AppSettings();
+  static const android =
+      const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
 
   Future get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -73,11 +75,32 @@ class PrayerTimesDataFromServer {
     }).toList();
   }
 
+  Future<bool> get updateTodayPrayerTimes async {
+    try {
+      final bool result = await android.invokeMethod('updateTodayPrayerTimes');
+      return result;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> get updatePrayerTimesAfterNewPlaceData async {
+    try {
+      final bool result =
+          await android.invokeMethod('updatePrayerTimesAfterNewPlaceData');
+      return result;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<List> getPrayerTimes() async {
     return await prayerTimesFromJsonFile.then((data) async {
       List getData;
-      if (data != null) getData = data;
-
+      if (data == null) updatePrayerTimesAfterNewPlaceData;
+      getData = data;
       getData = getData != null ? setActivePrayerTime(getData) : null;
 
       return getData;

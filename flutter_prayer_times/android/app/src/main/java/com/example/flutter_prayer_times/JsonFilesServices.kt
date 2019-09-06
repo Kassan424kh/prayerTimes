@@ -21,9 +21,9 @@ class JsonFilesServices {
     companion object {
         val filePath = "/data/user/0/com.example.flutter_prayer_times/app_flutter/"
 
-        fun writeToJsonFile(fileName: String, jsonObject: Any?, checkQuery: Boolean = true, checkMessage: String = ""): Boolean {
+        fun writeToJsonFile(fileName: String, jsonObject: Any?, checkQuery: Boolean = true, checkMessage: String = "", force: Boolean = false): Boolean {
             try {
-                if (!File(filePath + fileName).exists() || (File(filePath + fileName).exists() && !checkQuery)) {
+                if (!File(filePath + fileName).exists() || (File(filePath + fileName).exists() && !checkQuery) || force) {
                     FileWriter(filePath + fileName).use { file ->
                         val gson = Gson()
                         val prayersOpject = gson.toJson(jsonObject)
@@ -56,16 +56,16 @@ class JsonFilesServices {
                     obj = element!!.getAsJsonObject()
                 } else {
                     RestServerFactory.getDataFromServer(ctxt)
-                    print("prayerTimesJsonDateInMonth.json file isn't exists")
+                    println("prayerTimesJsonDateInMonth.json file isn't exists")
                 }
             } catch (e: Exception) {
-                print("Error[**332**]" + e)
+                println("Error[**332**]" + e)
             }
             return obj
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun getTodayDatesFromJsonFile(ctxt: Context): JsonArray? {
+        fun getTodayDatesFromJsonFile(ctxt: Context, force: Boolean = false): JsonArray? {
             val objs: JsonObject? = getDataFromJsonFile(ctxt)
             var todayDateDateArray: JsonArray? = null
             if (objs != null) {
@@ -99,7 +99,12 @@ class JsonFilesServices {
                         checkIfPrayerDateIsAvailable = todayDate.equals(dateOfStartPrayerTimesDatetime)
                     }
 
-                    writeToJsonFile(fileName, todayDateDateArray, checkIfPrayerDateIsAvailable, "$fileName is up to date")
+                    writeToJsonFile(
+                            fileName = fileName,
+                            jsonObject = todayDateDateArray,
+                            checkQuery = checkIfPrayerDateIsAvailable,
+                            checkMessage = "$fileName is up to date",
+                            force = force)
 
                     val alathanAlarmsSetter = AlathanAlarmsSetter()
                     alathanAlarmsSetter.setAlathanAlarms(array = todayDateDateArray, ctxt = ctxt)

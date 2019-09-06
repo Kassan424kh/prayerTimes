@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner_field.dart';
@@ -20,6 +22,7 @@ class PlaceSearchPage extends StatefulWidget {
 
 class _PlaceSearchPageState extends State<PlaceSearchPage> {
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
+  Timer _timer;
   static const platform =
       const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
   AppSettings appSettings = new AppSettings();
@@ -34,6 +37,36 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
         Navigator.pop(ctx);
       },
     );
+  }
+
+  Future<void> _tapHandling(e) async {
+    appSettings.jsonFromAppSettingsFile
+        .then((Map<String, dynamic> oldSettings) {
+      oldSettings["place"]["lng"] = e['center'][0].toString();
+      oldSettings["place"]["lat"] = e['center'][1].toString();
+      oldSettings["place"]["place"] = e['place_name'];
+      appSettings
+          .updateSettingsInAppSettingsJsonFile(oldSettings)
+          .then((isUpdated) {
+        if (isUpdated)
+          prayerTimesDataFromServer
+              .updatePrayerTimesAfterNewPlaceData
+              .then((result) {
+            if (result)
+              _timer = new Timer(
+                  const Duration(milliseconds: 200), () {
+                prayerTimesDataFromServer
+                    .updateTodayPrayerTimes
+                    .then((result) {
+                  if (result)
+                    closeKeyboard(context);
+                  else
+                    print("PrayerTimes cann't updated");
+                });
+              });
+          });
+      });
+    });
   }
 
   @override
@@ -52,18 +85,8 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
               ? Column(
                   children: foundedPlaces.getFoundedPlaces().map<Widget>((e) {
                   return ListTile(
-                    onTap: () {
-                      appSettings.jsonFromAppSettingsFile
-                          .then((Map<String, dynamic> oldSettings) {
-                        oldSettings["place"]["lng"] = e['center'][0].toString();
-                        oldSettings["place"]["lat"] = e['center'][1].toString();
-                        oldSettings["place"]["place"] = e['place_name'];
-                        appSettings
-                            .updateSettingsInAppSettingsJsonFile(oldSettings)
-                            .then((isUpdated) {
-                          if (isUpdated) closeKeyboard(context);
-                        });
-                      });
+                    onTap: () async {
+                      _tapHandling(e);
                     },
                     leading: Icon(Icons.place),
                     title: Text(e['place_name']),

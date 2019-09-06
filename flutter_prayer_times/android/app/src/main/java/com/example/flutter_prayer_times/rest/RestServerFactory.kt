@@ -18,7 +18,7 @@ import retrofit2.Response as Response1
 class RestServerFactory internal constructor() {
     companion object {
         val restServicePrayerTimes = RestServicePrayerTimes.create()
-        fun getDataFromServer(ctxt: Context) {
+        fun getDataFromServer(ctxt: Context, force: Boolean = false) {
             val appSettings = AppSettings(ctxt)
             val call = restServicePrayerTimes.all(
                     lat = appSettings.lat.toString(),
@@ -51,9 +51,12 @@ class RestServerFactory internal constructor() {
                         checkIfPrayerDateIsAvailable = todayDate in obj.keySet()
                     }
 
-                    val isWrited = JsonFilesServices.writeToJsonFile(fileName, resBody,
-                            checkIfPrayerDateIsAvailable,
-                            "data in $fileName are up to date")
+                    val isWrited = JsonFilesServices.writeToJsonFile(
+                            fileName = fileName,
+                            jsonObject = resBody,
+                            checkQuery = checkIfPrayerDateIsAvailable,
+                            checkMessage = "data in $fileName are up to date",
+                            force = force)
 
                     if (isWrited)
                         JsonFilesServices.getTodayDatesFromJsonFile(ctxt)

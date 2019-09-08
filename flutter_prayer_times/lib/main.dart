@@ -4,6 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner.dart';
+import 'package:flutter_prayer_times/provider/app_settings.dart';
+import 'package:flutter_prayer_times/provider/founded_places.dart';
+import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 
 import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_container.dart';
@@ -23,7 +26,6 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   AssetImage _backgroundImage = AssetImage(
       'assets/background_images/hugues-de-buyer-mimeure-lQPEChtLjUo-unsplash.jpg');
   DateTime _now = DateTime.now();
-  AppSettings appSettings = new AppSettings();
 
   Future<void> setData() async {
     DateTime dtNow = DateTime.now();
@@ -44,13 +46,10 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
       setData();
     });
 
-    appSettings.writeDefaultAppSettingsToAppSettingsJsonFile.then((none) {
-      appSettings.jsonFromAppSettingsFile;
+    AppSettings.writeDefaultAppSettingsToAppSettingsJsonFile.then((none) {
+      AppSettings.jsonFromAppSettingsFile;
     });
   }
-
-  @override
-
 
   @override
   didChangeDependencies() {
@@ -62,50 +61,60 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-      ),
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            color: _primaryColorAccent,
-            image: DecorationImage(
-              image: _backgroundImage,
-              fit: BoxFit.cover,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppSettingsProvider>(
+            builder: (_) => AppSettingsProvider()),
+        ChangeNotifierProvider<FoundedPlaces>(
+            builder: (_) => FoundedPlaces([])),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.black,
+        ),
+        home: Scaffold(
+          body: Container(
+            decoration: BoxDecoration(
+              color: _primaryColorAccent,
+              image: DecorationImage(
+                image: _backgroundImage,
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(40)),
             ),
-            borderRadius: BorderRadius.all(Radius.circular(40)),
-          ),
-
-          //color: _primaryColorAccent,
-          child: Column(children: <Widget>[
-            Expanded(
-                flex: 3,
-                child: Column(children: <Widget>[
-                  PlaceSearchBanner(
-                    primaryColor: _primaryColor,
-                    primaryColorAccent: _primaryColorAccent,
-                  ),
-                  SizedBox(height: 25),
-                  Center(
-                    child: Text(
-                      _now.toString().substring(11, 16),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 70,
-                          shadows: <Shadow>[
-                            Shadow(
-                                color: Colors.black,
-                                offset: Offset(0, 5),
-                                blurRadius: 50)
-                          ]),
+            //color: _primaryColorAccent,
+            child: Column(children: <Widget>[
+              Expanded(
+                  flex: 3,
+                  child: Column(children: <Widget>[
+                    PlaceSearchBanner(
+                      primaryColor: _primaryColor,
+                      primaryColorAccent: _primaryColorAccent,
                     ),
-                  ),
-                ])),
-            PrayerTimesContainer(
-                _primaryColor, _primaryColorAccent, _backgroundImage)
-          ]),
+                    SizedBox(height: 25),
+                    Center(
+                      child: Text(
+                        _now.toString().substring(11, 16),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 70,
+                            shadows: <Shadow>[
+                              Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(0, 5),
+                                  blurRadius: 50)
+                            ]),
+                      ),
+                    ),
+                  ])),
+              PrayerTimesContainer(
+                _primaryColor,
+                _primaryColorAccent,
+                _backgroundImage,
+              )
+            ]),
+          ),
         ),
       ),
     );

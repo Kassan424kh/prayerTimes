@@ -5,26 +5,26 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AppSettings {
-  Future get _localPath async {
+  static Future get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
-  Future get _defaultAppSettingsJsonAsString async {
+  static Future get _defaultAppSettingsJsonAsString async {
     return await rootBundle.loadString('assets/defaultAppSettings.json');
   }
 
-  Future get _appSettingsFile async {
+  static Future get _appSettingsFile async {
     final path = await _localPath;
     return File('$path/appSettings.json');
   }
 
-  Future<bool> get _isAppSettingsFileExists async {
+  static Future<bool> get isAppSettingsFileExists async {
     final path = await _localPath;
     return File('$path/appSettings.json').exists();
   }
 
-  Future<Map<String, dynamic>> get jsonFromDefaultAppSettingsFile async {
+  static Future<Map<String, dynamic>> get jsonFromDefaultAppSettingsFile async {
     try {
       Map<String, dynamic> defaultAppSettings =
           await json.decode(await _defaultAppSettingsJsonAsString);
@@ -37,8 +37,8 @@ class AppSettings {
   }
 
   // Only write if appSettings not exists, main first time after app installation
-  Future<void> get writeDefaultAppSettingsToAppSettingsJsonFile async {
-    await _isAppSettingsFileExists.then((isExists) async {
+  static Future<void> get writeDefaultAppSettingsToAppSettingsJsonFile async {
+    await isAppSettingsFileExists.then((isExists) async {
       if (!isExists) {
         try {
           print("created appSettings.json file from defaultAppSettings.json data");
@@ -54,7 +54,7 @@ class AppSettings {
     });
   }
 
-  Future<Map<String, dynamic>> get jsonFromAppSettingsFile async {
+  static Future<Map<String, dynamic>> get jsonFromAppSettingsFile async {
     try {
       final file = await _appSettingsFile;
       Map<String, dynamic> appSettings =
@@ -71,8 +71,8 @@ class AppSettings {
   /// from "jsonFromAppSettingsFile" function then set your changes on the Map request
   /// after that use "updateSettingsInAppSettingsJsonFile" function with the new
   /// Map data in the function data attribute.
-  Future<bool> updateSettingsInAppSettingsJsonFile(Map<String, dynamic> data) async {
-    return await _isAppSettingsFileExists.then((isExists) async {
+  static Future<bool> updateSettingsInAppSettingsJsonFile(Map<String, dynamic> data) async {
+    return await isAppSettingsFileExists.then((isExists) async {
       if (isExists) {
         try {
           final file = await _appSettingsFile;

@@ -30,6 +30,7 @@ dependencies:
   intl: ^0.15.8
   flutter_typeahead: ^1.6.1
   provider: ^3.0.0+1
+  flare_flutter: any
 
 
 dev_dependencies:
@@ -49,9 +50,12 @@ flutter_icons:
 # The following section is specific to Flutter.
 flutter:
   assets:
-  - assets/audios/
-  - assets/background_images/
-  - assets/defaultAppSettings.json
+    - assets/
+    - assets/app_logo/
+    - assets/app_logo/PrayerTimesAnimatedLogo.flr
+    - assets/audios/
+    - assets/background_images/
+    - assets/defaultAppSettings.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

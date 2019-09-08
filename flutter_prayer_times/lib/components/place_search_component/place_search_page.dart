@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner_field.dart';
 import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
+import 'package:flutter_prayer_times/provider/app_settings.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 
 import 'package:provider/provider.dart';
@@ -25,7 +26,6 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   Timer _timer;
   static const platform =
       const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
-  AppSettings appSettings = new AppSettings();
   PrayerTimesDataFromServer prayerTimesDataFromServer =
       new PrayerTimesDataFromServer();
 
@@ -40,12 +40,13 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   }
 
   Future<void> _tapHandling(e) async {
-    appSettings.jsonFromAppSettingsFile
+    AppSettings.jsonFromAppSettingsFile
         .then((Map<String, dynamic> oldSettings) {
       oldSettings["place"]["lng"] = e['center'][0].toString();
       oldSettings["place"]["lat"] = e['center'][1].toString();
       oldSettings["place"]["place"] = e['place_name'];
-      appSettings
+      Provider.of<AppSettingsProvider>(context).updateAppSettings(oldSettings);
+      AppSettings
           .updateSettingsInAppSettingsJsonFile(oldSettings)
           .then((isUpdated) {
         if (isUpdated)

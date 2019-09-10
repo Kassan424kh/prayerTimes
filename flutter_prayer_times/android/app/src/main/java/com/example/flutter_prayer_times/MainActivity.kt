@@ -1,12 +1,15 @@
 package com.example.flutter_prayer_times
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.widget.Toast
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import com.example.flutter_prayer_times.Receiver.BootReceiver
 import com.example.flutter_prayer_times.rest.RestServerFactory
 
 import io.flutter.app.FlutterActivity
@@ -28,10 +31,7 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
 
-        // Set scheduler with AlarmManager
         AlarmM.updatePrayerTimesAt1HourDaily(this, 0, 1, 0)
-
-        //RestServerFactory.getDataFromServer(this)
 
         MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
             when {

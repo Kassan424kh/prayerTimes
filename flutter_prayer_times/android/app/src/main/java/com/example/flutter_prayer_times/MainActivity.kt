@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.widget.Toast
+import com.example.flutter_prayer_times.HardwareServices.HardwareServices
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
 import com.example.flutter_prayer_times.rest.RestServerFactory
 import io.flutter.app.FlutterActivity
@@ -16,7 +17,6 @@ import java.util.concurrent.TimeUnit
 
 
 class MainActivity : FlutterActivity() {
-    var context: Context = this
     private val CHANNEL = "com.prayer-times.flutter/prayer-times-updater"
 
     @RequiresApi(Build.VERSION_CODES.O)

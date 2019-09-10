@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION.SDK_INT
 import android.support.annotation.RequiresApi
+import com.example.flutter_prayer_times.HardwareServices.HardwareServices
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -32,6 +33,8 @@ class AlathanPlayer : Service(){
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         this.mediaPlayer = MediaPlayer.create(this, R.raw.alathan)
         this.mediaPlayer?.start()
+
+        HardwareServices.vibrateAlathan(this)
 
         // Notification to keep foregroundService running in android > Android "O" version
         if (SDK_INT >= O) {

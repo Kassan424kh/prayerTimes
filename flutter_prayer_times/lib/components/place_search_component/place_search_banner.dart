@@ -68,7 +68,7 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                       "assets/app_logo/PrayerTimesAnimatedLogo.flr",
                       alignment: Alignment.center,
                       fit: BoxFit.contain,
-                      animation: "activate",
+                      animation: "run",
                     ),
                   ),
                 ),

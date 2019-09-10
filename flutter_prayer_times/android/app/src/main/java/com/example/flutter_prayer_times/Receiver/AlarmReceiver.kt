@@ -10,7 +10,6 @@ import android.support.annotation.RequiresApi
 import com.example.flutter_prayer_times.AlarmM
 
 import com.example.flutter_prayer_times.rest.RestServerFactory
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*

@@ -1,23 +1,16 @@
 package com.example.flutter_prayer_times
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.widget.Toast
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
-import com.example.flutter_prayer_times.Receiver.BootReceiver
 import com.example.flutter_prayer_times.rest.RestServerFactory
-
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 

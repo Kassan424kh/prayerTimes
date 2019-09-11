@@ -1,4 +1,4 @@
-package com.example.flutter_prayer_times.prayerTimesData
+package com.example.flutter_prayer_times.PrayerTimesData
 
 import com.google.gson.Gson
 import java.io.BufferedReader

@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 
 class AppSettingsFormat {
     var place: Place? = null
-    var acceptPlayingAthans: List<Boolean>? = null
+    var acceptPlayingAthans: List<List<Boolean>>? = null
     var languages: Languages? = null
 }
 

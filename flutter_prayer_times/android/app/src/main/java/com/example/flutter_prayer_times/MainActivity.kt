@@ -1,12 +1,10 @@
 package com.example.flutter_prayer_times
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.widget.Toast
-import com.example.flutter_prayer_times.HardwareServices.HardwareServices
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
 import com.example.flutter_prayer_times.rest.RestServerFactory
 import io.flutter.app.FlutterActivity

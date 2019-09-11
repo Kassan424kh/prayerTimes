@@ -31,6 +31,7 @@ dependencies:
   flutter_typeahead: ^1.6.1
   provider: ^3.0.0+1
   flare_flutter: any
+  vibration: 1.2.1
 
 
 dev_dependencies:

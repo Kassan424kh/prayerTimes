@@ -5,7 +5,12 @@
     "lng" : 9.992291
   },
   "acceptPlayingAthans": [
-    true, true, true, true, true
+    [true, true],
+    [false, false],
+    [true, true],
+    [true, true],
+    [true, true],
+    [true, true]
   ],
   "languages":{
     "arabic":  true,

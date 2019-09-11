@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner_field.dart';
 import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
@@ -23,9 +22,6 @@ class PlaceSearchPage extends StatefulWidget {
 
 class _PlaceSearchPageState extends State<PlaceSearchPage> {
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
-  Timer _timer;
-  static const platform =
-      const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
   PrayerTimesDataFromServer prayerTimesDataFromServer =
       new PrayerTimesDataFromServer();
 
@@ -54,7 +50,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
               .updatePrayerTimesAfterNewPlaceData
               .then((result) {
             if (result)
-              _timer = new Timer(
+              Timer(
                   const Duration(milliseconds: 200), () {
                 prayerTimesDataFromServer
                     .updateTodayPrayerTimes

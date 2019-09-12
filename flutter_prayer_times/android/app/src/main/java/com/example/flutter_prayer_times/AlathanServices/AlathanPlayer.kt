@@ -16,14 +16,15 @@ import android.support.v4.app.NotificationCompat
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION.SDK_INT
 import android.support.annotation.RequiresApi
+import com.example.flutter_prayer_times.AppSettings.AppSettings
 import com.example.flutter_prayer_times.HardwareServices.HardwareServices
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-
-class AlathanPlayer : Service(){
+class AlathanPlayer : Service() {
     private var mediaPlayer: MediaPlayer? = null
     val ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE"
+
 
     override fun onBind(arg0: Intent): IBinder? {
         Log.i(TAG, "onBind()")
@@ -31,14 +32,23 @@ class AlathanPlayer : Service(){
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        this.mediaPlayer = MediaPlayer.create(this, R.raw.alathan)
-        this.mediaPlayer?.start()
+        val appSettings = AppSettings(this)
+        val index : Int = intent.getIntExtra("index", -1)
 
-        HardwareServices.vibrateAlathan(this)
+        val isAlarmSoundActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(0)
+        val isAlarmVibrateActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(1)
+
+        if (isAlarmSoundActive!!) {
+            this.mediaPlayer = MediaPlayer.create(this, R.raw.alathan)
+            this.mediaPlayer?.start()
+        }
+
+        if (isAlarmVibrateActive!!)
+            HardwareServices.vibrateAlathan(this)
 
         // Notification to keep foregroundService running in android > Android "O" version
         if (SDK_INT >= O) {
-            val ANDROID_CHANNEL_ID:String = createNotificationChannel("my_service", "My Background Service")
+            val ANDROID_CHANNEL_ID: String = createNotificationChannel("my_service", "My Background Service")
             val builder = Notification.Builder(this, ANDROID_CHANNEL_ID)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText("Background service")
@@ -72,7 +82,7 @@ class AlathanPlayer : Service(){
 
     // Create NotificationId "ANDROID_CHANNEL_ID" function
     @RequiresApi(O)
-    private fun createNotificationChannel(channelId: String, channelName: String): String{
+    private fun createNotificationChannel(channelId: String, channelName: String): String {
         val chan = NotificationChannel(channelId,
                 channelName, NotificationManager.IMPORTANCE_NONE)
         chan.lightColor = Color.BLUE

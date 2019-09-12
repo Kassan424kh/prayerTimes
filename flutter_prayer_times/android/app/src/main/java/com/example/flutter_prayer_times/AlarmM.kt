@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 object AlarmM : Activity() {
-    fun cancelAlarmManagerIfUpdateIsDone(am: AlarmManager, ai: PendingIntent){
+    fun cancelAlarmManagerIfUpdateIsDone(am: AlarmManager, ai: PendingIntent) {
         am.cancel(ai)
     }
 
@@ -39,12 +39,16 @@ object AlarmM : Activity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setPrayerTimesToPlayAlathan(ctxt: Context, id: Int, hour: Int, minute: Int, nameOfPrayer: String = "", prayerTimeStartDateFormatted:LocalDateTime? =null) {
+    fun setPrayerTimesToPlayAlathan(ctxt: Context, id: Int, hour: Int, minute: Int,
+                                    nameOfPrayer: String = "",
+                                    prayerTimeStartDateFormatted: LocalDateTime? = null,
+                                    index: Int = -1) {
         val alarmMgr: AlarmManager?
         val alarmIntent: PendingIntent?
 
         alarmMgr = ctxt.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(ctxt, AlathanPlayerReceiver::class.java)
+        intent.putExtra("index", index)
         alarmIntent = PendingIntent.getBroadcast(ctxt, id, intent, 0)
 
         val calendar = Calendar.getInstance()

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner.dart';
+import 'package:flutter_prayer_times/components/splash_screen/splash_screen.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 import 'package:provider/provider.dart';
@@ -73,48 +74,53 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.black,
         ),
-        home: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-              color: _primaryColorAccent,
-              image: DecorationImage(
-                image: _backgroundImage,
-                fit: BoxFit.cover,
+        home: Stack(
+          children: <Widget>[
+            Scaffold(
+              body: Container(
+                decoration: BoxDecoration(
+                  color: _primaryColorAccent,
+                  image: DecorationImage(
+                    image: _backgroundImage,
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                ),
+                //color: _primaryColorAccent,
+                child: Column(children: <Widget>[
+                  Expanded(
+                      flex: 3,
+                      child: Column(children: <Widget>[
+                        PlaceSearchBanner(
+                          primaryColor: _primaryColor,
+                          primaryColorAccent: _primaryColorAccent,
+                        ),
+                        SizedBox(height: 25),
+                        Center(
+                          child: Text(
+                            _now.toString().substring(11, 16),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 70,
+                                shadows: <Shadow>[
+                                  Shadow(
+                                      color: Colors.black,
+                                      offset: Offset(0, 5),
+                                      blurRadius: 50)
+                                ]),
+                          ),
+                        ),
+                      ])),
+                  PrayerTimesContainer(
+                    _primaryColor,
+                    _primaryColorAccent,
+                    _backgroundImage,
+                  )
+                ]),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(40)),
             ),
-            //color: _primaryColorAccent,
-            child: Column(children: <Widget>[
-              Expanded(
-                  flex: 3,
-                  child: Column(children: <Widget>[
-                    PlaceSearchBanner(
-                      primaryColor: _primaryColor,
-                      primaryColorAccent: _primaryColorAccent,
-                    ),
-                    SizedBox(height: 25),
-                    Center(
-                      child: Text(
-                        _now.toString().substring(11, 16),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 70,
-                            shadows: <Shadow>[
-                              Shadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 5),
-                                  blurRadius: 50)
-                            ]),
-                      ),
-                    ),
-                  ])),
-              PrayerTimesContainer(
-                _primaryColor,
-                _primaryColorAccent,
-                _backgroundImage,
-              )
-            ]),
-          ),
+            SplashScreen(_primaryColor, _primaryColorAccent),
+          ],
         ),
       ),
     );

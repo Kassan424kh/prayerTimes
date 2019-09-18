@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 
 class PlaceSearchBanner extends StatefulWidget {
   final Color primaryColor, primaryColorAccent;
+  final AssetImage backgroundImageBlurEffect;
 
   const PlaceSearchBanner(
       {Key key,
       this.primaryColor = Colors.blue,
-      this.primaryColorAccent = Colors.white})
+      this.primaryColorAccent = Colors.white,
+      this.backgroundImageBlurEffect})
       : super(key: key);
 
   @override
@@ -44,10 +46,13 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
     return Container(
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
+        color: widget.primaryColor,
+        boxShadow: [
+          BoxShadow(color: Colors.black12, offset: Offset(0, 10), blurRadius: 30)
+        ],
         borderRadius: BorderRadius.all(
           Radius.circular(50),
         ),
-        color: Colors.white,
       ),
       child: SizedBox(
         width: double.infinity,
@@ -59,18 +64,12 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Container(
-                    width: 62,
-                    height: 62,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                    ),
-                    child: FlareActor(
-                      "assets/app_logo/PrayerTimesAnimatedLogo.flr",
-                      alignment: Alignment.center,
-                      fit: BoxFit.contain,
-                      animation: "run",
-                    ),
-                  ),
+                      width: 62,
+                      height: 62,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: Image.asset("assets/app_logo/mosque_3d.png")),
                 ),
                 Container(
                   width: placeName == "" ? 61 : null,

@@ -25,7 +25,9 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   Color _primaryColor = Color(0xff2196f3);
   Color _primaryColorAccent = Color(0xffe3f2fd);
   AssetImage _backgroundImage = AssetImage(
-      'assets/background_images/hugues-de-buyer-mimeure-lQPEChtLjUo-unsplash.jpg');
+      'assets/background_images/adrian-MBwvFtRqCcQ-unsplash.png');
+  AssetImage _backgroundImageBlurEffect = AssetImage(
+      'assets/background_images/adrian-MBwvFtRqCcQ-unsplash_blur_effect.png');
   DateTime _now = DateTime.now();
 
   Future<void> setData() async {
@@ -41,7 +43,6 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide'); // keyboard done
-    Screen.keepOn(true);
     setData();
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
@@ -94,17 +95,18 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
                         PlaceSearchBanner(
                           primaryColor: _primaryColor,
                           primaryColorAccent: _primaryColorAccent,
+                          backgroundImageBlurEffect: _backgroundImageBlurEffect,
                         ),
-                        SizedBox(height: 25),
+                        SizedBox(height: 20),
                         Center(
                           child: Text(
                             _now.toString().substring(11, 16),
                             style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 70,
+                                color: Colors.black54,
+                                fontSize: 80,
                                 shadows: <Shadow>[
                                   Shadow(
-                                      color: Colors.black,
+                                      color: Colors.black12,
                                       offset: Offset(0, 5),
                                       blurRadius: 50)
                                 ]),
@@ -114,7 +116,7 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
                   PrayerTimesContainer(
                     _primaryColor,
                     _primaryColorAccent,
-                    _backgroundImage,
+                    _backgroundImageBlurEffect,
                   )
                 ]),
               ),

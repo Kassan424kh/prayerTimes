@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_prayer_times/app_settings.dart';
 
 import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_card.dart';
 import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 
 class PrayerTimesContainer extends StatefulWidget {
-  final primaryColor, primaryColorAccent, backgroundImage;
+  final primaryColor, primaryColorAccent, backgroundImageBlurEffect;
 
-  PrayerTimesContainer(
-      this.primaryColor, this.primaryColorAccent, this.backgroundImage);
+  PrayerTimesContainer(this.primaryColor, this.primaryColorAccent,
+      this.backgroundImageBlurEffect);
 
   _PrayerTimesContainer createState() => _PrayerTimesContainer();
 }
@@ -50,8 +51,8 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
 
           return MapEntry(
               index,
-              PrayerTimesCard(
-                  _primaryColor, _primaryColorAccent, key, start, end, active, index));
+              PrayerTimesCard(_primaryColor, _primaryColorAccent, key, start,
+                  end, active, index));
         })
         .values
         .toList();
@@ -62,19 +63,22 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
           flex: 8,
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(
-                width: 0,
-                color: Colors.black54,
-                style: BorderStyle.solid,
-              ),
               borderRadius: BorderRadius.all(Radius.circular(40)),
             ),
             child: ClipRRect(
-              clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadius.all(Radius.circular(40)),
               child: Container(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  image: DecorationImage(
+                      image: widget.backgroundImageBlurEffect,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter),
+                ),
+                child: RefreshIndicator(
+                  onRefresh: () async{
+                    await _prayerTimesDataFromServer.updatePrayerTimesAfterNewPlaceData;
+                  },
                   child: ListView(
                       controller: _scrollController,
                       scrollDirection: Axis.vertical,

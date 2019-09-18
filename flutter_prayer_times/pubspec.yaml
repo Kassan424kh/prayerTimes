@@ -43,7 +43,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/app_logo/logo.png"
+  image_path: "assets/app_logo/mosque_3d.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -53,7 +53,6 @@ flutter:
   assets:
     - assets/
     - assets/app_logo/
-    - assets/app_logo/PrayerTimesAnimatedLogo.flr
     - assets/audios/
     - assets/background_images/
     - assets/defaultAppSettings.json

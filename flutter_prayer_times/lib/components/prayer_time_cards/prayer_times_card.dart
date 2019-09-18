@@ -156,7 +156,7 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
                   ]),
                   Text(
                     widget.primaryName,
-                    style: TextStyle(fontSize: 30, color: Colors.white),
+                    style: TextStyle(fontSize: 30, color: Colors.black54),
                   ),
                 ]),
           ),

@@ -1,5 +1,6 @@
 package com.example.flutter_prayer_times.AlathanServices
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.PendingIntent.*
@@ -14,6 +15,8 @@ import java.time.format.DateTimeFormatter
 import android.content.Intent
 import com.example.flutter_prayer_times.AppSettings.AppSettings
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class AlathanAlarmsSetter {
@@ -43,7 +46,7 @@ class AlathanAlarmsSetter {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SimpleDateFormat")
     fun setAlathanAlarms(array: JsonArray, ctxt: Context) {
         // Alathan Player setter
         // Format yyyy-MM-dd HH:mm:ssz
@@ -64,22 +67,41 @@ class AlathanAlarmsSetter {
             }
 
             if (dateTimeInString != null) {
-                val dateTimeNow: LocalDateTime = LocalDateTime.now()
-                val prayerTimeStartDateFormatted = LocalDateTime.parse(dateTimeInString,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssz"))
+
                 val isAlarmSoundActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(0)
                 val isAlarmVibrateActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(1)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val dateTimeNow: LocalDateTime = LocalDateTime.now()
+                    val prayerTimeStartDateFormatted = LocalDateTime.parse(dateTimeInString,
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssz"))
 
-                if (prayerTimeStartDateFormatted.isAfter(dateTimeNow) && (isAlarmSoundActive!! || isAlarmVibrateActive!!)) {
-                    AlarmM.setPrayerTimesToPlayAlathan(ctxt = ctxt, id = index + 1,
-                            hour = prayerTimeStartDateFormatted.hour,
-                            minute = prayerTimeStartDateFormatted.minute,
-                            nameOfPrayer = nameOfPrayer,
-                            prayerTimeStartDateFormatted = prayerTimeStartDateFormatted,
-                            index = index)
-                } else if (prayerTimeStartDateFormatted.isAfter(dateTimeNow) && !isAlarmSoundActive!! && !isAlarmVibrateActive!!) {
-                    deleteAlarm(ctxt, index + 1, nameOfPrayer)
+                    if (prayerTimeStartDateFormatted.isAfter(dateTimeNow) && (isAlarmSoundActive!! || isAlarmVibrateActive!!)) {
+                        AlarmM.setPrayerTimesToPlayAlathan(ctxt = ctxt, id = index + 1,
+                                hour = prayerTimeStartDateFormatted.hour,
+                                minute = prayerTimeStartDateFormatted.minute,
+                                nameOfPrayer = nameOfPrayer,
+                                prayerTimeStartDateFormatted = prayerTimeStartDateFormatted,
+                                index = index)
+                    } else if (prayerTimeStartDateFormatted.isAfter(dateTimeNow) && !isAlarmSoundActive!! && !isAlarmVibrateActive!!) {
+                        deleteAlarm(ctxt, index + 1, nameOfPrayer)
+                    }
+                } else {
+                    val dateTimeNow = Date()
+                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'")
+                    val prayerTimeStartDateFormattedString = formatter.parse(dateTimeInString)
+
+                    if (prayerTimeStartDateFormattedString.after(dateTimeNow) && (isAlarmSoundActive!! || isAlarmVibrateActive!!)) {
+                        AlarmM.setPrayerTimesToPlayAlathan(ctxt = ctxt, id = index + 1,
+                                hour = prayerTimeStartDateFormattedString.hours,
+                                minute = prayerTimeStartDateFormattedString.minutes,
+                                nameOfPrayer = nameOfPrayer,
+                                prayerTimeStartDateFormatted = prayerTimeStartDateFormattedString,
+                                index = index)
+                    } else if (prayerTimeStartDateFormattedString.after(dateTimeNow) && !isAlarmSoundActive!! && !isAlarmVibrateActive!!) {
+                        deleteAlarm(ctxt, index + 1, nameOfPrayer)
+                    }
                 }
+
             }
         }
     }

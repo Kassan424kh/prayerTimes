@@ -1,6 +1,9 @@
 package com.example.flutter_prayer_times.AppSettings
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.ContextWrapper
+import com.example.flutter_prayer_times.MainActivity
 import com.example.flutter_prayer_times.R
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -26,16 +29,18 @@ class Languages {
     var turkish: Boolean? = null
 }
 
-class AppSettings constructor(ctx: Context) {
+class AppSettings constructor(ctxt: Context) {
     var stringFromJsonFile: String? = null
     private var gson = Gson()
 
     init {
         try {
-            val appSettingsJsonfile = File("/data/user/0/com.example.flutter_prayer_times/app_flutter/appSettings.json")
+            val contextWrapper = ContextWrapper(ctxt)
+            val filePath = contextWrapper.getDir("flutter", 0).path
+            val appSettingsJsonfile = File(filePath + "/appSettings.json")
             val bufferedReader: BufferedReader? = if (!appSettingsJsonfile.exists()){
                 println("get place data from default appSettings Json File")
-                BufferedReader(InputStreamReader(ctx.getResources().openRawResource(R.raw.default_app_settings)))
+                BufferedReader(InputStreamReader(ctxt.getResources().openRawResource(R.raw.default_app_settings)))
             } else{
                 println("get place data from appSettings Json File")
                 appSettingsJsonfile.bufferedReader()

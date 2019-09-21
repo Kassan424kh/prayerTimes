@@ -11,7 +11,6 @@ import com.example.flutter_prayer_times.JsonFilesServices
 
 class BootReceiver : BroadcastReceiver() {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
         JsonFilesServices.getTodayDatesFromJsonFile(context)
         AlarmM.updatePrayerTimesAt1HourDaily(context, 0, 1, 0)

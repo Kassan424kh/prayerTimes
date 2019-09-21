@@ -69,6 +69,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
               borderRadius: BorderRadius.all(Radius.circular(40)),
               child: Container(
                 decoration: BoxDecoration(
+                  color: Colors.black12,
                   borderRadius: BorderRadius.all(Radius.circular(40)),
                   image: DecorationImage(
                       image: widget.backgroundImageBlurEffect,

@@ -1,6 +1,8 @@
 package com.example.flutter_prayer_times.rest
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.example.flutter_prayer_times.AppSettings.AppSettings
@@ -10,8 +12,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.io.BufferedReader
 import java.io.File
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 import retrofit2.Response as Response1
 
 
@@ -26,7 +30,7 @@ class RestServerFactory internal constructor() {
                     language = "arabic")
 
             call.enqueue(object : Callback<Map<String, List<Map<String, List<String>>>>> {
-                @RequiresApi(Build.VERSION_CODES.O)
+                @SuppressLint("SimpleDateFormat")
                 override fun onResponse(
                         call: Call<Map<String, List<Map<String, List<String>>>>>,
                         response: Response1<Map<String, List<Map<String, List<String>>>>>
@@ -35,8 +39,9 @@ class RestServerFactory internal constructor() {
                         return
 
                     val resBody = response.body()
-                    val fileName = "prayerTimesJsonDateInMonth.json"
-                    val filePath = "/data/user/0/com.example.flutter_prayer_times/app_flutter/"
+                    val fileName = "/prayerTimesJsonDateInMonth.json"
+                    val contextWrapper = ContextWrapper(ctxt)
+                    val filePath = contextWrapper.getDir("flutter", 0).path
 
                     var checkIfPrayerDateIsAvailable = true
                     if (File(filePath + fileName).exists()) {
@@ -46,12 +51,18 @@ class RestServerFactory internal constructor() {
                         val parser = JsonParser()
                         val element = parser.parse(yourJson)
                         val obj = element!!.getAsJsonObject()
-                        val formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                        val todayDate = LocalDate.now().format(formatters)
+                        val todayDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            val formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            LocalDate.now().format(formatters)
+                        } else{
+                            val formatters = SimpleDateFormat("yyyy-MM-dd")
+                            formatters.format(Date())
+                        }
                         checkIfPrayerDateIsAvailable = todayDate in obj.keySet()
                     }
 
                     val isWrited = JsonFilesServices.writeToJsonFile(
+                            ctxt = ctxt,
                             fileName = fileName,
                             jsonObject = resBody,
                             checkQuery = checkIfPrayerDateIsAvailable,

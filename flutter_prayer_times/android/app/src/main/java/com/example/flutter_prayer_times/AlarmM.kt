@@ -11,6 +11,7 @@ import android.widget.Toast
 
 import com.example.flutter_prayer_times.Receiver.AlarmReceiver
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import java.text.DateFormat
 import java.time.LocalDateTime
 import java.util.*
 
@@ -38,10 +39,9 @@ object AlarmM : Activity() {
         Toast.makeText(ctxt, "PrayerTimes updater set", Toast.LENGTH_SHORT).show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun setPrayerTimesToPlayAlathan(ctxt: Context, id: Int, hour: Int, minute: Int,
                                     nameOfPrayer: String = "",
-                                    prayerTimeStartDateFormatted: LocalDateTime? = null,
+                                    prayerTimeStartDateFormatted: Any? = null,
                                     index: Int = -1) {
         val alarmMgr: AlarmManager?
         val alarmIntent: PendingIntent?
@@ -59,7 +59,19 @@ object AlarmM : Activity() {
 
         alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
 
-        if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null)
-            println("✓ ${nameOfPrayer} was set at ${prayerTimeStartDateFormatted.hour}:${prayerTimeStartDateFormatted.minute} today")
+        if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null){
+            val hour: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                (prayerTimeStartDateFormatted as LocalDateTime).hour
+            }else{
+                (prayerTimeStartDateFormatted as Date).hours
+            }
+
+            val minute: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                (prayerTimeStartDateFormatted as LocalDateTime).minute
+            }else{
+                (prayerTimeStartDateFormatted as Date).minutes
+            }
+            println("✓ ${nameOfPrayer} was set at ${hour}:${minute} today")
+        }
     }
 }

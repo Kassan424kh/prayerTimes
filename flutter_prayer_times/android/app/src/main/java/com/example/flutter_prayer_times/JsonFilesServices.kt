@@ -1,8 +1,9 @@
 package com.example.flutter_prayer_times
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Build
-import android.support.annotation.RequiresApi
 import com.example.flutter_prayer_times.AlathanServices.AlathanAlarmsSetter
 import com.example.flutter_prayer_times.rest.RestServerFactory
 import com.google.gson.Gson
@@ -14,26 +15,32 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class JsonFilesServices {
     companion object {
-        val filePath = "/data/user/0/com.example.flutter_prayer_times/app_flutter/"
 
-        fun writeToJsonFile(fileName: String, jsonObject: Any?, checkQuery: Boolean = true, checkMessage: String = "", force: Boolean = false): Boolean {
+        private fun getApplicationDataPath (ctxt: Context) :String {
+            val contextWrapper = ContextWrapper(ctxt)
+            return contextWrapper.getDir("flutter", 0).path
+        }
+
+        fun writeToJsonFile(ctxt: Context, fileName: String, jsonObject: Any?, checkQuery: Boolean = true, checkMessage: String = "", force: Boolean = false): Boolean {
             try {
-                if (!File(filePath + fileName).exists() || (File(filePath + fileName).exists() && !checkQuery) || force) {
-                    FileWriter(filePath + fileName).use { file ->
+                return if (!File(getApplicationDataPath(ctxt) + fileName).exists() || (File(getApplicationDataPath(ctxt) + fileName).exists() && !checkQuery) || force) {
+                    FileWriter(getApplicationDataPath(ctxt) + fileName).use { file ->
                         val gson = Gson()
-                        val prayersOpject = gson.toJson(jsonObject)
-                        file.write(prayersOpject)
+                        val prayersObject = gson.toJson(jsonObject)
+                        file.write(prayersObject)
                         println("Successfully Copied JSON Object to $fileName File...")
                     }
-                    return true
+                    true
                 } else {
                     println("File $fileName is created, or $checkMessage")
-                    return true
+                    true
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -45,7 +52,9 @@ class JsonFilesServices {
         fun getDataFromJsonFile(ctxt: Context): JsonObject? {
             var obj: JsonObject? = null
             try {
-                val jsonFilePath = "/data/user/0/com.example.flutter_prayer_times/app_flutter/prayerTimesJsonDateInMonth.json"
+                val contextWrapper = ContextWrapper(ctxt)
+                val filePath = contextWrapper.getDir("flutter", 0).path
+                val jsonFilePath = "$filePath/prayerTimesJsonDateInMonth.json"
                 val jsonFile = File(jsonFilePath)
                 if (jsonFile.exists()) {
                     val bufferedReader: BufferedReader = jsonFile.bufferedReader()
@@ -53,53 +62,60 @@ class JsonFilesServices {
                     val yourJson = bufferedReader.use { it.readText() }
                     val parser = JsonParser()
                     val element = parser.parse(yourJson)
-                    obj = element!!.getAsJsonObject()
+                    obj = element!!.asJsonObject
                 } else {
                     RestServerFactory.getDataFromServer(ctxt)
                     println("prayerTimesJsonDateInMonth.json file isn't exists")
                 }
             } catch (e: Exception) {
-                println("Error[**332**]" + e)
+                println("Error[**332**] $e")
             }
             return obj
         }
 
-        @RequiresApi(Build.VERSION_CODES.O)
+        @SuppressLint("SimpleDateFormat")
         fun getTodayDatesFromJsonFile(ctxt: Context, force: Boolean = false): JsonArray? {
+            fun dateNow () :String {
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    LocalDate.now().format(formatters)
+                } else{
+                    val formatters = SimpleDateFormat("yyyy-MM-dd")
+                    formatters.format(Date())
+                }
+            }
+
             val objs: JsonObject? = getDataFromJsonFile(ctxt)
             var todayDateDateArray: JsonArray? = null
             if (objs != null) {
-                val formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                val todayDate = LocalDate.now().format(formatters)
-                if (todayDate in objs.keySet()) {
-                    todayDateDateArray = objs[todayDate] as JsonArray
+                if (dateNow() in objs.keySet()) {
+                    todayDateDateArray = objs[dateNow()] as JsonArray
 
                     val listOfPrayers = JSONArray()
                     for (i in 0 until todayDateDateArray.size())
                         listOfPrayers.add(todayDateDateArray[i])
 
-                    val fileName = "serverDataFile.json"
+                    val fileName = "/serverDataFile.json"
 
                     var checkIfPrayerDateIsAvailable = true
-                    if (File(filePath + fileName).exists()) {
-                        val bufferedReader: BufferedReader = File(filePath + fileName).bufferedReader()
+                    if (File(getApplicationDataPath(ctxt) + fileName).exists()) {
+                        val bufferedReader: BufferedReader = File(getApplicationDataPath(ctxt) + fileName).bufferedReader()
                         // Read the text from bufferReader and store in String variable
                         val yourJson = bufferedReader.use { it.readText() }
                         val parser = JsonParser()
                         val element = parser.parse(yourJson)
                         val obj = element.asJsonArray
-                        val formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                        val todayDate = LocalDate.now().format(formatters)
                         val innerObject = obj.get(0).asJsonObject
                         var dateOfStartPrayerTimesDatetime = ""
                         for (key: String in innerObject.keySet()) {
                             dateOfStartPrayerTimesDatetime = innerObject.get(key).asJsonArray.get(0).toString().subSequence(1, 11).toString()
                             break
                         }
-                        checkIfPrayerDateIsAvailable = todayDate.equals(dateOfStartPrayerTimesDatetime)
+                        checkIfPrayerDateIsAvailable = dateNow() == dateOfStartPrayerTimesDatetime
                     }
 
                     writeToJsonFile(
+                            ctxt = ctxt,
                             fileName = fileName,
                             jsonObject = todayDateDateArray,
                             checkQuery = checkIfPrayerDateIsAvailable,

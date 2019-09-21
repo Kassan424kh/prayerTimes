@@ -90,7 +90,7 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
                 //color: _primaryColorAccent,
                 child: Column(children: <Widget>[
                   Expanded(
-                      flex: 3,
+                      flex: 5,
                       child: Column(children: <Widget>[
                         PlaceSearchBanner(
                           primaryColor: _primaryColor,

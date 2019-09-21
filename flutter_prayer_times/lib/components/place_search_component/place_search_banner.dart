@@ -25,7 +25,7 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       Provider.of<AppSettingsProvider>(context).getAppSettings().then((s) {
         Map<String, dynamic> appSettingsObject = s;
         String place = appSettingsObject != null

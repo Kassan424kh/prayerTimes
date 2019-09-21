@@ -55,6 +55,8 @@ flutter:
     - assets/app_logo/
     - assets/audios/
     - assets/background_images/
+    - assets/background_images/adrian-MBwvFtRqCcQ-unsplash.png
+    - assets/background_images/adrian-MBwvFtRqCcQ-unsplash_blur_effect.png
     - assets/defaultAppSettings.json
   fonts:
     - family: Righteous

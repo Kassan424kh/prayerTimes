@@ -58,7 +58,9 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
         .toList();
   }
 
-  Widget prayerContainer() => _prayerTimes != null
+  Widget prayerContainer() {
+    final size = MediaQuery.of(context).size;
+    return _prayerTimes != null
       ? Expanded(
           flex: 8,
           child: Container(
@@ -74,18 +76,19 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
                   image: DecorationImage(
                       image: widget.backgroundImageBlurEffect,
                       fit: BoxFit.cover,
-                      alignment: Alignment.topCenter),
+                      alignment: Alignment.bottomLeft),
                 ),
                 child: RefreshIndicator(
-                  onRefresh: () async{
-                    await _prayerTimesDataFromServer.updatePrayerTimesAfterNewPlaceData;
+                  onRefresh: () async {
+                    await _prayerTimesDataFromServer
+                        .updatePrayerTimesAfterNewPlaceData;
                   },
                   child: ListView(
                       controller: _scrollController,
                       scrollDirection: Axis.vertical,
                       children: <Widget>[
                         ...prayerTimesList(),
-                        SizedBox(height: 50)
+                        SizedBox(height: size.height <= 650 ? 60: 85)
                       ]),
                 ),
               ),
@@ -104,6 +107,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
             ),
           ),
         );
+  }
 
   Future<void> setData() async {
     _prayerTimesDataFromServer

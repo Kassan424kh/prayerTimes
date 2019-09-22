@@ -167,7 +167,6 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
 
   @override
   void didUpdateWidget(PrayerTimesCard oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     Future.delayed(const Duration(milliseconds: 2000), () {
       Provider.of<AppSettingsProvider>(context)

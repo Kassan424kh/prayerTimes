@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_prayer_times/components/app_oclock.dart';
+import 'package:flutter_prayer_times/components/bottom_bar.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner.dart';
 import 'package:flutter_prayer_times/components/splash_screen/splash_screen.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
@@ -12,6 +14,7 @@ import 'package:screen/screen.dart';
 
 import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_container.dart';
 import 'package:flutter_prayer_times/app_settings.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 Future main() async => runApp(MyApp());
 
@@ -24,8 +27,8 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   // variables
   Color _primaryColor = Color(0xff2196f3);
   Color _primaryColorAccent = Color(0xffe3f2fd);
-  AssetImage _backgroundImage = AssetImage(
-      'assets/background_images/adrian-MBwvFtRqCcQ-unsplash.png');
+  AssetImage _backgroundImage =
+      AssetImage('assets/background_images/adrian-MBwvFtRqCcQ-unsplash.png');
   AssetImage _backgroundImageBlurEffect = AssetImage(
       'assets/background_images/adrian-MBwvFtRqCcQ-unsplash_blur_effect.png');
   DateTime _now = DateTime.now();
@@ -89,38 +92,21 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
                 ),
                 //color: _primaryColorAccent,
                 child: Column(children: <Widget>[
-                  Expanded(
-                      flex: 5,
-                      child: Column(children: <Widget>[
-                        PlaceSearchBanner(
-                          primaryColor: _primaryColor,
-                          primaryColorAccent: _primaryColorAccent,
-                          backgroundImageBlurEffect: _backgroundImageBlurEffect,
-                        ),
-                        SizedBox(height: 20),
-                        Center(
-                          child: Text(
-                            _now.toString().substring(11, 16),
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 80,
-                                shadows: <Shadow>[
-                                  Shadow(
-                                      color: Colors.black12,
-                                      offset: Offset(0, 5),
-                                      blurRadius: 50)
-                                ]),
-                          ),
-                        ),
-                      ])),
+                  AppOclock(
+                    primaryColor: _primaryColor,
+                    primaryColorAccent: _primaryColorAccent,
+                    backgroundImageBlurEffect: _backgroundImageBlurEffect,
+                    now: _now,
+                  ),
                   PrayerTimesContainer(
                     _primaryColor,
                     _primaryColorAccent,
                     _backgroundImageBlurEffect,
-                  )
+                  ),
                 ]),
               ),
             ),
+            Positioned(child: BottomBar(primaryColor : _primaryColor, primaryColorAccent: _primaryColorAccent),bottom: 0,left: 0),
             SplashScreen(_primaryColor, _primaryColorAccent),
           ],
         ),

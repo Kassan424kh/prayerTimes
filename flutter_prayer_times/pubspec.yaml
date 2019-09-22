@@ -32,6 +32,7 @@ dependencies:
   provider: ^3.0.0+1
   flare_flutter: any
   vibration: 1.2.1
+  sliding_up_panel: ^0.3.5
 
 
 dev_dependencies:

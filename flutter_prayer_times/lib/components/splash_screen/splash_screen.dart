@@ -53,6 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return _showSplashScreen
         ? Positioned(
             top: 0.0,
@@ -80,8 +81,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Container(
-                              width: 150,
-                              height: 150,
+                              width: size.width <= 350.0 ?120:150,
+                              height: size.width <= 350.0 ?120:150,
                               child: Image.asset("assets/app_logo/mosque_3d.png"),
                             ),
                           ),
@@ -95,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             "Al-Moathen",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 40,
+                              fontSize: size.width <= 350.0 ?25:40,
                               fontFamily: "Righteous",
                             ),
                           ),

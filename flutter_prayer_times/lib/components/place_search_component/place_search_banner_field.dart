@@ -31,6 +31,7 @@ class PlaceSearchBannerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final foundedPlaces = Provider.of<FoundedPlaces>(context);
     return Column(children: <Widget>[
       Container(
@@ -44,7 +45,7 @@ class PlaceSearchBannerField extends StatelessWidget {
         child: SizedBox(
           width: double.infinity,
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.all(size.width <= 350.0? 2: 5),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -52,7 +53,7 @@ class PlaceSearchBannerField extends StatelessWidget {
                     width: 61,
                     child: RaisedButton(
                       child: Icon(Icons.keyboard_arrow_left,
-                          color: primaryColor, size: 30),
+                          color: primaryColor, size: size.width <= 350.0? 20: 30),
                       color: primaryColorAccent,
                       splashColor: Colors.blue[100],
                       highlightColor: Colors.white10,
@@ -77,7 +78,7 @@ class PlaceSearchBannerField extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white,
                           hintText: 'Search after Place ... ',
-                          hintStyle: TextStyle(color: Colors.blue[200]),
+                          hintStyle: TextStyle(color: Colors.blue[200], fontSize: size.width <= 350.0? 12: null),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(width: 1, color: Colors.white),
@@ -101,7 +102,7 @@ class PlaceSearchBannerField extends StatelessWidget {
                           ),
                           focusColor: Colors.white,
                           hoverColor: Colors.white,
-                          contentPadding: EdgeInsets.all(18),
+                          contentPadding: EdgeInsets.all(size.width <= 350.0? 10: 18),
                         ),
                       ),
                       suggestionsCallback: (items) async {
@@ -117,7 +118,7 @@ class PlaceSearchBannerField extends StatelessWidget {
                   Container(
                     width: 61,
                     child: RaisedButton(
-                        child: Icon(Icons.gps_fixed, color: primaryColor, size: 30),
+                        child: Icon(Icons.gps_fixed, color: primaryColor, size: size.width <= 350.0? 20: 30),
                         color: primaryColorAccent,
                         splashColor: Colors.blue[100],
                         highlightColor: Colors.white10,

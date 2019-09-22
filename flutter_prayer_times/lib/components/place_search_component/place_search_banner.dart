@@ -43,6 +43,7 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -64,8 +65,8 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Container(
-                      width: 62,
-                      height: 62,
+                      width: size.width <= 350.0? 50:62,
+                      height: size.width <= 350.0? 50:62,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
@@ -73,7 +74,7 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                 ),
                 Container(
                   width: placeName == "" ? 61 : null,
-                  height: 61,
+                  height: size.width <= 350.0? 50:61,
                   child: RaisedButton(
                     child: Row(children: <Widget>[
                       if (placeName.length > 0) SizedBox(width: 10),
@@ -82,12 +83,12 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                           placeName,
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: size.width <= 350.0? 12:20,
                             color: widget.primaryColor,
                           ),
                         ),
                       if (placeName.length > 0) SizedBox(width: 10),
-                      Icon(Icons.place, color: widget.primaryColor, size: 30)
+                      Icon(Icons.place, color: widget.primaryColor, size: size.width <= 350.0 ?20 : 30)
                     ]),
                     color: widget.primaryColorAccent,
                     splashColor: Colors.blue[100],

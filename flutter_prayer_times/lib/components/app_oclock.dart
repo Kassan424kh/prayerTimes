@@ -24,7 +24,7 @@ class AppOclock extends StatelessWidget{
               now.toString().substring(11, 16),
               style: TextStyle(
                   color: Colors.black54,
-                  fontSize: size.height <= 650 ? 60: 80,
+                  fontSize: size.height <= 650 ? size.width <= 350.0? 45: 60: 80,
                   shadows: <Shadow>[
                     Shadow(
                         color: Colors.black12,

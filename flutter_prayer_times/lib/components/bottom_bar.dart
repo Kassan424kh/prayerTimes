@@ -28,7 +28,7 @@ class BottomBar extends StatelessWidget {
                   "© 2019 Khalil Khalil",
                   style: TextStyle(
                     color: primaryColor,
-                    fontSize: size.height <= 650 ? 13: 20,
+                    fontSize: size.height <= 650 ? size.width <= 350.0 ?11 : 13: 20,
                   ),
                 ),
               ),
@@ -49,6 +49,7 @@ class BottomBar extends StatelessWidget {
                     child: Icon(
                       Icons.settings,
                       color: primaryColorAccent,
+                      size: size.width <= 350.0 ?15 : 20,
                     ),
                   ),
                   onPressed: () {},

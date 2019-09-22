@@ -67,18 +67,20 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
       cs = Icons.vibration;
     else if (_cardStatus == 0) cs = Icons.alarm_off;
 
+    final size = MediaQuery.of(context).size;
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.transparent,
         borderRadius: brContainer,
       ),
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: EdgeInsets.all(10),
       child: Card(
         elevation: 0,
         color: Colors.transparent,
         clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.all(5),
+        margin: EdgeInsets.all(size.width <= 350.0? 0: 5),
         child: Column(children: <Widget>[
           Container(
             padding: EdgeInsets.only(right: 15),
@@ -88,18 +90,18 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
                   Column(children: <Widget>[
                     Container(
                       padding:
-                          EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                          EdgeInsets.symmetric(vertical: size.width <= 350.0? 20: 25, horizontal: size.width <= 350.0? 10: 15),
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         color: widget.primaryColorAccent,
                         borderRadius: brElements,
                       ),
                       child: Row(children: <Widget>[
-                        SizedBox(width: 30),
+                        SizedBox(width: size.width <= 350.0? 20: 30),
                         Text(
                           widget.start.substring(11, 16),
                           style: TextStyle(
-                            fontSize: displaySize ? 20 : 30,
+                            fontSize: displaySize ? size.width <= 350.0? 15: 20 : 30,
                             color: widget.primaryColor,
                           ),
                         ),
@@ -156,7 +158,7 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
                   ]),
                   Text(
                     widget.primaryName,
-                    style: TextStyle(fontSize: 30, color: Colors.black54),
+                    style: TextStyle(fontSize: size.width <= 350.0? 20: 30, color: Colors.black54),
                   ),
                 ]),
           ),

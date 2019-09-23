@@ -4,22 +4,24 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.media.MediaPlayer
-import com.example.flutter_prayer_times.R
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.IBinder
-import android.util.Log
-import android.support.v4.app.NotificationCompat
-import android.os.Build.VERSION_CODES.O
+import android.media.MediaPlayer
 import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.O
+import android.os.IBinder
 import android.support.annotation.RequiresApi
+import android.support.v4.app.NotificationCompat
+import android.util.Log
+import android.widget.Toast
 import com.example.flutter_prayer_times.AppSettings.AppSettings
 import com.example.flutter_prayer_times.HardwareServices.HardwareServices
+import com.example.flutter_prayer_times.R
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+
 
 class AlathanPlayer : Service() {
     private var mediaPlayer: MediaPlayer? = null
@@ -37,9 +39,17 @@ class AlathanPlayer : Service() {
 
         val isAlarmSoundActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(0)
         val isAlarmVibrateActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(1)
+        var alathanVolume = appSettings.getDataFromAppSettingsFile().alathanVolume
 
         if (isAlarmSoundActive!!) {
             this.mediaPlayer = MediaPlayer.create(this, R.raw.alathan)
+            try {
+                val maxVolume = java.lang.Float.valueOf(alathanVolume!!.trim()).toFloat()
+                Toast.makeText(this, "Alathan volume is: $maxVolume", Toast.LENGTH_LONG).show()
+                this.mediaPlayer?.setVolume(maxVolume, maxVolume)
+            } catch (nfe: NumberFormatException) {
+                Toast.makeText(this, "Alathan volume is: null", Toast.LENGTH_LONG).show()
+            }
             this.mediaPlayer?.start()
         }
 

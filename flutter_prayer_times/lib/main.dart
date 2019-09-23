@@ -106,7 +106,13 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
                 ]),
               ),
             ),
-            Positioned(child: BottomBar(primaryColor : _primaryColor, primaryColorAccent: _primaryColorAccent),bottom: 0,left: 0),
+            Positioned(
+              child: BottomBar(
+                  primaryColor: _primaryColor,
+                  primaryColorAccent: _primaryColorAccent),
+              bottom: 0,
+              left: 0,
+            ),
             SplashScreen(_primaryColor, _primaryColorAccent),
           ],
         ),

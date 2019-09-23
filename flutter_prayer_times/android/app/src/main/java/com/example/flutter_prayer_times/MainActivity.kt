@@ -1,8 +1,5 @@
 package com.example.flutter_prayer_times
 
-import android.app.Application
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -14,9 +11,9 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+
 class MainActivity : FlutterActivity() {
     private val CHANNEL_UPDATER = "com.prayer-times.flutter/prayer-times-updater"
-    private val CHANNEL_PATH = "com.prayer-times.flutter/prayer-times-path"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,19 +39,12 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
-        MethodChannel(flutterView, CHANNEL_PATH).setMethodCallHandler { call, result ->
-            when {
-                call.method == "appFlutterDataPath" -> {
-                    val contextWrapper = ContextWrapper(this)
-                    val filePath = contextWrapper.getDir("flutter", 0).path
-                    println(filePath)
-                    result.success(filePath)
-                }
-                else -> {
-                    result.notImplemented()
-                }
-            }
-        }
+
+        AlarmM.setPrayerTimesToPlayAlathan(ctxt = this, id = 21,
+                hour = 21,
+                minute = 40,
+                nameOfPrayer = "",
+                index = 0)
 
         this.startService(Intent(this, AlathanPlayerReceiver::class.java))
     }

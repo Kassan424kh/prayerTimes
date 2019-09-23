@@ -1,9 +1,7 @@
 package com.example.flutter_prayer_times.AppSettings
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
-import com.example.flutter_prayer_times.MainActivity
 import com.example.flutter_prayer_times.R
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -14,6 +12,7 @@ class AppSettingsFormat {
     var place: Place? = null
     var acceptPlayingAthans: List<List<Boolean>>? = null
     var languages: Languages? = null
+    var alathanVolume: String? = null
 }
 
 class Place {

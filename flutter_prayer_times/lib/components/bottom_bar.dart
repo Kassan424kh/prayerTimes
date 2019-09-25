@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/app_settings.dart';
+import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,9 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   double _volume = 0.10;
+  List<String> _languages = [];
+  String _selectedLanguages;
+  PrayerTimesDataFromServer prayerTimesDataFromServer = PrayerTimesDataFromServer();
 
   @override
   initState() {
@@ -39,15 +43,42 @@ class _BottomBarState extends State<BottomBar> {
     });
   }
 
+  Future<void> _selectedLangageHandler(String selectedLanguage) async {
+    AppSettings.jsonFromAppSettingsFile
+        .then((Map<String, dynamic> oldSettings) {
+      oldSettings["languages"]["selected"] = selectedLanguage;
+      Provider.of<AppSettingsProvider>(context).updateAppSettings(oldSettings);
+      AppSettings.updateSettingsInAppSettingsJsonFile(oldSettings)
+          .then((isUpdated) {
+        setState(() =>
+        _selectedLanguages = selectedLanguage);
+        if (isUpdated) print("App language is updated");
+        prayerTimesDataFromServer.updatePrayerTimesCompletely.then((isUpdated) => print("PrayerTimes ${isUpdated? "is": "isn't"} updated"));
+      });
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Timer(const Duration(milliseconds: 1000), () {
+    Timer(const Duration(milliseconds: 3000), () {
       Provider.of<AppSettingsProvider>(context)
           .getAppSettings()
-          .then((appSettings) {
-        for (String key in appSettings.keys)
-          if (key == "alathanVolume") setState(() => _volume = double.parse(appSettings[key]));
+          .then((Map<String, dynamic> appSettings) async {
+        if (appSettings != null ||
+            appSettings["languages"]["names"].length == 0) {
+          _selectedLanguages = appSettings["languages"]["selected"];
+          _languages.clear();
+          for (var key in await appSettings["languages"]["names"])
+            _languages.add(key);
+        }
+      });
+      Provider.of<AppSettingsProvider>(context)
+          .getAppSettings()
+          .then((appSettings) async {
+        for (String key in await appSettings.keys)
+          if (key == "alathanVolume")
+            setState(() => _volume = double.parse(appSettings[key]));
       });
     });
   }
@@ -56,7 +87,7 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      height: size.height / 1.5,
+      height: size.height / 2,
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: size.height <= 650 ? 5 : 15),
       decoration: BoxDecoration(
@@ -111,10 +142,10 @@ class _BottomBarState extends State<BottomBar> {
               color: Colors.blue[100],
               child: ListTile(
                 title: Text(
-                  "Set Alathan-Player volume",
+                  "Alathan volume",
                   style: TextStyle(
                     fontSize:
-                        size.height <= 650 ? size.width <= 350.0 ? 11 : 13 : 20,
+                        size.height <= 650 ? size.width <= 350.0 ? 11 : 13 : 17,
                   ),
                 ),
                 subtitle: Slider(
@@ -131,6 +162,63 @@ class _BottomBarState extends State<BottomBar> {
                   onChangeEnd: (volume) {
                     _volumeHandler(volume);
                   },
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              color: Colors.blue[100],
+              child: ListTile(
+                title: Text(
+                  "App language",
+                  style: TextStyle(
+                    fontSize:
+                        size.height <= 650 ? size.width <= 350.0 ? 11 : 13 : 17,
+                  ),
+                ),
+                subtitle: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                    child: Container(
+                      color: Colors.white54,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      child: _languages.length != 0 || _languages == null
+                          ? DropdownButton(
+                              value: _selectedLanguages,
+                              isExpanded: true,
+                              onChanged: (selectedLanguage) {
+                                _selectedLangageHandler(selectedLanguage);
+                              },
+                              style: TextStyle(color: widget.primaryColor),
+                              iconEnabledColor: widget.primaryColor,
+                              icon: Icon(Icons.language),
+                              underline: Container(),
+                              items: _languages.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Container(
+                                    child: Text(
+                                      value,
+                                      style:
+                                          TextStyle(color: widget.primaryColor),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : Container(
+                              child: Text(
+                                "No language founded",
+                                style: TextStyle(
+                                  color: Colors.blue[100],
+                                ),
+                              ),
+                            ),
+                    ),
+                  ),
                 ),
               ),
             ),

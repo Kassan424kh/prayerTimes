@@ -22,10 +22,8 @@ class Place {
 }
 
 class Languages {
-    var arabic: Boolean? = null
-    var english: Boolean? = null
-    var persian: Boolean? = null
-    var turkish: Boolean? = null
+    var names: List<String>? = null
+    var selected: String = "arabic"
 }
 
 class AppSettings constructor(ctxt: Context) {

@@ -39,8 +39,9 @@ class AlathanPlayer : Service() {
 
         val isAlarmSoundActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(0)
         val isAlarmVibrateActive = appSettings.getDataFromAppSettingsFile().acceptPlayingAthans?.get(index)?.get(1)
-        var alathanVolume = appSettings.getDataFromAppSettingsFile().alathanVolume
 
+        // User set alathan-player volume
+        val alathanVolume = appSettings.getDataFromAppSettingsFile().alathanVolume
         if (isAlarmSoundActive!!) {
             this.mediaPlayer = MediaPlayer.create(this, R.raw.alathan)
             try {
@@ -53,6 +54,7 @@ class AlathanPlayer : Service() {
             this.mediaPlayer?.start()
         }
 
+        // vibration
         if (isAlarmVibrateActive!!)
             HardwareServices.vibrateAlathan(this)
 

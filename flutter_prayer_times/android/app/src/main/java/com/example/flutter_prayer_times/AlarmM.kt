@@ -35,8 +35,6 @@ object AlarmM : Activity() {
         calendar.set(Calendar.SECOND, 0)
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, alarmIntent)
-
-        Toast.makeText(ctxt, "PrayerTimes updater set", Toast.LENGTH_SHORT).show()
     }
 
     fun setPrayerTimesToPlayAlathan(ctxt: Context, id: Int, hour: Int, minute: Int,
@@ -57,7 +55,7 @@ object AlarmM : Activity() {
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
 
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.timeInMillis, alarmIntent)
 
         if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null){
             val hour: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -47,7 +47,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           .then((isUpdated) {
         if (isUpdated)
           prayerTimesDataFromServer
-              .updatePrayerTimesAfterNewPlaceData
+              .updatePrayerTimesCompletely
               .then((result) {
             if (result)
               Timer(

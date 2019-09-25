@@ -85,10 +85,12 @@ class PrayerTimesDataFromServer {
     }
   }
 
-  Future<bool> get updatePrayerTimesAfterNewPlaceData async {
+  Future<bool> get updatePrayerTimesCompletely async {
     try {
       final bool result =
           await android.invokeMethod('updatePrayerTimesAfterNewPlaceData');
+      if(result)
+        updateTodayPrayerTimes;
       return result;
     } catch (e) {
       print(e);
@@ -99,7 +101,7 @@ class PrayerTimesDataFromServer {
   Future<List> getPrayerTimes() async {
     return await prayerTimesFromJsonFile.then((data) async {
       List getData;
-      if (data == null) updatePrayerTimesAfterNewPlaceData;
+      if (data == null) updatePrayerTimesCompletely;
       getData = data;
       getData = getData != null ? setActivePrayerTime(getData) : null;
 

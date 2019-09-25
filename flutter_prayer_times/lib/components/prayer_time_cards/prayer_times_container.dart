@@ -81,7 +81,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
                 child: RefreshIndicator(
                   onRefresh: () async {
                     await _prayerTimesDataFromServer
-                        .updatePrayerTimesAfterNewPlaceData;
+                        .updatePrayerTimesCompletely;
                   },
                   child: ListView(
                       controller: _scrollController,

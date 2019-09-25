@@ -27,7 +27,7 @@ class RestServerFactory internal constructor() {
             val call = restServicePrayerTimes.all(
                     lat = appSettings.lat.toString(),
                     lng = appSettings.lng.toString(),
-                    language = "arabic")
+                    language = appSettings.getDataFromAppSettingsFile().languages!!.selected)
 
             call.enqueue(object : Callback<Map<String, List<Map<String, List<String>>>>> {
                 @SuppressLint("SimpleDateFormat")

@@ -41,7 +41,7 @@ class MainActivity : FlutterActivity() {
         }
 
         AlarmM.setPrayerTimesToPlayAlathan(ctxt = this, id = 21,
-                hour = 21,
+                hour = 6,
                 minute = 40,
                 nameOfPrayer = "",
                 index = 0)

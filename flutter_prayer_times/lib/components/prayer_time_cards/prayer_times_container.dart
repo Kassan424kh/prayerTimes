@@ -6,19 +6,16 @@ import 'package:flutter_prayer_times/app_settings.dart';
 
 import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_card.dart';
 import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
+import 'package:provider/provider.dart';
 
 class PrayerTimesContainer extends StatefulWidget {
-  final primaryColor, primaryColorAccent, backgroundImageBlurEffect;
-
-  PrayerTimesContainer(this.primaryColor, this.primaryColorAccent,
-      this.backgroundImageBlurEffect);
-
   _PrayerTimesContainer createState() => _PrayerTimesContainer();
 }
 
 class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   List _prayerTimes;
-  var _now, _primaryColor, _primaryColorAccent;
+  var _now;
   PrayerTimesDataFromServer _prayerTimesDataFromServer =
       PrayerTimesDataFromServer();
   ScrollController _scrollController;
@@ -50,9 +47,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
           }
 
           return MapEntry(
-              index,
-              PrayerTimesCard(_primaryColor, _primaryColorAccent, key, start,
-                  end, active, index));
+              index, PrayerTimesCard(key, start, end, active, index));
         })
         .values
         .toList();
@@ -60,53 +55,68 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
 
   Widget prayerContainer() {
     final size = MediaQuery.of(context).size;
+    final appStyling = Provider.of<AppStyling>(context);
     return _prayerTimes != null
-      ? Expanded(
-          flex: 8,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(40)),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(40)),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.all(Radius.circular(40)),
-                  image: DecorationImage(
-                      image: widget.backgroundImageBlurEffect,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.bottomLeft),
-                ),
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    await _prayerTimesDataFromServer
-                        .updatePrayerTimesCompletely;
-                  },
-                  child: ListView(
-                      controller: _scrollController,
-                      scrollDirection: Axis.vertical,
-                      children: <Widget>[
-                        ...prayerTimesList(),
-                        SizedBox(height: size.height <= 650 ? 60: 85)
-                      ]),
+        ? Expanded(
+            flex: 8,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(appStyling.primaryRadius),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(appStyling.primaryRadius),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(appStyling.primaryRadius),
+                  ),
+                  child: Stack(fit: StackFit.passthrough, children: <Widget>[
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        height: size.height,
+                        width: size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius:
+                              BorderRadius.all(appStyling.primaryRadius),
+                          image: DecorationImage(
+                            image: appStyling.backgroundImageBlurEffect,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        await _prayerTimesDataFromServer
+                            .updatePrayerTimesCompletely;
+                      },
+                      child: ListView(
+                          controller: _scrollController,
+                          scrollDirection: Axis.vertical,
+                          children: <Widget>[
+                            ...prayerTimesList(),
+                            SizedBox(height: size.height <= 650 ? 73 : 85)
+                          ]),
+                    ),
+                  ]),
                 ),
               ),
             ),
-          ),
-        )
-      : Container(
-          height: 200,
-          child: Center(
-            child: Text(
-              'لا يوجد صلواة',
-              style: TextStyle(
-                fontSize: 28,
-                color: _primaryColor,
+          )
+        : Container(
+            height: 200,
+            child: Center(
+              child: Text(
+                'لا يوجد صلواة',
+                style: TextStyle(
+                  fontSize: 28,
+                  color: appStyling.primaryColor,
+                ),
               ),
             ),
-          ),
-        );
+          );
   }
 
   Future<void> setData() async {
@@ -123,10 +133,6 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   @override
   initState() {
     super.initState();
-    setState(() {
-      _primaryColor = widget.primaryColor;
-      _primaryColorAccent = widget.primaryColorAccent;
-    });
     setData();
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();

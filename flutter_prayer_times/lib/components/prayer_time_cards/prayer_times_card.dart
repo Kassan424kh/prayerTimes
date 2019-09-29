@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/app_settings.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
@@ -10,16 +11,15 @@ import '../../prayer_times_data_from_server.dart';
 
 // ignore: must_be_immutable
 class PrayerTimesCard extends StatefulWidget {
-  final primaryColor,
-      primaryColorAccent,
-      primaryName,
-      start,
-      end,
-      active,
-      index;
+  final primaryName, start, end, active, index;
 
-  PrayerTimesCard(this.primaryColor, this.primaryColorAccent, this.primaryName,
-      this.start, this.end, this.active, this.index);
+  PrayerTimesCard(
+    this.primaryName,
+    this.start,
+    this.end,
+    this.active,
+    this.index,
+  );
 
   @override
   _PrayerTimesCardState createState() => _PrayerTimesCardState();
@@ -33,10 +33,18 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       Provider.of<AppSettingsProvider>(context)
           .getAppSettings()
           .then((appSettings) {
+        String selectedLanguage = appSettings["languages"]["selected"];
+        if (appSettings["languages"]["isRtl"] != null)
+          for (var isThisLangRtl in appSettings["languages"]["isRtl"])
+            for (var key in isThisLangRtl.keys)
+              if (key == selectedLanguage)
+                Provider.of<AppStyling>(context)
+                    .setTextDirection(isThisLangRtl[key]);
+
         setState(() {
           List<dynamic> prayerStatus =
               appSettings["acceptPlayingAthans"][widget.index];
@@ -50,14 +58,6 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
     });
   }
 
-  BorderRadius brContainer = BorderRadius.only(
-      topLeft: Radius.circular(30),
-      bottomLeft: Radius.circular(30),
-      topRight: Radius.circular(30),
-      bottomRight: Radius.circular(5));
-
-  BorderRadius brElements = BorderRadius.all(Radius.circular(30));
-
   Widget prayerElement(displaySize) {
     // Card status
     IconData cs;
@@ -68,97 +68,110 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
     else if (_cardStatus == 0) cs = Icons.alarm_off;
 
     final size = MediaQuery.of(context).size;
-
+    final appStyling = Provider.of<AppStyling>(context);
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.transparent,
-        borderRadius: brContainer,
+        borderRadius: BorderRadius.all(appStyling.primaryRadiusMinus10),
       ),
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(0),
       child: Card(
         elevation: 0,
         color: Colors.transparent,
         clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.all(size.width <= 350.0? 0: 5),
+        margin: EdgeInsets.all(0),
         child: Column(children: <Widget>[
           Container(
-            padding: EdgeInsets.only(right: 15),
+            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             child: Row(
+                textDirection: Provider.of<AppStyling>(context).isRtl
+                    ? TextDirection.rtl
+                    : TextDirection.ltr,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Column(children: <Widget>[
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: size.width <= 350.0? 20: 25, horizontal: size.width <= 350.0? 10: 15),
+                      padding: EdgeInsets.symmetric(
+                          vertical: size.width <= 350.0 ? 20 : 25,
+                          horizontal: size.width <= 350.0 ? 10 : 15),
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
-                        color: widget.primaryColorAccent,
-                        borderRadius: brElements,
+                        color: appStyling.primaryColorWhite,
+                        borderRadius:
+                            BorderRadius.all(appStyling.primaryRadiusMinus10),
                       ),
-                      child: Row(children: <Widget>[
-                        SizedBox(width: size.width <= 350.0? 20: 30),
-                        Text(
-                          widget.start.substring(11, 16),
-                          style: TextStyle(
-                            fontSize: displaySize ? size.width <= 350.0? 15: 20 : 30,
-                            color: widget.primaryColor,
-                          ),
-                        ),
-                        SizedBox(width: 30),
-                        IconButton(
-                            // disable if Sunrise/الشروق
-                            onPressed: widget.index == 1
-                                ? null
-                                : () {
-                                    Vibration.vibrate(duration: 50);
-                                    AppSettings.isAppSettingsFileExists.then(
-                                        (check) => check
-                                            ? AppSettings
-                                                .jsonFromAppSettingsFile
-                                                .then((oldAppSettings) {
-                                                //card status
-                                                List<bool> _cs;
-                                                if (_cardStatus == 2)
-                                                  _cs = [false, true];
-                                                else if (_cardStatus == 1)
-                                                  _cs = [false, false];
-                                                else if (_cardStatus == 0)
-                                                  _cs = [true, true];
+                      child: Row(
+                          textDirection: Provider.of<AppStyling>(context).isRtl
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
+                          children: <Widget>[
+                            SizedBox(width: size.width <= 350.0 ? 20 : 30),
+                            Text(
+                              widget.start.substring(11, 16),
+                              style: TextStyle(
+                                fontSize: displaySize
+                                    ? size.width <= 350.0 ? 15 : 20
+                                    : 30,
+                                color: appStyling.primaryColor,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            IconButton(
+                                // disable if Sunrise/الشروق
+                                onPressed: widget.index == 1
+                                    ? null
+                                    : () {
+                                        Vibration.vibrate(duration: 50);
+                                        AppSettings.isAppSettingsFileExists
+                                            .then((check) => check
+                                                ? AppSettings
+                                                    .jsonFromAppSettingsFile
+                                                    .then((oldAppSettings) {
+                                                    //card status
+                                                    List<bool> _cs;
+                                                    if (_cardStatus == 2)
+                                                      _cs = [false, true];
+                                                    else if (_cardStatus == 1)
+                                                      _cs = [false, false];
+                                                    else if (_cardStatus == 0)
+                                                      _cs = [true, true];
 
-                                                oldAppSettings[
-                                                        "acceptPlayingAthans"]
-                                                    [widget.index] = _cs;
-                                                AppSettings
-                                                    .updateSettingsInAppSettingsJsonFile(
-                                                        oldAppSettings);
-                                                Provider.of<AppSettingsProvider>(
-                                                        context)
-                                                    .updateAppSettings(
-                                                        oldAppSettings);
+                                                    oldAppSettings[
+                                                            "acceptPlayingAthans"]
+                                                        [widget.index] = _cs;
+                                                    AppSettings
+                                                        .updateSettingsInAppSettingsJsonFile(
+                                                            oldAppSettings);
+                                                    Provider.of<AppSettingsProvider>(
+                                                            context)
+                                                        .updateAppSettings(
+                                                            oldAppSettings);
 
-                                                prayerTimesDataFromServer
-                                                    .updateTodayPrayerTimes
-                                                    .then(((check) {
-                                                  if (check)
-                                                    print(
-                                                        "Prayer Times reseted");
-                                                  else
-                                                    print(
-                                                        "Prayer Times cann't reseted");
-                                                }));
-                                              })
-                                            : null);
-                                  },
-                            icon:
-                                Icon(widget.index == 1 ? Icons.alarm_off : cs)),
-                        SizedBox(width: 30),
-                      ]),
+                                                    prayerTimesDataFromServer
+                                                        .updateTodayPrayerTimes
+                                                        .then(((check) {
+                                                      if (check)
+                                                        print(
+                                                            "Prayer Times reseted");
+                                                      else
+                                                        print(
+                                                            "Prayer Times cann't reseted");
+                                                    }));
+                                                  })
+                                                : null);
+                                      },
+                                icon: Icon(
+                                    widget.index == 1 ? Icons.alarm_off : cs)),
+                            SizedBox(width: 10),
+                          ]),
                     ),
                   ]),
                   Text(
                     widget.primaryName,
-                    style: TextStyle(fontSize: size.width <= 350.0? 20: 30, color: Colors.black54),
+                    style: TextStyle(
+                        fontSize: size.width <= 350.0 ? 20 : 30,
+                        color: Colors.black54),
                   ),
                 ]),
           ),
@@ -174,6 +187,14 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
       Provider.of<AppSettingsProvider>(context)
           .getAppSettings()
           .then((appSettings) {
+        String selectedLanguage = appSettings["languages"]["selected"];
+        if (appSettings["languages"]["isRtl"] != null)
+          for (var isThisLangRtl in appSettings["languages"]["isRtl"])
+            for (var key in isThisLangRtl.keys)
+              if (key == selectedLanguage)
+                Provider.of<AppStyling>(context)
+                    .setTextDirection(isThisLangRtl[key]);
+
         setState(() {
           List<dynamic> prayerStatus =
               appSettings["acceptPlayingAthans"][widget.index];

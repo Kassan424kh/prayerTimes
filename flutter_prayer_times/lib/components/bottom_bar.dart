@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/app_settings.dart';
 import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:provider/provider.dart';
 
 class BottomBar extends StatefulWidget {
@@ -21,7 +22,8 @@ class _BottomBarState extends State<BottomBar> {
   double _volume = 0.10;
   List<String> _languages = [];
   String _selectedLanguages;
-  PrayerTimesDataFromServer prayerTimesDataFromServer = PrayerTimesDataFromServer();
+  PrayerTimesDataFromServer prayerTimesDataFromServer =
+      PrayerTimesDataFromServer();
 
   @override
   initState() {
@@ -50,10 +52,11 @@ class _BottomBarState extends State<BottomBar> {
       Provider.of<AppSettingsProvider>(context).updateAppSettings(oldSettings);
       AppSettings.updateSettingsInAppSettingsJsonFile(oldSettings)
           .then((isUpdated) {
-        setState(() =>
-        _selectedLanguages = selectedLanguage);
+        setState(() => _selectedLanguages = selectedLanguage);
         if (isUpdated) print("App language is updated");
-        prayerTimesDataFromServer.updatePrayerTimesCompletely.then((isUpdated) => print("PrayerTimes ${isUpdated? "is": "isn't"} updated"));
+        prayerTimesDataFromServer.updatePrayerTimesCompletely.then(
+            (isUpdated) =>
+                print("PrayerTimes ${isUpdated ? "is" : "isn't"} updated"));
       });
     });
   }
@@ -86,26 +89,28 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final appStyling = Provider.of<AppStyling>(context);
     return Container(
-      height: size.height / 2,
-      width: MediaQuery.of(context).size.width,
+      key: widget.key,
+      width: size.width,
       margin: EdgeInsets.only(top: size.height <= 650 ? 5 : 15),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(40)),
-        color: Colors.blue[100],
+        borderRadius: BorderRadius.all(appStyling.primaryRadius),
+        color: appStyling.primaryColorAccent,
       ),
-      child: Column(children: <Widget>[
+      child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Material(
                 color: Colors.transparent,
                 child: Container(
+                  margin: EdgeInsets.only(left: 15, top: 5),
                   padding: EdgeInsets.all(size.height <= 650 ? 10 : 20),
                   child: Text(
                     "© 2019 Khalil Khalil",
                     style: TextStyle(
-                      color: widget.primaryColor,
+                      color: appStyling.primaryColor,
                       fontSize: size.height <= 650
                           ? size.width <= 350.0 ? 11 : 13
                           : 20,
@@ -114,32 +119,40 @@ class _BottomBarState extends State<BottomBar> {
                 ),
               ),
               Container(
-                  margin: EdgeInsets.only(right: 15, top: 10),
-                  width: size.height <= 650 ? 60 : 80,
-                  child: RaisedButton(
-                    color: widget.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
-                      ),
+                margin: EdgeInsets.only(right: 15, top: 5),
+                width: size.height <= 650 ? 60 : 80,
+                child: RaisedButton(
+                  color: appStyling.primaryColorAccent,
+                  highlightElevation: 0,
+                  focusElevation: 0,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
                     ),
-                    child: Container(
-                      width: size.height <= 650 ? 30 : 50,
-                      height: size.height <= 650 ? 30 : 50,
-                      child: Icon(
-                        Icons.settings,
-                        color: widget.primaryColorAccent,
-                        size: size.width <= 350.0 ? 15 : 25,
-                      ),
+                  ),
+                  child: Container(
+                    width: size.height <= 650 ? 30 : 50,
+                    height: size.height <= 650 ? 30 : 50,
+                    child: Icon(
+                      Icons.settings,
+                      color: appStyling.primaryColor,
+                      size: size.width <= 350.0 ? 15 : 25,
                     ),
-                    onPressed: () {},
-                  ))
+                  ),
+                  onPressed: () {},
+                ),
+              )
             ]),
         Material(
-          child: Column(children: <Widget>[
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             Container(
               padding: EdgeInsets.only(top: 20),
-              color: Colors.blue[100],
+              color: appStyling.primaryColorAccent,
               child: ListTile(
                 title: Text(
                   "Alathan volume",
@@ -150,7 +163,7 @@ class _BottomBarState extends State<BottomBar> {
                 ),
                 subtitle: Slider(
                   label: (_volume * 1000).toInt().toString(),
-                  activeColor: widget.primaryColor,
+                  activeColor: appStyling.primaryColor,
                   inactiveColor: Colors.white,
                   value: _volume,
                   min: 0,
@@ -167,7 +180,7 @@ class _BottomBarState extends State<BottomBar> {
             ),
             Container(
               padding: EdgeInsets.only(top: 20),
-              color: Colors.blue[100],
+              color: appStyling.primaryColorAccent,
               child: ListTile(
                 title: Text(
                   "App language",
@@ -191,8 +204,8 @@ class _BottomBarState extends State<BottomBar> {
                               onChanged: (selectedLanguage) {
                                 _selectedLangageHandler(selectedLanguage);
                               },
-                              style: TextStyle(color: widget.primaryColor),
-                              iconEnabledColor: widget.primaryColor,
+                              style: TextStyle(color: appStyling.primaryColor),
+                              iconEnabledColor: appStyling.primaryColor,
                               icon: Icon(Icons.language),
                               underline: Container(),
                               items: _languages.map<DropdownMenuItem<String>>(
@@ -203,7 +216,7 @@ class _BottomBarState extends State<BottomBar> {
                                     child: Text(
                                       value,
                                       style:
-                                          TextStyle(color: widget.primaryColor),
+                                          TextStyle(color: appStyling.primaryColor),
                                     ),
                                   ),
                                 );
@@ -213,7 +226,7 @@ class _BottomBarState extends State<BottomBar> {
                               child: Text(
                                 "No language founded",
                                 style: TextStyle(
-                                  color: Colors.blue[100],
+                                  color: appStyling.primaryColorAccent,
                                 ),
                               ),
                             ),

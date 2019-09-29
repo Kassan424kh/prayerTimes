@@ -13,13 +13,19 @@
     [true, true]
   ],
   "languages":{
-  "names":[
-    "arabic",
-    "english",
-    "persian",
-    "turkish"
-  ],
-  "selected": "arabic"
-},
+    "names":[
+      "arabic",
+      "english",
+      "persian",
+      "turkish"
+    ],
+    "selected": "arabic",
+    "isRtl": [
+      {"arabic" : false},
+      {"english" : true},
+      {"persian": false},
+      {"turkish": true}
+    ]
+  },
   "alathanVolume": "0.10"
 }

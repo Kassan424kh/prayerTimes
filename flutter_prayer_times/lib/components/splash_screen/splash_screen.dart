@@ -1,11 +1,9 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
-  final Color _primaryColor, _primaryColorAccent;
-
-  SplashScreen(this._primaryColor, this._primaryColorAccent);
-
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -54,6 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final appStyling = Provider.of<AppStyling>(context);
     return _showSplashScreen
         ? Positioned(
             top: 0.0,
@@ -64,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: widget._primaryColor),
+                decoration: BoxDecoration(color: appStyling.primaryColor),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

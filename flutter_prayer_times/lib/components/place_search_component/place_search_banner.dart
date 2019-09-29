@@ -2,16 +2,14 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_page.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:provider/provider.dart';
 
 class PlaceSearchBanner extends StatefulWidget {
-  final Color primaryColor, primaryColorAccent;
   final AssetImage backgroundImageBlurEffect;
 
   const PlaceSearchBanner(
       {Key key,
-      this.primaryColor = Colors.blue,
-      this.primaryColorAccent = Colors.white,
       this.backgroundImageBlurEffect})
       : super(key: key);
 
@@ -44,15 +42,16 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final appStyling = Provider.of<AppStyling>(context);
     return Container(
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: widget.primaryColor,
+        color: appStyling.primaryColor,
         boxShadow: [
           BoxShadow(color: Colors.black12, offset: Offset(0, 10), blurRadius: 30)
         ],
         borderRadius: BorderRadius.all(
-          Radius.circular(50),
+          Provider.of<AppStyling>(context).primaryRadius50,
         ),
       ),
       child: SizedBox(
@@ -84,14 +83,14 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
                             fontSize: size.width <= 350.0? 12:20,
-                            color: widget.primaryColor,
+                            color: appStyling.primaryColor,
                           ),
                         ),
                       if (placeName.length > 0) SizedBox(width: 10),
-                      Icon(Icons.place, color: widget.primaryColor, size: size.width <= 350.0 ?20 : 30)
+                      Icon(Icons.place, color: appStyling.primaryColor, size: size.width <= 350.0 ? 15 : 25)
                     ]),
-                    color: widget.primaryColorAccent,
-                    splashColor: Colors.blue[100],
+                    color: appStyling.primaryColorAccent,
+                    splashColor: appStyling.primaryColorAccent,
                     highlightColor: Colors.white10,
                     highlightElevation: 0,
                     padding: EdgeInsets.all(15),
@@ -105,10 +104,7 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PlaceSearchPage(
-                            primaryColor: widget.primaryColor,
-                            primaryColorAccent: widget.primaryColorAccent,
-                          ),
+                          builder: (context) => PlaceSearchPage(),
                         ),
                       );
                     },

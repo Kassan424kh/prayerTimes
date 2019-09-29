@@ -19,7 +19,13 @@
       "persian",
       "turkish"
     ],
-    "selected": "arabic"
+    "selected": "arabic",
+    "isRtl": [
+      {"arabic" : false},
+      {"english" : true},
+      {"persian": false},
+      {"turkish": true}
+    ]
   },
   "alathanVolume": "0.10"
 }

@@ -6,12 +6,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.widget.Toast
-
 import com.example.flutter_prayer_times.Receiver.AlarmReceiver
 import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
-import java.text.DateFormat
 import java.time.LocalDateTime
 import java.util.*
 
@@ -55,7 +51,13 @@ object AlarmM : Activity() {
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
 
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.timeInMillis, alarmIntent)
+        if (Build.VERSION.SDK_INT >= 23) {
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+        } else {
+            alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+        }
 
         if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null){
             val hour: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
@@ -7,13 +8,6 @@ import 'dart:convert' as convert;
 import 'package:provider/provider.dart';
 
 class PlaceSearchBannerField extends StatelessWidget {
-  final Color primaryColor, primaryColorAccent;
-
-  const PlaceSearchBannerField(
-      {Key key,
-      this.primaryColor = Colors.blue,
-      this.primaryColorAccent = Colors.white})
-      : super(key: key);
 
   Future closeKeyboard(ctx) async {
     FocusScope.of(ctx).requestFocus(new FocusNode());
@@ -33,6 +27,7 @@ class PlaceSearchBannerField extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final foundedPlaces = Provider.of<FoundedPlaces>(context);
+    final appStyling = Provider.of<AppStyling>(context);
     return Column(children: <Widget>[
       Container(
         margin: EdgeInsets.all(10),
@@ -40,22 +35,25 @@ class PlaceSearchBannerField extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular(50),
           ),
-          color: primaryColorAccent,
+          color: appStyling.primaryColorAccent,
         ),
         child: SizedBox(
           width: double.infinity,
           child: Container(
-            padding: EdgeInsets.all(size.width <= 350.0? 2: 5),
+            padding: EdgeInsets.all(size.width <= 350.0 ? 2 : 5),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
                     width: 61,
                     child: RaisedButton(
-                      child: Icon(Icons.keyboard_arrow_left,
-                          color: primaryColor, size: size.width <= 350.0? 20: 30),
-                      color: primaryColorAccent,
-                      splashColor: Colors.blue[100],
+                      child: Icon(
+                        Icons.keyboard_arrow_left,
+                        color: appStyling.primaryColor,
+                        size: size.width <= 350.0 ? 15 : 25,
+                      ),
+                      color: appStyling.primaryColorAccent,
+                      splashColor: appStyling.primaryColorAccent,
                       highlightColor: Colors.white10,
                       highlightElevation: 0,
                       padding: EdgeInsets.all(15),
@@ -78,7 +76,9 @@ class PlaceSearchBannerField extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white,
                           hintText: 'Search after Place ... ',
-                          hintStyle: TextStyle(color: Colors.blue[200], fontSize: size.width <= 350.0? 12: null),
+                          hintStyle: TextStyle(
+                              color: Colors.blue[200],
+                              fontSize: size.width <= 350.0 ? 12 : null),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(width: 1, color: Colors.white),
@@ -102,7 +102,8 @@ class PlaceSearchBannerField extends StatelessWidget {
                           ),
                           focusColor: Colors.white,
                           hoverColor: Colors.white,
-                          contentPadding: EdgeInsets.all(size.width <= 350.0? 10: 18),
+                          contentPadding:
+                              EdgeInsets.all(size.width <= 350.0 ? 10 : 18),
                         ),
                       ),
                       suggestionsCallback: (items) async {
@@ -118,9 +119,13 @@ class PlaceSearchBannerField extends StatelessWidget {
                   Container(
                     width: 61,
                     child: RaisedButton(
-                        child: Icon(Icons.gps_fixed, color: primaryColor, size: size.width <= 350.0? 20: 30),
-                        color: primaryColorAccent,
-                        splashColor: Colors.blue[100],
+                        child: Icon(
+                          Icons.gps_fixed,
+                          color: appStyling.primaryColor,
+                          size: size.width <= 350.0 ? 15 : 25,
+                        ),
+                        color: appStyling.primaryColorAccent,
+                        splashColor: appStyling.primaryColorWhite,
                         highlightColor: Colors.white10,
                         highlightElevation: 0,
                         padding: EdgeInsets.all(15),

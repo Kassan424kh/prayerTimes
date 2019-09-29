@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_banner_field.dart';
 import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 
 import 'package:provider/provider.dart';
@@ -11,10 +12,6 @@ import 'package:provider/provider.dart';
 import '../../app_settings.dart';
 
 class PlaceSearchPage extends StatefulWidget {
-  final Color primaryColor, primaryColorAccent;
-
-  PlaceSearchPage({Key key, this.primaryColor, this.primaryColorAccent})
-      : super(key: key);
 
   @override
   _PlaceSearchPageState createState() => _PlaceSearchPageState();
@@ -69,14 +66,12 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   @override
   Widget build(BuildContext context) {
     final foundedPlaces = Provider.of<FoundedPlaces>(context);
+    final appStyling = Provider.of<AppStyling>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
         child: Column(children: <Widget>[
-          PlaceSearchBannerField(
-            primaryColor: widget.primaryColor,
-            primaryColorAccent: widget.primaryColorAccent,
-          ),
+          PlaceSearchBannerField(),
           SizedBox(height: 30),
           foundedPlaces.getFoundedPlaces().length != 0
               ? Column(

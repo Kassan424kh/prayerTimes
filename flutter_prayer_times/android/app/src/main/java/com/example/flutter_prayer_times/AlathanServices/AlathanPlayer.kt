@@ -12,10 +12,10 @@ import android.media.MediaPlayer
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
 import android.os.IBinder
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import com.example.flutter_prayer_times.AppSettings.AppSettings
 import com.example.flutter_prayer_times.HardwareServices.HardwareServices
 import com.example.flutter_prayer_times.R

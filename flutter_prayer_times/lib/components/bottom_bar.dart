@@ -7,6 +7,7 @@ import 'package:flutter_prayer_times/prayer_times_data_from_server.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
 import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BottomBar extends StatefulWidget {
   final primaryColor, primaryColorAccent;
@@ -215,8 +216,8 @@ class _BottomBarState extends State<BottomBar> {
                                   child: Container(
                                     child: Text(
                                       value,
-                                      style:
-                                          TextStyle(color: appStyling.primaryColor),
+                                      style: TextStyle(
+                                          color: appStyling.primaryColor),
                                     ),
                                   ),
                                 );
@@ -235,9 +236,75 @@ class _BottomBarState extends State<BottomBar> {
                 ),
               ),
             ),
+            Container(
+              padding: EdgeInsets.only(top: 25),
+              color: appStyling.primaryColorAccent,
+              child: ListTile(
+                  title: Text(
+                    "Alathan volume",
+                    style: TextStyle(
+                      fontSize: size.height <= 650
+                          ? size.width <= 350.0 ? 11 : 13
+                          : 17,
+                    ),
+                  ),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      BtnUrlInBrowserLauncher(
+                          text: "T & C", url: "http://prayer-times.vsyou.app/terms-and-conditions"),
+                      BtnUrlInBrowserLauncher(
+                          text: "Privacy Policy", url: "http://prayer-times.vsyou.app/privacy-policy")
+                    ],
+                  )),
+            )
           ]),
         )
       ]),
+    );
+  }
+}
+
+class BtnUrlInBrowserLauncher extends StatelessWidget {
+  final text, url;
+
+  BtnUrlInBrowserLauncher({Key key, this.text, this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final appStyling = Provider.of<AppStyling>(context);
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(appStyling.primaryRadius),
+        child: Container(
+          color: appStyling.primaryColorWhite,
+          child: RaisedButton(
+            color: appStyling.primaryColorWhite,
+            elevation: 0,
+            onPressed: () async {
+              if (await canLaunch(url)) {
+                await launch(url);
+              } else {
+                throw 'Could not launch $url';
+              }
+            },
+            child: Row(
+              children: <Widget>[
+                Text(
+                  text,
+                  style: TextStyle(color: appStyling.primaryColor),
+                ),
+                SizedBox(width: 10),
+                Icon(
+                  Icons.open_in_new,
+                  color: appStyling.primaryColor,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

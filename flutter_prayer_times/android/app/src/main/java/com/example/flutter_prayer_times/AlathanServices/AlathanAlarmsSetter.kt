@@ -2,12 +2,9 @@ package com.example.flutter_prayer_times.AlathanServices
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.PendingIntent.*
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.widget.Toast
 import com.example.flutter_prayer_times.AlarmM
 import com.google.gson.JsonArray
 import java.time.LocalDateTime

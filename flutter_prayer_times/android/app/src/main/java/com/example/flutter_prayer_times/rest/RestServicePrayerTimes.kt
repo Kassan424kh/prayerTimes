@@ -17,7 +17,7 @@ interface RestServicePrayerTimes {
      */
     companion object Factory {
         fun create() : RestServicePrayerTimes {
-            val BASE_URL = "https://stage.prayer-times.vsyou.app/"
+            val BASE_URL = "https://prayer-times.vsyou.app/"
             val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(JacksonConverterFactory.create())

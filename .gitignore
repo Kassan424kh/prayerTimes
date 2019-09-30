@@ -4,3 +4,4 @@
 /.idea/*
 /flutter_prayer_times/pubspec.lock
 .DS_Store
+/server_prayer_times/nohup.out

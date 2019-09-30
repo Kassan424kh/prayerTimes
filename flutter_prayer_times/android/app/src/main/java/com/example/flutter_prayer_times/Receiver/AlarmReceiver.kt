@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
 import com.example.flutter_prayer_times.AlarmM
 
 import com.example.flutter_prayer_times.rest.RestServerFactory

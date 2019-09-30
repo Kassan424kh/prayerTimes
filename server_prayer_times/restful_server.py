@@ -1,16 +1,19 @@
 import json
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, make_response
 from flask_restful import Resource, Api, reqparse
 from datetime import datetime as dt, timedelta as td, date as d
 from flask_cors import CORS
 from urllib.request import urlopen, Request
 
-app = Flask('__main__')
+app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
 with open('./translate.json', "r", encoding="utf8") as data:
     TRANSLATED_PRAYER_NAMES = json.load(data)
+
+def cleanTimeText(prayer_value):
+    return prayer_value[:5] + ":00Z"
 
 end_times_of_prayers = {
     "Fajr": "Sunrise",
@@ -61,14 +64,14 @@ def timesConverterToDartDateTimeFormat(lat, lng, language, only_today):
 
                 # start date of prayer
                 start_date = (date_of_this_object + " " +
-                              prayer_value.replace(" (CEST)", "").replace(" (EEST)", "") + ":00Z")
+                              cleanTimeText(prayer_value))
 
                 # end date of prayer
-                end_date = (date_of_this_object + " " + data.get("timings").get(
-                    end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "").replace(" (EEST)", "") + ":00Z")
+                end_date = (date_of_this_object + " " + cleanTimeText(data.get("timings").get(
+                    end_times_of_prayers.get(prayer_key))))
                 if prayer_key == "Isha":
-                    end_date = ((dt.strptime(date_of_this_object, '%Y-%m-%d') + td(days=1)).strftime('%Y-%m-%d') + " " +
-                                data.get("timings").get(end_times_of_prayers.get(prayer_key)).replace(" (CEST)", "").replace(" (EEST)", "") + ":00Z")
+                    end_date = ((dt.strptime(date_of_this_object, '%Y-%m-%d') + td(days=1)).strftime('%Y-%m-%d') + " " + cleanTimeText(
+                                data.get("timings").get(end_times_of_prayers.get(prayer_key))))
 
                 prayer_times_of_this_date.append({selectedTranslatingLanguage[prayer_key]:
                                                     [
@@ -100,8 +103,26 @@ class GebetsZeiten(Resource):
         args = self.parser.parse_args()
         return timesConverterToDartDateTimeFormat(args.get('lat', False), args.get('lng', False), args.get('language', None), args.get('today', None))
 
-
 api.add_resource(GebetsZeiten, "/")
+
+
+class PrivacyPolicy(Resource):
+    def __init__(self):
+        pass
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('privacy_policy.html', title='Home', user='user'), 200, headers)
+
+api.add_resource(PrivacyPolicy, "/privacy-policy")
+
+class TermsAndConditions(Resource):
+    def __init__(self):
+        pass
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('terms_and_conditions.html', title='Home', user='user'), 200, headers)
+
+api.add_resource(TermsAndConditions, "/terms-and-conditions")
 
 if __name__ == '__main__':
     app.run(port=5000, host="0.0.0.0")

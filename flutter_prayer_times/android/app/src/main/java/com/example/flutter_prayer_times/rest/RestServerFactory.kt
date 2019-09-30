@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import android.support.annotation.RequiresApi
 import com.example.flutter_prayer_times.AppSettings.AppSettings
 import com.example.flutter_prayer_times.JsonFilesServices
 import com.google.gson.JsonParser

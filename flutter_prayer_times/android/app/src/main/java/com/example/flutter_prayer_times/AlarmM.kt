@@ -51,24 +51,23 @@ object AlarmM : Activity() {
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
 
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23)
             alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
-        } else if (Build.VERSION.SDK_INT >= 19) {
+        else if (Build.VERSION.SDK_INT >= 19)
             alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
-        } else {
+        else
             alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
-        }
 
-        if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null){
+        if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null) {
             val hour: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 (prayerTimeStartDateFormatted as LocalDateTime).hour
-            }else{
+            } else {
                 (prayerTimeStartDateFormatted as Date).hours
             }
 
             val minute: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 (prayerTimeStartDateFormatted as LocalDateTime).minute
-            }else{
+            } else {
                 (prayerTimeStartDateFormatted as Date).minutes
             }
             println("✓ ${nameOfPrayer} was set at ${hour}:${minute} today")

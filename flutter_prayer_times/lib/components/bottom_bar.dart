@@ -241,7 +241,7 @@ class _BottomBarState extends State<BottomBar> {
               color: appStyling.primaryColorAccent,
               child: ListTile(
                   title: Text(
-                    "Alathan volume",
+                    "Rights",
                     style: TextStyle(
                       fontSize: size.height <= 650
                           ? size.width <= 350.0 ? 11 : 13

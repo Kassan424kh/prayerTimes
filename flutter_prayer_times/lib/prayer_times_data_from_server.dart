@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'app_settings.dart';
+
 class PrayerTimesDataFromServer {
-  String _dtNow =
-      "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  AppSettings appSettings = new AppSettings();
+  static const android =
+      const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
 
   Future get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -39,26 +41,7 @@ class PrayerTimesDataFromServer {
       print(data.toString());
       await file.writeAsString(json.encode(data));
     } catch (e) {
-      print('cann\'t saved data to json File');
-    }
-  }
-
-  Future<List> get getPrayerTimesFromApiServer async {
-    //print('get data from restful server');
-    String url = 'https://prayer-times.vsyou.app/';
-    try {
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        await writePrayerTimesToJsonFile(
-            json.decode(response.body));
-        return json.decode(response.body);
-      } else {
-        print('[Error] connection faild');
-        return null;
-      }
-    } catch (e) {
-      print('[Error] faild connection to server $url');
-      return null;
+      print("cann't saved data to json File");
     }
   }
 
@@ -92,15 +75,34 @@ class PrayerTimesDataFromServer {
     }).toList();
   }
 
+  Future<bool> get updateTodayPrayerTimes async {
+    try {
+      final bool result = await android.invokeMethod('updateTodayPrayerTimes');
+      return result;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> get updatePrayerTimesCompletely async {
+    try {
+      final bool result =
+          await android.invokeMethod('updatePrayerTimesAfterNewPlaceData');
+      if(result)
+        updateTodayPrayerTimes;
+      return result;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<List> getPrayerTimes() async {
     return await prayerTimesFromJsonFile.then((data) async {
       List getData;
-      if (data == null) {
-        getPrayerTimesFromApiServer.then((d) => getData = d);
-      } else {
-        getData = data as List;
-      }
-
+      if (data == null) updatePrayerTimesCompletely;
+      getData = data;
       getData = getData != null ? setActivePrayerTime(getData) : null;
 
       return getData;

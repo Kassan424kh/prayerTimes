@@ -3,9 +3,19 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_prayer_times/components/app_oclock.dart';
+import 'package:flutter_prayer_times/components/bottom_bar.dart';
+import 'package:flutter_prayer_times/components/home.dart';
+import 'package:flutter_prayer_times/components/splash_screen/splash_screen.dart';
+import 'package:flutter_prayer_times/provider/app_settings.dart';
+import 'package:flutter_prayer_times/provider/app_styling.dart';
+import 'package:flutter_prayer_times/provider/founded_places.dart';
+import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 
-import './prayer_times_container.dart';
+import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_container.dart';
+import 'package:flutter_prayer_times/app_settings.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 Future main() async => runApp(MyApp());
 
@@ -16,10 +26,6 @@ class MyApp extends StatefulWidget {
 
 class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   // variables
-  Color _primaryColor = Color(0xff2196f3); //Colors.deepPurpleAccent;
-  Color _primaryColorAccent = Color(0xffe3f2fd); //Colors.deepPurpleAccent;
-  AssetImage _backgroundImage =
-      AssetImage('assets/background_images/jan-antonin-kolar-1530013-unsplash.jpg');
   DateTime _now = DateTime.now();
 
   Future<void> setData() async {
@@ -34,10 +40,14 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    Screen.keepOn(true);
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // keyboard done
     setData();
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setData();
+    });
+
+    AppSettings.writeDefaultAppSettingsToAppSettingsJsonFile.then((none) {
+      AppSettings.jsonFromAppSettingsFile;
     });
   }
 
@@ -51,45 +61,22 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-      ),
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            color: _primaryColorAccent,
-            image: DecorationImage(
-              image: _backgroundImage,
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-          ),
-
-          //color: _primaryColorAccent,
-          child: Column(children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Center(
-                child: Text(
-                  _now.toString().substring(11, 16),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 60,
-                      shadows: <Shadow>[
-                        Shadow(
-                            color: Colors.black,
-                            offset: Offset(0, 5),
-                            blurRadius: 50)
-                      ]),
-                ),
-              ),
-            ),
-            PrayerTimesContainer(
-                _primaryColor, _primaryColorAccent, _backgroundImage)
-          ]),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppSettingsProvider>(
+            builder: (_) => AppSettingsProvider()),
+        ChangeNotifierProvider<FoundedPlaces>(
+            builder: (_) => FoundedPlaces([])),
+        ChangeNotifierProvider<AppStyling>(
+          builder: (_) => AppStyling(),
         ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.black,
+        ),
+        home: Home(_now),
       ),
     );
   }

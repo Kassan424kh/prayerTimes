@@ -22,17 +22,30 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  assets_audio_player: ^1.0.1
+  #assets_audio_player: ^1.0.1
   cupertino_icons: ^0.1.2
   path_provider: ^1.1.0
   screen: ^0.0.5
   http: ^0.12.0+2
   intl: ^0.15.8
+  flutter_typeahead: ^1.6.1
+  provider: ^3.0.0+1
+  flare_flutter: any
+  vibration: 1.2.1
+  sliding_up_panel: ^0.3.5
+  url_launcher: ^5.1.4
+
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.7.3
+
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app_logo/mosque_3d.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -40,8 +53,17 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-  - assets/audios/
-  - assets/background_images/
+    - assets/
+    - assets/app_logo/
+    - assets/audios/
+    - assets/background_images/
+    - assets/background_images/adrian-MBwvFtRqCcQ-unsplash.png
+    - assets/background_images/adrian-MBwvFtRqCcQ-unsplash_blur_effect.png
+    - assets/defaultAppSettings.json
+  fonts:
+    - family: Righteous
+      fonts:
+      - asset: assets/fonts/Righteous-Regular.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

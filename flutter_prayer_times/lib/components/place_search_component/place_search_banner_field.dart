@@ -35,7 +35,7 @@ class PlaceSearchBannerField extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular(50),
           ),
-          color: appStyling.primaryColorAccent,
+          color: appStyling.primaryColor,
         ),
         child: SizedBox(
           width: double.infinity,
@@ -45,11 +45,12 @@ class PlaceSearchBannerField extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    width: 61,
+                    width: 60,
+                    height: 60,
                     child: RaisedButton(
                       child: Icon(
                         Icons.keyboard_arrow_left,
-                        color: appStyling.primaryColor,
+                        color: appStyling.primaryTextColor,
                         size: size.width <= 350.0 ? 15 : 25,
                       ),
                       color: appStyling.primaryColorAccent,
@@ -68,34 +69,38 @@ class PlaceSearchBannerField extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(width: 5),
+                  SizedBox(width: 10),
                   Expanded(
                     child: TypeAheadField(
                       textFieldConfiguration: TextFieldConfiguration(
+                        style: TextStyle(
+                            color: appStyling.primaryTextColor
+                        ),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          counterStyle: TextStyle(color: appStyling.primaryTextColor),
+                          fillColor: appStyling.primaryColorAccent,
                           hintText: 'Search after Place ... ',
                           hintStyle: TextStyle(
-                              color: Colors.blue[200],
+                              color: appStyling.primaryTextColor,
                               fontSize: size.width <= 350.0 ? 12 : null),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.white),
+                            borderSide:!appStyling.themeStatusIsDark?
+                                BorderSide(width: 1, color: Colors.white): BorderSide(width: 1, color: appStyling.primaryColor),
                             borderRadius: BorderRadius.all(
                               Radius.circular(50),
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.white),
+                            borderSide:!appStyling.themeStatusIsDark?
+                            BorderSide(width: 1, color: Colors.white): BorderSide(width: 1, color: appStyling.primaryColor),
                             borderRadius: BorderRadius.all(
                               Radius.circular(50),
                             ),
                           ),
                           border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.white),
+                            borderSide:!appStyling.themeStatusIsDark?
+                            BorderSide(width: 1, color: Colors.white): BorderSide(width: 1, color: appStyling.primaryColor),
                             borderRadius: BorderRadius.all(
                               Radius.circular(50),
                             ),
@@ -103,7 +108,7 @@ class PlaceSearchBannerField extends StatelessWidget {
                           focusColor: Colors.white,
                           hoverColor: Colors.white,
                           contentPadding:
-                              EdgeInsets.all(size.width <= 350.0 ? 10 : 18),
+                              EdgeInsets.all(size.width <= 350.0 ? 10 : 22),
                         ),
                       ),
                       suggestionsCallback: (items) async {
@@ -115,13 +120,14 @@ class PlaceSearchBannerField extends StatelessWidget {
                       onSuggestionSelected: (s) {},
                     ),
                   ),
-                  SizedBox(width: 5),
+                  SizedBox(width: 10),
                   Container(
-                    width: 61,
+                    width: 60,
+                    height: 60,
                     child: RaisedButton(
                         child: Icon(
                           Icons.gps_fixed,
-                          color: appStyling.primaryColor,
+                          color: appStyling.primaryTextColor,
                           size: size.width <= 350.0 ? 15 : 25,
                         ),
                         color: appStyling.primaryColorAccent,

@@ -113,56 +113,58 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
                                 fontSize: displaySize
                                     ? size.width <= 350.0 ? 15 : 20
                                     : 30,
-                                color: appStyling.primaryColor,
+                                color: appStyling.primaryTextColor,
                               ),
                             ),
                             SizedBox(width: 10),
                             IconButton(
-                                // disable if Sunrise/الشروق
-                                onPressed: widget.index == 1
-                                    ? null
-                                    : () {
-                                        Vibration.vibrate(duration: 50);
-                                        AppSettings.isAppSettingsFileExists
-                                            .then((check) => check
-                                                ? AppSettings
-                                                    .jsonFromAppSettingsFile
-                                                    .then((oldAppSettings) {
-                                                    //card status
-                                                    List<bool> _cs;
-                                                    if (_cardStatus == 2)
-                                                      _cs = [false, true];
-                                                    else if (_cardStatus == 1)
-                                                      _cs = [false, false];
-                                                    else if (_cardStatus == 0)
-                                                      _cs = [true, true];
+                              // disable if Sunrise/الشروق
+                              onPressed: widget.index == 1
+                                  ? null
+                                  : () {
+                                      Vibration.vibrate(duration: 50);
+                                      AppSettings.isAppSettingsFileExists.then(
+                                          (check) => check
+                                              ? AppSettings
+                                                  .jsonFromAppSettingsFile
+                                                  .then((oldAppSettings) {
+                                                  //card status
+                                                  List<bool> _cs;
+                                                  if (_cardStatus == 2)
+                                                    _cs = [false, true];
+                                                  else if (_cardStatus == 1)
+                                                    _cs = [false, false];
+                                                  else if (_cardStatus == 0)
+                                                    _cs = [true, true];
 
-                                                    oldAppSettings[
-                                                            "acceptPlayingAthans"]
-                                                        [widget.index] = _cs;
-                                                    AppSettings
-                                                        .updateSettingsInAppSettingsJsonFile(
-                                                            oldAppSettings);
-                                                    Provider.of<AppSettingsProvider>(
-                                                            context)
-                                                        .updateAppSettings(
-                                                            oldAppSettings);
+                                                  oldAppSettings[
+                                                          "acceptPlayingAthans"]
+                                                      [widget.index] = _cs;
+                                                  AppSettings
+                                                      .updateSettingsInAppSettingsJsonFile(
+                                                          oldAppSettings);
+                                                  Provider.of<AppSettingsProvider>(
+                                                          context)
+                                                      .updateAppSettings(
+                                                          oldAppSettings);
 
-                                                    prayerTimesDataFromServer
-                                                        .updateTodayPrayerTimes
-                                                        .then(((check) {
-                                                      if (check)
-                                                        print(
-                                                            "Prayer Times reseted");
-                                                      else
-                                                        print(
-                                                            "Prayer Times cann't reseted");
-                                                    }));
-                                                  })
-                                                : null);
-                                      },
-                                icon: Icon(
-                                    widget.index == 1 ? Icons.alarm_off : cs)),
+                                                  prayerTimesDataFromServer
+                                                      .updateTodayPrayerTimes
+                                                      .then(((check) {
+                                                    if (check)
+                                                      print(
+                                                          "Prayer Times reseted");
+                                                    else
+                                                      print(
+                                                          "Prayer Times cann't reseted");
+                                                  }));
+                                                })
+                                              : null);
+                                    },
+                              icon: Icon(
+                                  widget.index == 1 ? Icons.alarm_off : cs, color: appStyling.primaryTextColor),
+                              color: appStyling.primaryTextColor,
+                            ),
                             SizedBox(width: 10),
                           ]),
                     ),

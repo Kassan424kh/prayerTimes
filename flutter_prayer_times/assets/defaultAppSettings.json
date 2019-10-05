@@ -27,5 +27,8 @@
       {"turkish": true}
     ]
   },
-  "alathanVolume": "0.10"
+  "alathanVolume": "0.10",
+  "themeStatus":{
+    "isDark": false
+  }
 }

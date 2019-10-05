@@ -1,21 +1,13 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_prayer_times/components/app_oclock.dart';
-import 'package:flutter_prayer_times/components/bottom_bar.dart';
 import 'package:flutter_prayer_times/components/home.dart';
-import 'package:flutter_prayer_times/components/splash_screen/splash_screen.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
 import 'package:flutter_prayer_times/provider/app_styling.dart';
 import 'package:flutter_prayer_times/provider/founded_places.dart';
 import 'package:provider/provider.dart';
-import 'package:screen/screen.dart';
-
-import 'package:flutter_prayer_times/components/prayer_time_cards/prayer_times_container.dart';
 import 'package:flutter_prayer_times/app_settings.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 Future main() async => runApp(MyApp());
 

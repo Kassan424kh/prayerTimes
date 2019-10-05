@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import '../../app_settings.dart';
 
 class PlaceSearchPage extends StatefulWidget {
-
   @override
   _PlaceSearchPageState createState() => _PlaceSearchPageState();
 }
@@ -39,19 +38,13 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
       oldSettings["place"]["lat"] = e['center'][1].toString();
       oldSettings["place"]["place"] = e['place_name'];
       Provider.of<AppSettingsProvider>(context).updateAppSettings(oldSettings);
-      AppSettings
-          .updateSettingsInAppSettingsJsonFile(oldSettings)
+      AppSettings.updateSettingsInAppSettingsJsonFile(oldSettings)
           .then((isUpdated) {
         if (isUpdated)
-          prayerTimesDataFromServer
-              .updatePrayerTimesCompletely
-              .then((result) {
+          prayerTimesDataFromServer.updatePrayerTimesCompletely.then((result) {
             if (result)
-              Timer(
-                  const Duration(milliseconds: 200), () {
-                prayerTimesDataFromServer
-                    .updateTodayPrayerTimes
-                    .then((result) {
+              Timer(const Duration(milliseconds: 200), () {
+                prayerTimesDataFromServer.updateTodayPrayerTimes.then((result) {
                   if (result)
                     closeKeyboard(context);
                   else
@@ -68,7 +61,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
     final foundedPlaces = Provider.of<FoundedPlaces>(context);
     final appStyling = Provider.of<AppStyling>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appStyling.themeStatusIsDark ? appStyling.primaryColor : appStyling.primaryColorWhite,
       body: Container(
         child: Column(children: <Widget>[
           PlaceSearchBannerField(),
@@ -76,17 +69,28 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           foundedPlaces.getFoundedPlaces().length != 0
               ? Column(
                   children: foundedPlaces.getFoundedPlaces().map<Widget>((e) {
-                  return ListTile(
-                    onTap: () async {
-                      _tapHandling(e);
-                    },
-                    leading: Icon(Icons.place),
-                    title: Text(e['place_name']),
-                    subtitle: Text(
-                        '${"Lng: " + e['center'][0].toString() + " -- " + "Lat: " + e['center'][1].toString()}'),
+                  return Container(
+                    color: appStyling.primaryColorAccent,
+                    child: ListTile(
+                      onTap: () async {
+                        _tapHandling(e);
+                      },
+                      leading: Icon(
+                        Icons.place,
+                        color: appStyling.primaryTextColor,
+                      ),
+                      title: Text(
+                        e['place_name'],
+                        style: TextStyle(
+                          color: appStyling.primaryTextColor,
+                        ),
+                      ),
+                    ),
                   );
                 }).toList())
-              : Center(child: Text('No searched places'))
+              : Center(
+                  child: Text('No searched places',
+                      style: TextStyle(color: appStyling.primaryTextColor)))
         ]),
       ),
     );

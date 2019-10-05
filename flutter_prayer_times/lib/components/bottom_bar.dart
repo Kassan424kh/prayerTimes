@@ -25,11 +25,7 @@ class _BottomBarState extends State<BottomBar> {
   String _selectedLanguages;
   PrayerTimesDataFromServer prayerTimesDataFromServer =
       PrayerTimesDataFromServer();
-
-  @override
-  initState() {
-    super.initState();
-  }
+  bool _themeStatus = false;
 
   Future<void> _volumeHandler(volume) async {
     AppSettings.jsonFromAppSettingsFile
@@ -62,6 +58,21 @@ class _BottomBarState extends State<BottomBar> {
     });
   }
 
+  Future<void> _themeStatusHandler(bool themeStatus) async {
+    AppSettings.jsonFromAppSettingsFile
+        .then((Map<String, dynamic> oldSettings) {
+      oldSettings["themeStatus"]["isDark"] = themeStatus;
+      Provider.of<AppSettingsProvider>(context).updateAppSettings(oldSettings);
+      AppSettings.updateSettingsInAppSettingsJsonFile(oldSettings)
+          .then((isUpdated) {
+        if (isUpdated) print("App theme is updated");
+        prayerTimesDataFromServer.updatePrayerTimesCompletely.then(
+            (isUpdated) =>
+                print("App theme ${isUpdated ? "is" : "isn't"} updated"));
+      });
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -76,13 +87,10 @@ class _BottomBarState extends State<BottomBar> {
           for (var key in await appSettings["languages"]["names"])
             _languages.add(key);
         }
-      });
-      Provider.of<AppSettingsProvider>(context)
-          .getAppSettings()
-          .then((appSettings) async {
-        for (String key in await appSettings.keys)
-          if (key == "alathanVolume")
-            setState(() => _volume = double.parse(appSettings[key]));
+        setState(() {
+          _volume = double.parse(appSettings["alathanVolume"]);
+          _themeStatus = appSettings["themeStatus"]["isDark"];
+        });
       });
     });
   }
@@ -111,7 +119,7 @@ class _BottomBarState extends State<BottomBar> {
                   child: Text(
                     "© 2019 Khalil Khalil",
                     style: TextStyle(
-                      color: appStyling.primaryColor,
+                      color: appStyling.primaryTextColor,
                       fontSize: size.height <= 650
                           ? size.width <= 350.0 ? 11 : 13
                           : 20,
@@ -141,7 +149,7 @@ class _BottomBarState extends State<BottomBar> {
                     height: size.height <= 650 ? 30 : 50,
                     child: Icon(
                       Icons.settings,
-                      color: appStyling.primaryColor,
+                      color: appStyling.primaryTextColor,
                       size: size.width <= 350.0 ? 15 : 25,
                     ),
                   ),
@@ -150,117 +158,144 @@ class _BottomBarState extends State<BottomBar> {
               )
             ]),
         Material(
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 20),
-              color: appStyling.primaryColorAccent,
-              child: ListTile(
-                title: Text(
-                  "Alathan volume",
-                  style: TextStyle(
-                    fontSize:
-                        size.height <= 650 ? size.width <= 350.0 ? 11 : 13 : 17,
+          child: Container(
+            constraints: BoxConstraints(minWidth: 230.0, minHeight: 25.0),
+            child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                color: appStyling.primaryColorAccent,
+                child: ListTile(
+                  title: ListTileTitle("Alathan volume"),
+                  subtitle: Slider(
+                    label: (_volume * 1000).toInt().toString(),
+                    activeColor: appStyling.primaryTextColor,
+                    inactiveColor: Colors.white,
+                    value: _volume,
+                    min: 0,
+                    max: 0.10,
+                    divisions: 10,
+                    onChanged: (volume) {
+                      setState(() => _volume = volume);
+                    },
+                    onChangeEnd: (volume) {
+                      _volumeHandler(volume);
+                    },
                   ),
-                ),
-                subtitle: Slider(
-                  label: (_volume * 1000).toInt().toString(),
-                  activeColor: appStyling.primaryColor,
-                  inactiveColor: Colors.white,
-                  value: _volume,
-                  min: 0,
-                  max: 0.10,
-                  divisions: 10,
-                  onChanged: (volume) {
-                    setState(() => _volume = volume);
-                  },
-                  onChangeEnd: (volume) {
-                    _volumeHandler(volume);
-                  },
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 20),
-              color: appStyling.primaryColorAccent,
-              child: ListTile(
-                title: Text(
-                  "App language",
-                  style: TextStyle(
-                    fontSize:
-                        size.height <= 650 ? size.width <= 350.0 ? 11 : 13 : 17,
-                  ),
-                ),
-                subtitle: Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                    child: Container(
-                      color: Colors.white54,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                      child: _languages.length != 0 || _languages == null
-                          ? DropdownButton(
-                              value: _selectedLanguages,
-                              isExpanded: true,
-                              onChanged: (selectedLanguage) {
-                                _selectedLangageHandler(selectedLanguage);
-                              },
-                              style: TextStyle(color: appStyling.primaryColor),
-                              iconEnabledColor: appStyling.primaryColor,
-                              icon: Icon(Icons.language),
-                              underline: Container(),
-                              items: _languages.map<DropdownMenuItem<String>>(
-                                  (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Container(
-                                    child: Text(
-                                      value,
-                                      style: TextStyle(
-                                          color: appStyling.primaryColor),
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                color: appStyling.primaryColorAccent,
+                child: ListTile(
+                  title: ListTileTitle("App language"),
+                  subtitle: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                      child: Container(
+                        color: appStyling.primaryTextColor,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        child: _languages.length != 0 || _languages != null
+                            ? DropdownButton(
+                                value: _selectedLanguages,
+                                isExpanded: true,
+                                onChanged: (selectedLanguage) {
+                                  _selectedLangageHandler(selectedLanguage);
+                                },
+                                style:
+                                    TextStyle(color: appStyling.primaryColor),
+                                iconEnabledColor: appStyling.primaryColor,
+                                icon: Icon(Icons.language),
+                                underline: Container(),
+                                items: _languages.map<DropdownMenuItem<String>>(
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Container(
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(
+                                            color: appStyling.themeStatusIsDark
+                                                ? appStyling.primaryColor
+                                                : appStyling
+                                                    .primaryColorAccent),
+                                      ),
                                     ),
+                                  );
+                                }).toList(),
+                              )
+                            : Container(
+                                child: Text(
+                                  "No language founded",
+                                  style: TextStyle(
+                                    color: appStyling.primaryColorAccent,
                                   ),
-                                );
-                              }).toList(),
-                            )
-                          : Container(
-                              child: Text(
-                                "No language founded",
-                                style: TextStyle(
-                                  color: appStyling.primaryColorAccent,
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 25),
-              color: appStyling.primaryColorAccent,
-              child: ListTile(
-                  title: Text(
-                    "Rights",
-                    style: TextStyle(
-                      fontSize: size.height <= 650
-                          ? size.width <= 350.0 ? 11 : 13
-                          : 17,
-                    ),
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                color: appStyling.primaryColorAccent,
+                child: ListTile(
+                  title: ListTileTitle("Darkmode"),
+                  trailing: Switch(
+                    value: _themeStatus,
+                    onChanged: (themeStatus) {
+                      setState(() {
+                        _themeStatus = themeStatus;
+                        appStyling.setTheme(themeStatus);
+                        _themeStatusHandler(themeStatus);
+                      });
+                    },
                   ),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      BtnUrlInBrowserLauncher(
-                          text: "T & C", url: "http://prayer-times.vsyou.app/terms-and-conditions"),
-                      BtnUrlInBrowserLauncher(
-                          text: "Privacy Policy", url: "http://prayer-times.vsyou.app/privacy-policy")
-                    ],
-                  )),
-            )
-          ]),
-        )
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 25),
+                color: appStyling.primaryColorAccent,
+                child: ListTile(
+                    title: ListTileTitle("Rights"),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        BtnUrlInBrowserLauncher(
+                            text: "T & C",
+                            url:
+                                "http://prayer-times.vsyou.app/terms-and-conditions"),
+                        BtnUrlInBrowserLauncher(
+                            text: "Privacy Policy",
+                            url: "http://prayer-times.vsyou.app/privacy-policy")
+                      ],
+                    )),
+              )
+            ]),
+          ),
+        ),
       ]),
+    );
+  }
+}
+
+class ListTileTitle extends StatelessWidget {
+  final _title;
+
+  ListTileTitle(this._title);
+
+  @override
+  Widget build(BuildContext context) {
+    final appStyling = Provider.of<AppStyling>(context);
+    final size = MediaQuery.of(context).size;
+    return Text(
+      _title,
+      style: TextStyle(
+        color: appStyling.primaryTextColor,
+        fontSize: size.height <= 650 ? size.width <= 350.0 ? 11 : 13 : 17,
+      ),
     );
   }
 }
@@ -278,9 +313,9 @@ class BtnUrlInBrowserLauncher extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.all(appStyling.primaryRadius),
         child: Container(
-          color: appStyling.primaryColorWhite,
+          color: appStyling.primaryTextColor,
           child: RaisedButton(
-            color: appStyling.primaryColorWhite,
+            color: appStyling.primaryTextColor,
             elevation: 0,
             onPressed: () async {
               if (await canLaunch(url)) {
@@ -293,12 +328,17 @@ class BtnUrlInBrowserLauncher extends StatelessWidget {
               children: <Widget>[
                 Text(
                   text,
-                  style: TextStyle(color: appStyling.primaryColor),
+                  style: TextStyle(
+                      color: appStyling.themeStatusIsDark
+                          ? appStyling.primaryColor
+                          : appStyling.primaryColorAccent),
                 ),
                 SizedBox(width: 10),
                 Icon(
                   Icons.open_in_new,
-                  color: appStyling.primaryColor,
+                  color: appStyling.themeStatusIsDark
+                      ? appStyling.primaryColor
+                      : appStyling.primaryColorAccent,
                 ),
               ],
             ),

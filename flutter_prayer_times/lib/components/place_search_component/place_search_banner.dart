@@ -1,4 +1,3 @@
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prayer_times/components/place_search_component/place_search_page.dart';
 import 'package:flutter_prayer_times/provider/app_settings.dart';
@@ -83,11 +82,11 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
                             fontSize: size.width <= 350.0? 12:20,
-                            color: appStyling.primaryColor,
+                            color: appStyling.primaryTextColor,
                           ),
                         ),
                       if (placeName.length > 0) SizedBox(width: 10),
-                      Icon(Icons.place, color: appStyling.primaryColor, size: size.width <= 350.0 ? 15 : 25)
+                      Icon(Icons.place, color: appStyling.primaryTextColor, size: size.width <= 350.0 ? 15 : 25)
                     ]),
                     color: appStyling.primaryColorAccent,
                     splashColor: appStyling.primaryColorAccent,

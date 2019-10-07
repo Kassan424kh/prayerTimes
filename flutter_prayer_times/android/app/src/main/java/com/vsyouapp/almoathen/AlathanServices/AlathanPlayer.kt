@@ -1,4 +1,4 @@
-package com.example.flutter_prayer_times.AlathanServices
+package com.vsyouapp.almoathen.AlathanServices
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -16,9 +16,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.example.flutter_prayer_times.AppSettings.AppSettings
-import com.example.flutter_prayer_times.HardwareServices.HardwareServices
-import com.example.flutter_prayer_times.R
+import com.vsyouapp.almoathen.AppSettings.AppSettings
+import com.vsyouapp.almoathen.HardwareServices.HardwareServices
+import com.vsyouapp.almoathen.R
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 

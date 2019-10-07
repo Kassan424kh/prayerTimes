@@ -1,9 +1,7 @@
-package com.example.flutter_prayer_times.PrayerTimesData
+package com.vsyouapp.almoathen.PrayerTimesData
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
-import com.example.flutter_prayer_times.MainActivity
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.File

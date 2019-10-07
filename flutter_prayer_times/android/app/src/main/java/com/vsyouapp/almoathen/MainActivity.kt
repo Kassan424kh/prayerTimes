@@ -1,10 +1,10 @@
-package com.example.flutter_prayer_times
+package com.vsyouapp.almoathen
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
-import com.example.flutter_prayer_times.rest.RestServerFactory
+import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
+import com.vsyouapp.almoathen.rest.RestServerFactory
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant

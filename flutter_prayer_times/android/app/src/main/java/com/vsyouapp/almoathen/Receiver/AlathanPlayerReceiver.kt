@@ -1,11 +1,11 @@
-package com.example.flutter_prayer_times.Receiver
+package com.vsyouapp.almoathen.Receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
-import com.example.flutter_prayer_times.AlathanServices.AlathanPlayer
+import com.vsyouapp.almoathen.AlathanServices.AlathanPlayer
 
 class AlathanPlayerReceiver : BroadcastReceiver() {
     override fun onReceive(ctxt: Context, intent: Intent) {

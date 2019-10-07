@@ -3,5 +3,6 @@
 /.idea
 /.idea/*
 /flutter_prayer_times/pubspec.lock
+/flutter_prayer_times/android/key.properties
 .DS_Store
 /server_prayer_times/nohup.out

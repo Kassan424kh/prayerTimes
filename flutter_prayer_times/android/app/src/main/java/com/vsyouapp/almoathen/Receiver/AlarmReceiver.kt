@@ -1,4 +1,4 @@
-package com.example.flutter_prayer_times.Receiver
+package com.vsyouapp.almoathen.Receiver
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -7,9 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.example.flutter_prayer_times.AlarmM
+import com.vsyouapp.almoathen.AlarmM
 
-import com.example.flutter_prayer_times.rest.RestServerFactory
+import com.vsyouapp.almoathen.rest.RestServerFactory
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

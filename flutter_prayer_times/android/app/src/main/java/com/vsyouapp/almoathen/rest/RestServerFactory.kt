@@ -1,11 +1,11 @@
-package com.example.flutter_prayer_times.rest
+package com.vsyouapp.almoathen.rest
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import com.example.flutter_prayer_times.AppSettings.AppSettings
-import com.example.flutter_prayer_times.JsonFilesServices
+import com.vsyouapp.almoathen.AppSettings.AppSettings
+import com.vsyouapp.almoathen.JsonFilesServices
 import com.google.gson.JsonParser
 import retrofit2.Call
 import retrofit2.Callback

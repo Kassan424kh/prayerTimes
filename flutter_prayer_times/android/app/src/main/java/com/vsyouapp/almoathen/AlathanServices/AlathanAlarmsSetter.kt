@@ -1,17 +1,17 @@
-package com.example.flutter_prayer_times.AlathanServices
+package com.vsyouapp.almoathen.AlathanServices
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent.*
 import android.content.Context
 import android.os.Build
-import com.example.flutter_prayer_times.AlarmM
+import com.vsyouapp.almoathen.AlarmM
 import com.google.gson.JsonArray
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import android.content.Intent
-import com.example.flutter_prayer_times.AppSettings.AppSettings
-import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import com.vsyouapp.almoathen.AppSettings.AppSettings
+import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
 import java.text.SimpleDateFormat
 import java.util.*
 

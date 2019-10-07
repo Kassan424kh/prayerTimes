@@ -1,11 +1,11 @@
-package com.example.flutter_prayer_times
+package com.vsyouapp.almoathen
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import com.example.flutter_prayer_times.AlathanServices.AlathanAlarmsSetter
-import com.example.flutter_prayer_times.rest.RestServerFactory
+import com.vsyouapp.almoathen.AlathanServices.AlathanAlarmsSetter
+import com.vsyouapp.almoathen.rest.RestServerFactory
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject

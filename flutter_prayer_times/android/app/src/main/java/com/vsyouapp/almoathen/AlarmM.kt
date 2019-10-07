@@ -1,4 +1,4 @@
-package com.example.flutter_prayer_times
+package com.vsyouapp.almoathen
 
 import android.app.Activity
 import android.app.AlarmManager
@@ -6,8 +6,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.example.flutter_prayer_times.Receiver.AlarmReceiver
-import com.example.flutter_prayer_times.Receiver.AlathanPlayerReceiver
+import com.vsyouapp.almoathen.Receiver.AlarmReceiver
+import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
 import java.time.LocalDateTime
 import java.util.*
 

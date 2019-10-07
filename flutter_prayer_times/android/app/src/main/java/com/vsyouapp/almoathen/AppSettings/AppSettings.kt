@@ -1,8 +1,8 @@
-package com.example.flutter_prayer_times.AppSettings
+package com.vsyouapp.almoathen.AppSettings
 
 import android.content.Context
 import android.content.ContextWrapper
-import com.example.flutter_prayer_times.R
+import com.vsyouapp.almoathen.R
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.File

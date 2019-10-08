@@ -9,7 +9,7 @@ import 'app_settings.dart';
 class PrayerTimesDataFromServer {
   AppSettings appSettings = new AppSettings();
   static const android =
-      const MethodChannel('com.prayer-times.flutter/prayer-times-updater');
+      const MethodChannel('com.vsyouapp.almoathen/prayer-times-updater');
 
   Future get _localPath async {
     final directory = await getApplicationDocumentsDirectory();

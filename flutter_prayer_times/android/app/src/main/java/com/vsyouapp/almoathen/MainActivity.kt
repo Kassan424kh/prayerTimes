@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL_UPDATER = "com.prayer-times.flutter/prayer-times-updater"
+    private val CHANNEL_UPDATER = "com.vsyouapp.almoathen/prayer-times-updater"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -29,7 +29,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
           String key;
           String start;
           String end;
-          bool active;
+          bool active = false;
           pt.forEach((k, v) {
             if (k != 'active') {
               key = k.toString();

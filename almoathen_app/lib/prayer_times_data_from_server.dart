@@ -39,10 +39,6 @@ class PrayerTimesDataFromServer {
       print(data.toString());
       await file.writeAsString(json.encode(data));
     } catch (e) {
-      Timer(const Duration(seconds: 5), () {
-        updatePrayerTimesCompletely;
-      });
-
       print("cann't saved data to json File");
     }
   }
@@ -102,6 +98,7 @@ class PrayerTimesDataFromServer {
       List getData;
       if (data == null) updatePrayerTimesCompletely;
       getData = data;
+      getData = getData != null ? setActivePrayerTime(getData) : null;
 
       return getData;
     });

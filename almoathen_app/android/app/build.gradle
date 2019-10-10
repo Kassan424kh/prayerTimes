@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.almoathen_app"
+        applicationId "com.vsyouapp.almoathen"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
@@ -64,11 +64,11 @@ android {
         release {
             signingConfig signingConfigs.release
 
-            minifyEnabled true
-            useProguard true
+            shrinkResources false
+            minifyEnabled false
+            useProguard false
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
         }
     }
 }

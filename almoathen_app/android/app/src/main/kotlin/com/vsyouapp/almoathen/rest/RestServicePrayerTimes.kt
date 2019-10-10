@@ -1,4 +1,4 @@
-package com.example.almoathen_app.rest
+package com.vsyouapp.almoathen.rest
 
 import retrofit2.Call
 import retrofit2.Retrofit

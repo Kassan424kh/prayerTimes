@@ -1,11 +1,11 @@
-package com.example.almoathen_app.Receiver
+package com.vsyouapp.almoathen.Receiver
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.almoathen_app.AlarmM
-import com.example.almoathen_app.JsonFilesServices
+import com.vsyouapp.almoathen.AlarmM
+import com.vsyouapp.almoathen.JsonFilesServices
 
 class BootReceiver : BroadcastReceiver() {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")

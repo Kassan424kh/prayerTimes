@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.almoathen_app">
+    package="com.vsyouapp.almoathen">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -20,7 +20,7 @@
         android:label="Almoathen"
         android:icon="@mipmap/launcher_icon">
         <activity
-            android:name=".MainActivity"
+            android:name="com.vsyouapp.almoathen.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -39,15 +39,15 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".AlathanServices.AlathanPlayer"
+            android:name="com.vsyouapp.almoathen.AlathanServices.AlathanPlayer"
             android:stopWithTask="false"
             android:process=".process"
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped"/>
-        <receiver android:process=":remote" android:name=".Receiver.AlarmReceiver"/>
-        <receiver android:process=":alathan_player_receiver" android:name=".Receiver.AlathanPlayerReceiver"/>
-        <receiver android:name=".Receiver.BootReceiver"
+        <receiver android:process=":remote" android:name="com.vsyouapp.almoathen.Receiver.AlarmReceiver"/>
+        <receiver android:process=":alathan_player_receiver" android:name="com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver"/>
+        <receiver android:name="com.vsyouapp.almoathen.Receiver.BootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>

@@ -1,4 +1,4 @@
-package com.example.almoathen_app.HardwareServices
+package com.vsyouapp.almoathen.HardwareServices
 
 import android.content.Context
 import android.os.Build

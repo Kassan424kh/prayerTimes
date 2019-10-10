@@ -1,4 +1,4 @@
-package com.example.almoathen_app.PrayerTimesData
+package com.vsyouapp.almoathen.PrayerTimesData
 
 import android.content.Context
 import android.content.ContextWrapper

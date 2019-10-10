@@ -1,4 +1,4 @@
-package com.example.almoathen_app.Receiver
+package com.vsyouapp.almoathen.Receiver
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -7,9 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.example.almoathen_app.AlarmM
+import com.vsyouapp.almoathen.AlarmM
 
-import com.example.almoathen_app.rest.RestServerFactory
+import com.vsyouapp.almoathen.rest.RestServerFactory
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

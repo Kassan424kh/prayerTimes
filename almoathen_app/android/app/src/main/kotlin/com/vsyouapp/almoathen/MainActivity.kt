@@ -1,10 +1,10 @@
-package com.example.almoathen_app
+package com.vsyouapp.almoathen
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.example.almoathen_app.Receiver.AlathanPlayerReceiver
-import com.example.almoathen_app.rest.RestServerFactory
+import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
+import com.vsyouapp.almoathen.rest.RestServerFactory
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
@@ -12,13 +12,13 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL_UPDATER = "app.native/updater"
+    private val CHANNEL = "app.native/updater"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
 
-        MethodChannel(flutterView, CHANNEL_UPDATER).setMethodCallHandler { call, result ->
+        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
             when {
                 call.method == "updatePrayerTimesAfterNewPlaceData" -> {
                     RestServerFactory.getDataFromServer(this, true)

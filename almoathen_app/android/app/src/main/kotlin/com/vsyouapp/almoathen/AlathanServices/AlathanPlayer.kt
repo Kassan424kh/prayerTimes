@@ -1,4 +1,4 @@
-package com.example.almoathen_app.AlathanServices
+package com.vsyouapp.almoathen.AlathanServices
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -16,9 +16,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.example.almoathen_app.AppSettings.AppSettings
-import com.example.almoathen_app.HardwareServices.HardwareServices
-import com.example.almoathen_app.R
+import com.vsyouapp.almoathen.AppSettings.AppSettings
+import com.vsyouapp.almoathen.HardwareServices.HardwareServices
+import com.vsyouapp.almoathen.R
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 

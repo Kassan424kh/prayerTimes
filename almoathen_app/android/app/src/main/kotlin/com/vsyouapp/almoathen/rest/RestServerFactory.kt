@@ -1,11 +1,11 @@
-package com.example.almoathen_app.rest
+package com.vsyouapp.almoathen.rest
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import com.example.almoathen_app.AppSettings.AppSettings
-import com.example.almoathen_app.JsonFilesServices
+import com.vsyouapp.almoathen.AppSettings.AppSettings
+import com.vsyouapp.almoathen.JsonFilesServices
 import com.google.gson.JsonParser
 import retrofit2.Call
 import retrofit2.Callback

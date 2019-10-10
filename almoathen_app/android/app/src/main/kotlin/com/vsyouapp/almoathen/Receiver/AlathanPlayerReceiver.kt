@@ -1,11 +1,11 @@
-package com.example.almoathen_app.Receiver
+package com.vsyouapp.almoathen.Receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
-import com.example.almoathen_app.AlathanServices.AlathanPlayer
+import com.vsyouapp.almoathen.AlathanServices.AlathanPlayer
 
 class AlathanPlayerReceiver : BroadcastReceiver() {
     override fun onReceive(ctxt: Context, intent: Intent) {

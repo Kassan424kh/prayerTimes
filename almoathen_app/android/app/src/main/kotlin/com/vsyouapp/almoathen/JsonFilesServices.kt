@@ -1,11 +1,11 @@
-package com.example.almoathen_app
+package com.vsyouapp.almoathen
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import com.example.almoathen_app.AlathanServices.AlathanAlarmsSetter
-import com.example.almoathen_app.rest.RestServerFactory
+import com.vsyouapp.almoathen.AlathanServices.AlathanAlarmsSetter
+import com.vsyouapp.almoathen.rest.RestServerFactory
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject

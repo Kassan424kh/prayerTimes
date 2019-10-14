@@ -1,7 +1,10 @@
 package com.vsyouapp.almoathen
 
+import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
 import com.vsyouapp.almoathen.rest.RestServerFactory

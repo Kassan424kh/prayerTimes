@@ -26,29 +26,56 @@ class PrayerTimesCard extends StatefulWidget {
 }
 
 class _PrayerTimesCardState extends State<PrayerTimesCard> {
+  int status = 0;
   int _cardStatus = 2;
   PrayerTimesDataFromServer prayerTimesDataFromServer = new PrayerTimesDataFromServer();
+  Timer timer;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      Provider.of<AppSettingsProvider>(context).getAppSettings().then((appSettings) {
-        String selectedLanguage = appSettings["languages"]["selected"];
-        if (appSettings["languages"]["isRtl"] != null)
-          for (var isThisLangRtl in appSettings["languages"]["isRtl"])
-            for (var key in isThisLangRtl.keys) if (key == selectedLanguage) Provider.of<AppStyling>(context).setTextDirection(isThisLangRtl[key]);
+  setAppSettings() {
+    timer = Timer.periodic(new Duration(seconds: 1), (timer) {
+      Provider.of<AppSettingsProvider>(context).getAppSettings().then((Map<String, dynamic> appSettings) async {
+        if (appSettings != null) {
+          String selectedLanguage = appSettings["languages"]["selected"];
+          if (appSettings["languages"]["isRtl"] != null)
+            for (var isThisLangRtl in appSettings["languages"]["isRtl"])
+              for (var key in isThisLangRtl.keys) if (key == selectedLanguage) {
+                Provider.of<AppStyling>(context).setTextDirection(isThisLangRtl[key]);
+                Provider.of<AppStyling>(context).stylingIsUpdated = true;
+              }
 
-        setState(() {
-          List<dynamic> prayerStatus = appSettings["acceptPlayingAthans"][widget.index];
-          if (prayerStatus[0] && prayerStatus[1])
-            _cardStatus = 2;
-          else if (!prayerStatus[0] && prayerStatus[1])
-            _cardStatus = 1;
-          else if (!prayerStatus[0] && !prayerStatus[1]) _cardStatus = 0;
-        });
+          setState(() {
+            List<dynamic> prayerStatus = appSettings["acceptPlayingAthans"][widget.index];
+            if (prayerStatus[0] && prayerStatus[1])
+              _cardStatus = 2;
+            else if (!prayerStatus[0] && prayerStatus[1])
+              _cardStatus = 1;
+            else if (!prayerStatus[0] && !prayerStatus[1]) _cardStatus = 0;
+          });
+          timer.cancel();
+        }
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setAppSettings();
+  }
+
+  @override
+  didChangeDependencies() {
+    super.didChangeDependencies();
+    setAppSettings();
+  }
+
+  @override
+  void didUpdateWidget(PrayerTimesCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (Provider.of<AppStyling>(context).stylingIsUpdated) {
+      setAppSettings();
+      Provider.of<AppStyling>(context).stylingIsUpdated = false;
+    }
   }
 
   Widget prayerElement(displaySize) {
@@ -143,28 +170,6 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
         ]),
       ),
     );
-  }
-
-  @override
-  void didUpdateWidget(PrayerTimesCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      Provider.of<AppSettingsProvider>(context).getAppSettings().then((appSettings) {
-        String selectedLanguage = appSettings["languages"]["selected"];
-        if (appSettings["languages"]["isRtl"] != null)
-          for (var isThisLangRtl in appSettings["languages"]["isRtl"])
-            for (var key in isThisLangRtl.keys) if (key == selectedLanguage) Provider.of<AppStyling>(context).setTextDirection(isThisLangRtl[key]);
-
-        setState(() {
-          List<dynamic> prayerStatus = appSettings["acceptPlayingAthans"][widget.index];
-          if (prayerStatus[0] && prayerStatus[1])
-            _cardStatus = 2;
-          else if (!prayerStatus[0] && prayerStatus[1])
-            _cardStatus = 1;
-          else if (!prayerStatus[0] && !prayerStatus[1]) _cardStatus = 0;
-        });
-      });
-    });
   }
 
   @override

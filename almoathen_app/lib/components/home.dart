@@ -20,17 +20,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Timer timer;
 
-@override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Timer(const Duration(milliseconds: 2000), () {
-      Provider.of<AppSettingsProvider>(context)
-          .getAppSettings()
-          .then((Map<String, dynamic> appSettings) async {
-        Provider.of<AppStyling>(context).setTheme(appSettings["themeStatus"]["isDark"]);
+  setAppSettings() {
+    timer = Timer.periodic(new Duration(seconds: 1), (timer) {
+      Provider.of<AppSettingsProvider>(context).getAppSettings().then((Map<String, dynamic> appSettings) async {
+        if (appSettings != null) {
+          Provider.of<AppStyling>(context).setTheme(appSettings["themeStatus"]["isDark"]);
+          timer.cancel();
+        }
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setAppSettings();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setAppSettings();
   }
 
   @override

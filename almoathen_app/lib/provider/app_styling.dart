@@ -45,4 +45,7 @@ class AppStyling with ChangeNotifier{
     primaryColorWhite= isDark ? primaryColorWhiteDark : primaryColorWhiteLight;
     primaryTextColor = isDark ? primaryTextColorDark : primaryColorLight;
   }
+
+  bool stylingIsUpdated = false;
+
 }

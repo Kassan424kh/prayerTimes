@@ -42,8 +42,10 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
             if (result)
               Timer(const Duration(milliseconds: 200), () {
                 prayerTimesDataFromServer.updateTodayPrayerTimes.then((result) {
-                  if (result)
+                  if (result){
+                    Provider.of<AppStyling>(context).stylingIsUpdated = true;
                     closeKeyboard(context);
+                  }
                   else
                     print("PrayerTimes cann't updated");
                 });

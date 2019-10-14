@@ -20,12 +20,14 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
+  double _maxDefaultVolume;
   double _volume = 0.10;
   List<String> _languages = [];
   String _selectedLanguages;
   PrayerTimesDataFromServer prayerTimesDataFromServer =
       PrayerTimesDataFromServer();
   bool _themeStatus = false;
+  Timer timer;
 
   Future<void> _volumeHandler(volume) async {
     AppSettings.jsonFromAppSettingsFile
@@ -73,26 +75,36 @@ class _BottomBarState extends State<BottomBar> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Timer(const Duration(milliseconds: 3000), () {
-      Provider.of<AppSettingsProvider>(context)
-          .getAppSettings()
-          .then((Map<String, dynamic> appSettings) async {
-        if (appSettings != null ||
-            appSettings["languages"]["names"].length == 0) {
-          _selectedLanguages = appSettings["languages"]["selected"];
-          _languages.clear();
-          for (var key in await appSettings["languages"]["names"])
-            _languages.add(key);
+  setAppSettings() {
+    // runs every 1 second
+    timer = Timer.periodic(new Duration(seconds: 1), (timer) {
+      Provider.of<AppSettingsProvider>(context).getAppSettings().then((Map<String, dynamic> appSettings) async {
+        if (appSettings != null){
+          Provider.of<AppSettingsProvider>(context)
+              .getAppSettings()
+              .then((Map<String, dynamic> appSettings) async {
+            if (appSettings != null ||
+                appSettings["languages"]["names"].length == 0) {
+              _selectedLanguages = appSettings["languages"]["selected"];
+              _languages.clear();
+              for (var key in await appSettings["languages"]["names"])
+                _languages.add(key);
+            }
+            setState(() {
+              _volume = double.parse(appSettings["alathanVolume"]);
+              _themeStatus = appSettings["themeStatus"]["isDark"];
+            });
+          });
+          timer.cancel();
         }
-        setState(() {
-          _volume = double.parse(appSettings["alathanVolume"]);
-          _themeStatus = appSettings["themeStatus"]["isDark"];
-        });
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setAppSettings();
   }
 
   @override

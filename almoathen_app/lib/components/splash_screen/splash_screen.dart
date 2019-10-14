@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:almoathen_app/provider/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:almoathen_app/provider/app_styling.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +19,26 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _showSplashScreen = true;
   double _splashScreenAnimatedOpacity = 1;
   double _logoAnimatedOpacity = 0;
+  Timer timer;
 
   setTimeout(Duration duration, void doThis) {
     Future.delayed(duration, () {
       doThis;
+    });
+  }
+
+  setAppSettings() async {
+    // runs every 1 second
+     timer = Timer.periodic(new Duration(seconds: 1), (timer) {
+      Provider.of<AppSettingsProvider>(context).getAppSettings().then((Map<String, dynamic> appSettings) async {
+        if (appSettings != null){
+          setState(() {
+            _splashScreenAnimatedOpacity = 0;
+            _showSplashScreen = false;
+          });
+          timer.cancel();
+        }
+      });
     });
   }
 
@@ -36,16 +55,12 @@ class _SplashScreenState extends State<SplashScreen> {
         _logoAnimatedOpacity = 1;
       });
     });
-    Future.delayed(Duration(milliseconds: 2500), () {
-      setState(() {
-        _splashScreenAnimatedOpacity = 0;
-      });
-    });
-    Future.delayed(Duration(milliseconds: 3250), () {
-      setState(() {
-        _showSplashScreen = false;
-      });
-    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setAppSettings();
   }
 
   @override
@@ -72,15 +87,12 @@ class _SplashScreenState extends State<SplashScreen> {
                         duration: Duration(seconds: 1),
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 1000),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              boxShadow: <BoxShadow>[_logoBoxShadow]),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(100)), boxShadow: <BoxShadow>[_logoBoxShadow]),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Container(
-                              width: size.width <= 350.0 ?120:150,
-                              height: size.width <= 350.0 ?120:150,
+                              width: size.width <= 350.0 ? 120 : 150,
+                              height: size.width <= 350.0 ? 120 : 150,
                               child: Image.asset("assets/app_logo/mosque_3d.png"),
                             ),
                           ),
@@ -94,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             "Al-Moathen",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: size.width <= 350.0 ?25:40,
+                              fontSize: size.width <= 350.0 ? 25 : 40,
                               fontFamily: "Righteous",
                             ),
                           ),

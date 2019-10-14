@@ -22,7 +22,7 @@ object AlarmM : Activity() {
 
         alarmMgr = ctxt.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(ctxt, AlarmReceiver::class.java)
-        alarmIntent = PendingIntent.getBroadcast(ctxt, id, intent, 0)
+        alarmIntent = PendingIntent.getBroadcast(ctxt, id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
@@ -43,7 +43,7 @@ object AlarmM : Activity() {
         alarmMgr = ctxt.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(ctxt, AlathanPlayerReceiver::class.java)
         intent.putExtra("index", index)
-        alarmIntent = PendingIntent.getBroadcast(ctxt, id, intent, 0)
+        alarmIntent = PendingIntent.getBroadcast(ctxt, id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()

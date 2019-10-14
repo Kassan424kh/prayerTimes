@@ -28,6 +28,7 @@ class PrayerTimesCard extends StatefulWidget {
 class _PrayerTimesCardState extends State<PrayerTimesCard> {
   int status = 0;
   int _cardStatus = 2;
+  bool updateCardStatus = false;
   PrayerTimesDataFromServer prayerTimesDataFromServer = new PrayerTimesDataFromServer();
   Timer timer;
 
@@ -72,9 +73,12 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
   @override
   void didUpdateWidget(PrayerTimesCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (Provider.of<AppStyling>(context).stylingIsUpdated) {
+    if (Provider.of<AppStyling>(context).stylingIsUpdated ||updateCardStatus) {
       setAppSettings();
       Provider.of<AppStyling>(context).stylingIsUpdated = false;
+      setState(() {
+        updateCardStatus = false;
+      });
     }
   }
 
@@ -104,7 +108,7 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
         child: Column(children: <Widget>[
           Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: Row(textDirection: Provider.of<AppStyling>(context).isRtl ? TextDirection.rtl : TextDirection.ltr, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+            child: Row(textDirection: appStyling.isRtl ? TextDirection.rtl : TextDirection.ltr, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
               Column(children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(vertical: size.width <= 350.0 ? 20 : 25, horizontal: size.width <= 350.0 ? 10 : 15),
@@ -113,7 +117,9 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
                     color: appStyling.primaryColorWhite,
                     borderRadius: BorderRadius.all(appStyling.primaryRadiusMinus10),
                   ),
-                  child: Row(textDirection: Provider.of<AppStyling>(context).isRtl ? TextDirection.rtl : TextDirection.ltr, children: <Widget>[
+                  child: Row(
+                      textDirection: appStyling.isRtl ? TextDirection.rtl : TextDirection.ltr,
+                      children: <Widget>[
                     SizedBox(width: size.width <= 350.0 ? 20 : 30),
                     Text(
                       widget.start.substring(11, 16),
@@ -138,6 +144,10 @@ class _PrayerTimesCardState extends State<PrayerTimesCard> {
                                       else if (_cardStatus == 1)
                                         _cs = [false, false];
                                       else if (_cardStatus == 0) _cs = [true, true];
+
+                                      setState(() {
+                                        updateCardStatus = true;
+                                      });
 
                                       oldAppSettings["acceptPlayingAthans"][widget.index] = _cs;
                                       AppSettings.updateSettingsInAppSettingsJsonFile(oldAppSettings);

@@ -15,9 +15,9 @@ class AlathanPlayerReceiver : WakefulBroadcastReceiver() {
 
         val alathanPlayerClass = AlathanPlayer()
         val myService = Intent(ctxt, AlathanPlayer::class.java)
-        startWakefulService(ctxt, myService)
         myService.putExtra("index", index)
         myService.setAction(alathanPlayerClass.ACTION_START_FOREGROUND_SERVICE)
+        startWakefulService(ctxt, myService)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             ctxt.startForegroundService(myService)
         else

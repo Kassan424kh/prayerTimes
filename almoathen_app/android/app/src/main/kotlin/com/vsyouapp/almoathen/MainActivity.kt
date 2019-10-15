@@ -42,13 +42,11 @@ class MainActivity : FlutterActivity() {
 
         AlarmM.updatePrayerTimesAt1HourDaily(this, 0, 1, 0)
 
-        /*
-            AlarmM.setPrayerTimesToPlayAlathan(ctxt = this, id = 21,
-                hour = 12,
-                minute = 48,
+       /* AlarmM.setPrayerTimesToPlayAlathan(ctxt = this, id = 21,
+                hour = 6,
+                minute = 49,
                 nameOfPrayer = "",
-                index = 0)
-        */
+                index = 0)*/
 
         this.startService(Intent(this, AlathanPlayerReceiver::class.java))
     }

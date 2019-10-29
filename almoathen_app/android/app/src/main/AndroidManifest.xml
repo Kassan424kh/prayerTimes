@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vsyouapp.almoathen">
+    package="com.vsyouapp.almoathen"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -15,9 +16,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-sdk tools:overrideLibrary="com.ly.permission"/>
+
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Almoathen"
+        android:label="Almoathen - المؤذن"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name="com.vsyouapp.almoathen.MainActivity"

@@ -3,12 +3,18 @@ import 'package:almoathen_app/provider/app_styling.dart';
 import 'package:almoathen_app/provider/founded_places.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'dart:convert' as convert;
 
 import 'package:provider/provider.dart';
 
-class PlaceSearchBannerField extends StatelessWidget {
+class PlaceSearchBannerField extends StatefulWidget {
 
+  @override
+  _PlaceSearchBannerFieldState createState() => _PlaceSearchBannerFieldState();
+}
+
+class _PlaceSearchBannerFieldState extends State<PlaceSearchBannerField> {
   Future closeKeyboard(ctx) async {
     FocusScope.of(ctx).requestFocus(new FocusNode());
     return Future.delayed(
@@ -18,6 +24,10 @@ class PlaceSearchBannerField extends StatelessWidget {
       },
     );
   }
+
+  var location = new Location();
+
+  Type userLocation;
 
   final String _apiKey =
       "pk.eyJ1Ijoia2Fzc2FuNDI0a2giLCJhIjoiY2pxMmI4NHJxMTA4NzN4cDMxYW1md2x4MiJ9" +
@@ -141,7 +151,11 @@ class PlaceSearchBannerField extends StatelessWidget {
                             Radius.circular(50),
                           ),
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          location.getLocation().then((LocationData ld) {
+                            viewLatLogFromSearchedPlaceApi("${ld.longitude},${ld.latitude}", foundedPlaces);
+                          });
+                        }),
                   ),
                 ]),
           ),

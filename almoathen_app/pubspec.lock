@@ -69,13 +69,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_keyboard_visibility:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.3"
+    version: "0.7.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -87,7 +94,7 @@ packages:
       name: flutter_typeahead
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.1"
+    version: "1.7.0"
   http:
     dependency: "direct main"
     description:
@@ -108,7 +115,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   intl:
     dependency: "direct main"
     description:
@@ -116,13 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.8"
-  keyboard_visibility:
-    dependency: transitive
+  location:
+    dependency: "direct main"
     description:
-      name: keyboard_visibility
+      name: location
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.6"
+    version: "2.3.5"
   matcher:
     dependency: transitive
     description:
@@ -150,7 +157,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.4.0"
   pedantic:
     dependency: transitive
     description:
@@ -158,6 +165,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
+  permission:
+    dependency: "direct main"
+    description:
+      name: permission
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
   petitparser:
     dependency: transitive
     description:
@@ -178,7 +192,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.0+1"
   quiver:
     dependency: transitive
     description:
@@ -260,7 +274,14 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.6"
+    version: "5.2.5"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   vector_math:
     dependency: transitive
     description:
@@ -291,4 +312,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
-  flutter: ">=1.5.0 <2.0.0"
+  flutter: ">=1.9.1+hotfix.4 <2.0.0"

@@ -1,10 +1,8 @@
 package com.vsyouapp.almoathen
 
-import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
 import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
 import com.vsyouapp.almoathen.rest.RestServerFactory
@@ -32,6 +30,9 @@ class MainActivity : FlutterActivity() {
                         JsonFilesServices.getTodayDatesFromJsonFile(this, true)
                     }, 1500, TimeUnit.MILLISECONDS)
                     result.success(true)
+                }
+                call.method == "sdkVersionNumber" -> {
+                    result.success(Build.VERSION.SDK_INT)
                 }
                 else -> {
                     result.notImplemented()

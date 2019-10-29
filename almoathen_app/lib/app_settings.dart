@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:almoathen_app/prayer_times_data_from_server.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,6 +23,16 @@ class AppSettings {
   static Future<bool> get isAppSettingsFileExists async {
     final path = await _localPath;
     return File('$path/appSettings.json').exists();
+  }
+
+  static Future<int> get androidSdkVersionNumber async {
+    try {
+      final int result = await PrayerTimesDataFromServer.android.invokeMethod('sdkVersionNumber');
+      return result;
+    } catch (e) {
+      print(e);
+      return 0;
+    }
   }
 
   static Future<Map<String, dynamic>> get jsonFromDefaultAppSettingsFile async {

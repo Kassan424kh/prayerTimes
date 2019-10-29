@@ -6,6 +6,7 @@ import 'package:almoathen_app/components/home.dart';
 import 'package:almoathen_app/provider/app_settings.dart';
 import 'package:almoathen_app/provider/app_styling.dart';
 import 'package:almoathen_app/provider/founded_places.dart';
+import 'package:permission/permission.dart';
 import 'package:provider/provider.dart';
 import 'package:almoathen_app/app_settings.dart';
 
@@ -20,11 +21,15 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   // variables
   DateTime _now = DateTime.now();
 
+  List<PermissionName> _permissionsAppUses = [
+    PermissionName.Location,
+    PermissionName.Storage
+  ];
+
   Future<void> setData() async {
     DateTime dtNow = DateTime.now();
     setState(() {
-      _now = DateTime(
-          dtNow.year, dtNow.month, dtNow.day, dtNow.hour, dtNow.minute);
+      _now = DateTime(dtNow.year, dtNow.month, dtNow.day, dtNow.hour, dtNow.minute);
     });
   }
 
@@ -44,9 +49,15 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
   }
 
   @override
-  didChangeDependencies() {
+  didChangeDependencies() async {
     super.didChangeDependencies();
     setData();
+    AppSettings.androidSdkVersionNumber.then((int androidVersionNumber) async {
+      if (androidVersionNumber < 20)
+        Permission.openSettings;
+      else
+        await Permission.requestPermissions(_permissionsAppUses);
+    });
   }
 
   // build
@@ -59,10 +70,8 @@ class _MyApp extends State<MyApp> with TickerProviderStateMixin {
     ]);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppSettingsProvider>(
-            builder: (_) => AppSettingsProvider()),
-        ChangeNotifierProvider<FoundedPlaces>(
-            builder: (_) => FoundedPlaces([])),
+        ChangeNotifierProvider<AppSettingsProvider>(builder: (_) => AppSettingsProvider()),
+        ChangeNotifierProvider<FoundedPlaces>(builder: (_) => FoundedPlaces([])),
         ChangeNotifierProvider<AppStyling>(
           builder: (_) => AppStyling(),
         ),

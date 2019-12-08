@@ -41,7 +41,7 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        AlarmM.updatePrayerTimesAt1HourDaily(this, 0, 1, 0)
+        AlarmM.updatePrayerTimesAt1HourDaily(this, 15, 1, 0)
 
        /* AlarmM.setPrayerTimesToPlayAlathan(ctxt = this, id = 21,
                 hour = 6,

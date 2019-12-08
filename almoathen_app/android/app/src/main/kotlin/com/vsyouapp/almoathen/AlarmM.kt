@@ -58,6 +58,8 @@ object AlarmM : Activity() {
         else
             alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
 
+        if (id == 5) this.updatePrayerTimesAt1HourDaily(this, 15, 1, 0)
+
         if (nameOfPrayer != "" && prayerTimeStartDateFormatted != null) {
             val hour: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 (prayerTimeStartDateFormatted as LocalDateTime).hour

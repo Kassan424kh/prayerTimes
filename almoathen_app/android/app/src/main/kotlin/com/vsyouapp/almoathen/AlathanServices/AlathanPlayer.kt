@@ -16,8 +16,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.vsyouapp.almoathen.AlarmM
 import com.vsyouapp.almoathen.AppSettings.AppSettings
 import com.vsyouapp.almoathen.HardwareServices.HardwareServices
+import com.vsyouapp.almoathen.MainActivity
 import com.vsyouapp.almoathen.R
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -57,6 +59,11 @@ class AlathanPlayer : Service() {
         // vibration
         if (isAlarmVibrateActive!!)
             HardwareServices.vibrateAlathan(this)
+
+        if (index == 5) {
+            AlarmM.updatePrayerTimesAt1HourDaily(MainActivity@this, 15, 1, 0)
+            print("************ updated prayerTimes ************")
+        }
 
         // Notification to keep foregroundService running in android > Android "O" version
         if (SDK_INT >= O) {

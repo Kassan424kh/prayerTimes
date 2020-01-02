@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:almoathen_app/app_settings.dart';
 
 import 'package:almoathen_app/components/prayer_time_cards/prayer_times_card.dart';
 import 'package:almoathen_app/prayer_times_data_from_server.dart';
@@ -78,8 +77,7 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
                         width: size.width,
                         decoration: BoxDecoration(
                           color: Colors.black12,
-                          borderRadius:
-                              BorderRadius.all(appStyling.primaryRadius),
+                          borderRadius: BorderRadius.all(appStyling.primaryRadius),
                           image: DecorationImage(
                             image: appStyling.backgroundImageBlurEffect,
                             fit: BoxFit.cover,
@@ -120,13 +118,10 @@ class _PrayerTimesContainer extends State<PrayerTimesContainer> {
   }
 
   Future<void> setData() async {
-    _prayerTimesDataFromServer
-        .getPrayerTimes()
-        .then((List data) => setState(() => _prayerTimes = data));
+    _prayerTimesDataFromServer.getPrayerTimes().then((List data) => setState(() => _prayerTimes = data));
     DateTime dtNow = DateTime.now();
     setState(() {
-      _now = DateTime(
-          dtNow.year, dtNow.month, dtNow.day, dtNow.hour, dtNow.minute);
+      _now = DateTime(dtNow.year, dtNow.month, dtNow.day, dtNow.hour, dtNow.minute);
     });
   }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import com.vsyouapp.almoathen.AppSettings.AppendLogsToTextField
 import com.vsyouapp.almoathen.Receiver.AlathanPlayerReceiver
 import com.vsyouapp.almoathen.rest.RestServerFactory
 import io.flutter.app.FlutterActivity
@@ -48,6 +49,8 @@ class MainActivity : FlutterActivity() {
                 minute = 49,
                 nameOfPrayer = "",
                 index = 0)*/
+
+        AppendLogsToTextField.appendLog("hhssssssshhhhhh")
 
         this.startService(Intent(this, AlathanPlayerReceiver::class.java))
     }

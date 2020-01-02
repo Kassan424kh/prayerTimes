@@ -80,16 +80,18 @@ class _PlaceSearchBannerState extends State<PlaceSearchBanner> {
               height: size.width <= 350.0 ? 50 : 61,
               child: RaisedButton(
                 child: Row(children: <Widget>[
-                  if (placeName.length > 0) SizedBox(width: 10),
-                  if (placeName.length > 0) Text(
-                      placeName,
-                      textDirection: TextDirection.ltr,
-                      style: TextStyle(
-                        fontSize: size.width <= 350.0 ? 12 : 20,
-                        color: appStyling.primaryTextColor,
-                      ),
-                    ),
-                  if (placeName.length > 0) SizedBox(width: 10),
+                  placeName.length > 0 ? SizedBox(width: 10) : Container(),
+                  placeName.length > 0
+                      ? Text(
+                          placeName,
+                          textDirection: TextDirection.ltr,
+                          style: TextStyle(
+                            fontSize: size.width <= 350.0 ? 12 : 20,
+                            color: appStyling.primaryTextColor,
+                          ),
+                        )
+                      : Container(),
+                  placeName.length > 0 ? SizedBox(width: 10) : Container(),
                   Icon(Icons.place, color: appStyling.primaryTextColor, size: size.width <= 350.0 ? 15 : 25)
                 ]),
                 color: appStyling.primaryColorAccent,

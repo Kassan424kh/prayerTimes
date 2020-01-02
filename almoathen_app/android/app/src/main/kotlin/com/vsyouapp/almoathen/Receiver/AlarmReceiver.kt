@@ -3,11 +3,13 @@ package com.vsyouapp.almoathen.Receiver
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.legacy.content.WakefulBroadcastReceiver
 import com.vsyouapp.almoathen.AlarmM
+import com.vsyouapp.almoathen.AppSettings.AppendLogsToTextField
 
 import com.vsyouapp.almoathen.rest.RestServerFactory
 import java.text.SimpleDateFormat
@@ -15,7 +17,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class AlarmReceiver : WakefulBroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
     @SuppressLint("SimpleDateFormat")
     override fun onReceive(ctxt: Context, intent: Intent) {
         RestServerFactory.getDataFromServer(ctxt)
